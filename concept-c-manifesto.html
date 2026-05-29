@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>더나은 — 매니페스토 컨셉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+  :root{
+    --orange:#FF752D;
+    --orange-deep:#E5601A;
+    --orange-soft:#FFE9DA;
+    --paper:#FAF8F2;
+    --paper-warm:#F0EBDE;
+    --ink:#1A1A1A;
+    --ink-2:#222226;
+    --gray-800:#3A3A3F;
+    --gray-600:#6B6B72;
+    --gray-400:#9C9CA3;
+    --gray-300:#C9C5BA;
+    --gray-200:#E8E3D4;
+    --gray-100:#F2EEE0;
+    --green:#2E7D5B;
+    --blue:#3057C8;
+    --font:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SF Mono,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--mono);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  ::selection{background:var(--orange); color:#fff}
+  a{color:inherit; text-decoration:none}
+
+  /* ============ LAYOUT ============ */
+  .page{
+    max-width:1280px; margin:0 auto; padding:0 24px;
+    display:grid; grid-template-columns:48px 1fr; gap:0;
+    position:relative;
+  }
+  .gutter{
+    border-right:1px solid var(--gray-200);
+    position:relative;
+  }
+  .gutter__inner{
+    position:sticky; top:0;
+    padding-top:24px;
+    font-family:var(--mono); font-size:11px; color:var(--gray-400);
+    text-align:right; padding-right:14px;
+    height:100vh;
+    display:flex; flex-direction:column; gap:2px;
+    line-height:1.8;
+  }
+  .gutter__num{display:block; white-space:nowrap}
+
+  /* ============ NAV ============ */
+  .nav{
+    position:sticky; top:0; z-index:60;
+    background:rgba(250,248,242,.85);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .2s;
+    margin-bottom:24px;
+  }
+  .nav.scrolled{border-bottom-color:var(--gray-200)}
+  .nav__inner{
+    max-width:1280px; margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+  }
+  .nav__brand{display:flex; align-items:center; gap:10px; font-weight:500; font-size:14px}
+  .nav__brand svg{height:24px}
+  .nav__brand .cmt{color:var(--gray-400); font-size:12px}
+  .nav__links{display:flex; gap:0; font-size:13px}
+  .nav__links a{
+    padding:8px 12px; color:var(--gray-600); position:relative;
+    transition:color .15s;
+  }
+  .nav__links a:hover{color:var(--ink)}
+  .nav__links a::before{content:".\00a0"; color:var(--gray-300)}
+  .nav__links a.active{color:var(--orange)}
+
+  /* ============ COL ============ */
+  .col{padding:24px 0 80px; min-width:0}
+
+  /* line block — basic unit, has indent & color */
+  .l{display:block; padding-left:0; font-size:14px; line-height:1.85}
+  .l.cmt{color:var(--gray-400); font-style:italic}
+  .l.cmt-bold{color:var(--gray-600); font-style:italic}
+  .ind-1{padding-left:32px}
+  .ind-2{padding-left:64px}
+  .ind-3{padding-left:96px}
+  .ind-4{padding-left:128px}
+
+  /* syntax colors */
+  .kw{color:var(--orange); font-weight:500}
+  .fn{color:var(--blue); font-weight:500}
+  .str{color:var(--green)}
+  .num{color:var(--orange-deep)}
+  .var{color:var(--ink); font-weight:500}
+  .punct{color:var(--gray-400)}
+  .prop{color:var(--ink-2)}
+  .cmt{color:var(--gray-400)}
+  .tag{color:var(--orange); font-weight:600; font-family:var(--font)}
+
+  /* arrow markers */
+  .arr{color:var(--orange); margin-right:8px}
+  .check{color:var(--green); margin-right:8px; font-weight:600}
+
+  /* ============ HEADERS ============ */
+  /* file-style section header */
+  .file-header{
+    margin:64px 0 32px;
+    display:flex; align-items:center; gap:16px;
+    padding:14px 18px; background:var(--paper-warm); border-radius:10px;
+    border:1px solid var(--gray-200);
+    position:sticky; top:64px; z-index:10;
+  }
+  .file-header__dot{width:10px; height:10px; border-radius:50%; background:var(--orange)}
+  .file-header__path{font-family:var(--mono); font-size:13px; color:var(--gray-600)}
+  .file-header__path b{color:var(--ink); font-weight:500}
+  .file-header__lang{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--gray-400); text-transform:uppercase; letter-spacing:.08em}
+
+  /* ============ HERO ============ */
+  .hero{padding:60px 0 120px}
+  .hero__file{
+    font-family:var(--mono); font-size:13px; color:var(--gray-400); margin-bottom:32px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero__file::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--orange)}
+
+  .h1-block{position:relative}
+  .h1-block .preface{
+    font-family:var(--mono); font-size:14px; color:var(--gray-400); margin-bottom:24px;
+    line-height:1.9;
+  }
+  .h1-block .preface b{color:var(--ink); font-weight:500; font-style:normal}
+
+  .display{
+    font-family:var(--font); font-size:clamp(56px, 9vw, 132px);
+    font-weight:700; letter-spacing:-.045em; line-height:.92;
+    margin:0 0 32px; color:var(--ink); text-wrap:balance;
+  }
+  .display .accent{color:var(--orange)}
+  .display .strike{
+    text-decoration:line-through; text-decoration-color:var(--orange); text-decoration-thickness:.06em;
+    text-underline-offset:.05em;
+    color:var(--gray-400); white-space:nowrap;
+  }
+  .display .box{
+    background:var(--orange); color:#fff; padding:0 .15em; display:inline-block;
+    border-radius:4px; white-space:nowrap;
+  }
+  .display .accent{white-space:nowrap}
+  .display .caret::after{
+    content:""; display:inline-block; width:.5em; height:.95em; background:var(--orange);
+    margin-left:.05em; vertical-align:-.08em; animation:blink 1s steps(2) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  .display + .post{
+    font-family:var(--mono); font-size:14px; color:var(--gray-400); line-height:1.9;
+    margin:24px 0 48px;
+  }
+  .display + .post b{color:var(--ink); font-weight:500; font-style:normal}
+
+  .hero__cta{display:flex; gap:14px; flex-wrap:wrap; padding-left:0}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:13px 22px;
+    border-radius:8px; font-family:var(--mono); font-size:13.5px; font-weight:500;
+    border:1.5px solid transparent; transition:all .2s; cursor:pointer; line-height:1;
+  }
+  .btn--primary{background:var(--orange); color:#fff}
+  .btn--primary:hover{background:var(--orange-deep); transform:translateY(-1px)}
+  .btn--ghost{background:transparent; color:var(--ink); border-color:var(--gray-300)}
+  .btn--ghost:hover{border-color:var(--ink); background:var(--paper-warm)}
+  .section--dark .btn--ghost{color:#fff; border-color:rgba(255,255,255,.2)}
+  .section--dark .btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.05)}
+
+  /* ============ ABOUT (indent block) ============ */
+  .section--about{padding:40px 0 100px}
+
+  .indent-block{
+    font-size:15px; line-height:2.0; font-family:var(--mono);
+  }
+  .indent-block .l{font-size:15px}
+  .indent-block .big{
+    font-family:var(--font); font-size:clamp(20px, 2.4vw, 28px); font-weight:500;
+    color:var(--ink); letter-spacing:-.015em; line-height:1.35; padding:6px 0;
+  }
+  .indent-block .small{font-size:13px; color:var(--gray-600)}
+
+  /* ============ VALUES (dark, big numbers) ============ */
+  .section--dark{
+    background:var(--ink); color:var(--paper);
+    margin:80px -100vw; padding:120px 100vw;
+    position:relative;
+  }
+  .section--dark .file-header{
+    background:var(--ink-2); border-color:rgba(255,255,255,.08);
+  }
+  .section--dark .file-header__path{color:var(--gray-400)}
+  .section--dark .file-header__path b{color:#fff}
+  .section--dark .l.cmt{color:var(--gray-400)}
+  .section--dark .l.cmt-bold{color:#bdbdc4}
+  .section--dark .var{color:#fff}
+  .section--dark .prop{color:#eaeaee}
+  .section--dark .punct{color:var(--gray-400)}
+  .section--dark .display{color:#fff}
+
+  .values-list{margin:60px 0 0}
+  .value-row{
+    display:grid; grid-template-columns:80px 1.2fr 2fr 60px; gap:32px; align-items:start;
+    padding:40px 24px; border-top:1px solid rgba(255,255,255,.08);
+    cursor:pointer; transition:background .25s;
+  }
+  .value-row:hover{background:rgba(255,117,45,.06)}
+  .value-row:last-child{border-bottom:1px solid rgba(255,255,255,.08)}
+  .value-row__num{
+    font-family:var(--mono); font-size:13px; color:var(--orange); padding-top:14px;
+    font-weight:500;
+  }
+  .value-row__title{
+    font-family:var(--font); font-size:clamp(28px, 3.4vw, 44px); font-weight:600;
+    letter-spacing:-.03em; line-height:1.05; color:#fff; margin:0;
+  }
+  .value-row__title em{font-style:normal; color:var(--orange)}
+  .value-row__desc{
+    font-family:var(--mono); font-size:14px; color:#bdbdc4; line-height:1.85;
+  }
+  .value-row__desc .indent{display:block; padding-left:20px; color:var(--gray-400)}
+  .value-row__desc .indent::before{content:"→ "; color:var(--orange)}
+  .value-row__arrow{
+    font-family:var(--mono); font-size:24px; color:var(--gray-400); text-align:right;
+    padding-top:8px; transition:all .25s;
+  }
+  .value-row:hover .value-row__arrow{color:var(--orange); transform:translateX(6px)}
+
+  /* ============ SERVICES ============ */
+  .services{margin-top:48px}
+  .service-row{
+    display:grid; grid-template-columns:60px 1fr 1.2fr 100px; gap:32px; align-items:start;
+    padding:36px 0; border-top:1px solid var(--gray-200);
+    position:relative; cursor:pointer; transition:all .2s;
+  }
+  .service-row:last-child{border-bottom:1px solid var(--gray-200)}
+  .service-row:hover{padding-left:12px; background:linear-gradient(to right, var(--paper-warm), transparent 60%)}
+  .service-row__num{font-family:var(--mono); font-size:13px; color:var(--orange); padding-top:10px; font-weight:500}
+  .service-row__title{
+    font-family:var(--font); font-size:clamp(24px,2.8vw,36px); font-weight:600;
+    letter-spacing:-.02em; line-height:1.1; color:var(--ink); margin:0;
+  }
+  .service-row__title .mono{font-family:var(--mono); font-weight:400; font-size:.7em; color:var(--gray-400); display:block; margin-top:6px}
+  .service-row__desc{font-family:var(--mono); font-size:13px; color:var(--gray-600); line-height:1.85}
+  .service-row__desc .tag{
+    display:inline-block; padding:2px 8px; background:var(--paper-warm); color:var(--gray-800);
+    border-radius:4px; margin:0 4px 4px 0; font-size:11px; font-weight:500;
+  }
+  .service-row__arrow{
+    font-family:var(--mono); font-size:13px; color:var(--gray-400); text-align:right;
+    padding-top:14px; transition:all .25s;
+  }
+  .service-row:hover .service-row__arrow{color:var(--orange)}
+
+  /* ============ TEAM (avatars in code call) ============ */
+  .team-call{
+    margin-top:48px; padding:32px;
+    background:var(--paper-warm); border:1px solid var(--gray-200); border-radius:14px;
+  }
+  .team-call__head{
+    font-family:var(--mono); font-size:13px; color:var(--gray-600); margin-bottom:28px;
+    line-height:1.9;
+  }
+  .team-call__head .kw{color:var(--orange); font-weight:500}
+  .team-call__head .fn{color:var(--blue)}
+  .team-call__head .str{color:var(--green)}
+
+  .team-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+    padding-left:32px;
+  }
+  .person{
+    background:var(--paper); border:1px solid var(--gray-200); border-radius:12px;
+    padding:20px; transition:all .2s; cursor:pointer;
+  }
+  .person:hover{border-color:var(--orange); transform:translateY(-2px)}
+  .person__avatar{
+    width:64px; height:64px; border-radius:50%; margin-bottom:14px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .person__avatar svg{width:100%; height:100%}
+  .person__name{font-family:var(--font); font-size:15px; font-weight:600; color:var(--ink)}
+  .person__role{font-family:var(--mono); font-size:11px; color:var(--gray-400); margin-top:2px}
+  .person__line{
+    margin-top:12px; padding-top:12px; border-top:1px dashed var(--gray-200);
+    font-family:var(--mono); font-size:11.5px; color:var(--gray-600); line-height:1.6;
+  }
+  .person__line .arr{color:var(--orange); margin-right:4px}
+
+  /* ============ PROJECTS / CASE ============ */
+  .cases{margin-top:48px}
+  .case-row{
+    display:grid; grid-template-columns:80px 1fr 200px 80px; gap:24px; align-items:center;
+    padding:24px 0; border-top:1px solid var(--gray-200);
+    font-family:var(--mono); font-size:13px;
+  }
+  .case-row:last-child{border-bottom:1px solid var(--gray-200)}
+  .case-row .year{color:var(--orange); font-weight:500}
+  .case-row .name{color:var(--ink); font-weight:500; font-family:var(--font); font-size:17px}
+  .case-row .name .indus{font-family:var(--mono); font-size:12px; color:var(--gray-400); margin-left:8px; font-weight:400}
+  .case-row .meta{color:var(--gray-600)}
+  .case-row .link{color:var(--orange); text-align:right}
+
+  /* ============ CTA ============ */
+  .cta-block{
+    margin:80px 0 0; padding:80px 40px; text-align:center;
+    background:var(--ink); color:#fff; border-radius:24px;
+    position:relative; overflow:hidden;
+  }
+  .cta-block::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size:32px 32px;
+    mask-image:radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+  .cta-block__inner{position:relative}
+  .cta-block .preface{font-family:var(--mono); color:var(--gray-400); font-size:13px; margin-bottom:24px}
+  .cta-block h2{
+    font-family:var(--font); font-size:clamp(40px,5vw,72px); font-weight:600;
+    letter-spacing:-.03em; line-height:1.05; margin:0 0 24px; text-wrap:balance;
+  }
+  .cta-block h2 em{font-style:normal; color:var(--orange)}
+  .cta-block .sub{color:#bdbdc4; max-width:50ch; margin:0 auto 36px; font-family:var(--mono); font-size:14px; line-height:1.7}
+  .cta-block .btns{display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center}
+
+  /* ============ FOOTER ============ */
+  .footer{
+    padding:64px 0 32px; margin-top:80px;
+    border-top:1px solid var(--gray-200); font-family:var(--mono); font-size:13px;
+  }
+  .footer__row{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px}
+  .footer__brand{display:flex; align-items:center; gap:12px; margin-bottom:14px}
+  .footer__brand svg{height:24px}
+  .footer__brand b{font-family:var(--font); font-weight:600}
+  .footer__copy{margin:0; color:var(--gray-600); max-width:34ch; line-height:1.7}
+  .footer h5{font-family:var(--font); font-weight:600; font-size:14px; margin:0 0 14px; color:var(--ink)}
+  .footer ul{list-style:none; padding:0; margin:0; line-height:2.1}
+  .footer a{color:var(--gray-600)}
+  .footer a:hover{color:var(--orange)}
+  .footer__bottom{
+    padding-top:24px; border-top:1px solid var(--gray-200);
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    color:var(--gray-400);
+  }
+
+  /* ============ REVEAL ============ */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .8s ease, transform .8s ease}
+  .reveal.in{opacity:1; transform:none}
+
+  /* ============ MOBILE ============ */
+  @media (max-width:900px){
+    .page{grid-template-columns:1fr; padding:0 18px}
+    .gutter{display:none}
+    .nav__links{display:none}
+    .indent-block .ind-1{padding-left:16px}
+    .indent-block .ind-2{padding-left:32px}
+    .indent-block .ind-3{padding-left:48px}
+    .value-row, .service-row, .case-row{grid-template-columns:1fr; gap:8px}
+    .value-row__arrow, .service-row__arrow, .case-row .link{display:none}
+    .team-grid{grid-template-columns:1fr 1fr; padding-left:0}
+    .footer__row{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body data-screen-label="C · Manifesto">
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#">
+      <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+        <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <span>deonaeun</span>
+      <span class="cmt">// since 2009</span>
+    </a>
+    <div class="nav__links">
+      <a href="#about">about</a>
+      <a href="#values">values</a>
+      <a href="#services">services</a>
+      <a href="#team">team</a>
+      <a href="#cases">cases</a>
+      <a href="#contact" class="active">contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ PAGE ============ -->
+<div class="page">
+
+  <!-- Line numbers gutter -->
+  <div class="gutter">
+    <div class="gutter__inner" id="gutter">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <main class="col">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="hero__file">README.md · deonaeun · main</div>
+
+      <div class="h1-block">
+        <div class="preface">
+          <span class="punct">/**</span><br>
+          <span class="punct"> *</span> <span class="cmt">@file</span> &nbsp; deonaeun / mission.txt<br>
+          <span class="punct"> *</span> <span class="cmt">@since</span> 2009<br>
+          <span class="punct"> *</span> <span class="cmt">@status</span> <b style="color:var(--orange)">always shipping</b><br>
+          <span class="punct"> */</span>
+        </div>
+
+        <h1 class="display">
+          더 나은<br>
+          <span class="strike">세상은 없다</span><br>
+          <span class="accent">세상을</span> 함께<br>
+          <span class="box">짓는다</span><span class="caret"></span>
+        </h1>
+
+        <div class="post">
+          <span class="punct">/*</span> <span class="cmt">— deonaeun's reason for being.</span> <span class="punct">*/</span><br><br>
+          소프트웨어로 사람과 사람을, 문제와 해결을,<br>
+          오늘과 더 나은 내일을 잇습니다.<br>
+          <span class="cmt">// 15년, 200+ 프로젝트, 42명의 메이커.</span>
+        </div>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#services">▸ run services()</a>
+          <a class="btn btn--ghost" href="#contact">→ open issue</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="section--about" id="about">
+      <div class="file-header">
+        <span class="file-header__dot"></span>
+        <span class="file-header__path">src / company / <b>about.md</b></span>
+        <span class="file-header__lang">markdown</span>
+      </div>
+
+      <div class="indent-block">
+        <span class="l cmt"># 우리에 대하여</span>
+        <span class="l"></span>
+        <span class="l big">우리는 <b style="color:var(--orange)">소프트웨어 개발사</b>입니다.</span>
+        <span class="l ind-1 cmt-bold">— 그런데, '개발사'라는 단어는 너무 작습니다.</span>
+        <span class="l"></span>
+        <span class="l big ind-1">우리는 <span class="kw">사람</span>을 모아,</span>
+        <span class="l big ind-2"><span class="kw">문제</span>를 풀고,</span>
+        <span class="l big ind-3"><span class="kw">코드</span>를 한 줄씩 더해서,</span>
+        <span class="l big ind-4">하루씩 <span style="color:var(--orange)">더 나은 세상</span>을 만듭니다.</span>
+        <span class="l"></span>
+        <span class="l cmt"># 우리가 믿는 것</span>
+        <span class="l"></span>
+        <span class="l"><span class="arr">→</span><b style="color:var(--ink); font-family:var(--font); font-size:16px">작은 코드 한 줄</b>이 누군가의 하루를 바꿀 수 있다.</span>
+        <span class="l ind-1 cmt-bold">/* 그래서 한 줄을 가볍게 쓰지 않습니다. */</span>
+        <span class="l"></span>
+        <span class="l"><span class="arr">→</span><b style="color:var(--ink); font-family:var(--font); font-size:16px">다양한 사람</b>이 모이면 더 다양한 답을 만든다.</span>
+        <span class="l ind-1 cmt-bold">/* 그래서 42명, 42가지 방식으로 일합니다. */</span>
+        <span class="l"></span>
+        <span class="l"><span class="arr">→</span><b style="color:var(--ink); font-family:var(--font); font-size:16px">빠른 것보다 함께 가는 것</b>이 멀리 간다.</span>
+        <span class="l ind-1 cmt-bold">/* 그래서 96%의 고객이 다시 우리를 찾습니다. */</span>
+      </div>
+    </section>
+
+    <!-- ============ VALUES (dark section) ============ -->
+    <section class="section--dark" id="values">
+      <div class="file-header">
+        <span class="file-header__dot"></span>
+        <span class="file-header__path">src / company / <b>values.json</b></span>
+        <span class="file-header__lang">json</span>
+      </div>
+
+      <div class="indent-block" style="font-family:var(--mono)">
+        <span class="l"><span class="punct">[</span></span>
+        <span class="l ind-1 cmt-bold">// 우리를 우리답게 만드는 세 가지</span>
+      </div>
+
+      <div class="values-list">
+        <div class="value-row">
+          <div class="value-row__num">node_01</div>
+          <h3 class="value-row__title"><em>신뢰</em>를<br>코드로 옮긴다.</h3>
+          <div class="value-row__desc">
+            한 줄의 코드도, 한 번의 약속도 책임집니다.<br>
+            <span class="indent">96%의 고객이 두 번째 프로젝트로 다시 찾습니다.</span>
+            <span class="indent">출시 후에도 평균 4년을 함께합니다.</span>
+          </div>
+          <div class="value-row__arrow">→</div>
+        </div>
+
+        <div class="value-row">
+          <div class="value-row__num">node_02</div>
+          <h3 class="value-row__title"><em>사람</em>을<br>중심에 둔다.</h3>
+          <div class="value-row__desc">
+            코드보다 먼저 사용자, 기술보다 먼저 팀.<br>
+            <span class="indent">42명의 다양한 배경 — 개발자, 디자이너, PM, 데이터.</span>
+            <span class="indent">다양할수록 답은 더 다양해진다고 믿습니다.</span>
+          </div>
+          <div class="value-row__arrow">→</div>
+        </div>
+
+        <div class="value-row">
+          <div class="value-row__num">node_03</div>
+          <h3 class="value-row__title"><em>만드는 일</em>을<br>사랑한다.</h3>
+          <div class="value-row__desc">
+            리팩토링도, 마이그레이션도, 0.1초의 응답 시간도.<br>
+            <span class="indent">38개의 오픈소스 기여 — 안 보이는 곳도 정성껏.</span>
+            <span class="indent">매주 사내 기술 공유, 매월 오픈 토크.</span>
+          </div>
+          <div class="value-row__arrow">→</div>
+        </div>
+      </div>
+
+      <div class="indent-block" style="margin-top:24px">
+        <span class="l"><span class="punct">]</span></span>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section id="services">
+      <div class="file-header">
+        <span class="file-header__dot"></span>
+        <span class="file-header__path">src / services / <b>index.ts</b></span>
+        <span class="file-header__lang">typescript</span>
+      </div>
+
+      <div class="indent-block">
+        <span class="l"><span class="kw">export const</span> <span class="var">services</span> <span class="punct">= [</span></span>
+        <span class="l ind-1 cmt-bold">// 4 modules · 무한한 조합</span>
+      </div>
+
+      <div class="services">
+        <a class="service-row" href="#">
+          <div class="service-row__num">// 01</div>
+          <h3 class="service-row__title">
+            B2B SaaS 플랫폼
+            <span class="mono">buildSaaS({ scale: '1M MAU', ship: '8w+' })</span>
+          </h3>
+          <div class="service-row__desc">
+            업무 자동화부터 멀티테넌트 SaaS까지. 출시 후에도 함께 운영합니다.<br>
+            <span class="tag">React</span><span class="tag">Next.js</span><span class="tag">NestJS</span><span class="tag">PostgreSQL</span><span class="tag">AWS</span>
+          </div>
+          <div class="service-row__arrow">→ explore</div>
+        </a>
+        <a class="service-row" href="#">
+          <div class="service-row__num">// 02</div>
+          <h3 class="service-row__title">
+            모바일 · 웹 프로덕트
+            <span class="mono">buildApp({ platform: 'iOS + Android' })</span>
+          </h3>
+          <div class="service-row__desc">
+            네이티브와 크로스플랫폼. 디자인부터 스토어 출시, CS까지 풀사이클.<br>
+            <span class="tag">Swift</span><span class="tag">Kotlin</span><span class="tag">React Native</span><span class="tag">Figma</span>
+          </div>
+          <div class="service-row__arrow">→ explore</div>
+        </a>
+        <a class="service-row" href="#">
+          <div class="service-row__num">// 03</div>
+          <h3 class="service-row__title">
+            AI · 데이터 플랫폼
+            <span class="mono">buildAI({ poc: '2 weeks', deploy: 'on-prem | cloud' })</span>
+          </h3>
+          <div class="service-row__desc">
+            LLM 도입 컨설팅, RAG·검색 엔진, 데이터 파이프라인. 2주 PoC로 ROI 검증.<br>
+            <span class="tag">LangChain</span><span class="tag">Vector DB</span><span class="tag">Airflow</span><span class="tag">dbt</span>
+          </div>
+          <div class="service-row__arrow">→ explore</div>
+        </a>
+        <a class="service-row" href="#">
+          <div class="service-row__num">// 04</div>
+          <h3 class="service-row__title">
+            디자인 시스템 · 브랜드
+            <span class="mono">buildDS({ scope: 'tokens → components → docs' })</span>
+          </h3>
+          <div class="service-row__desc">
+            토큰부터 컴포넌트까지. 디자이너와 개발자가 같은 언어로 일하는 기반.<br>
+            <span class="tag">Figma Tokens</span><span class="tag">Storybook</span><span class="tag">Tailwind</span>
+          </div>
+          <div class="service-row__arrow">→ explore</div>
+        </a>
+      </div>
+
+      <div class="indent-block" style="margin-top:20px">
+        <span class="l"><span class="punct">]</span></span>
+      </div>
+    </section>
+
+    <!-- ============ TEAM ============ -->
+    <section id="team" style="margin-top:80px">
+      <div class="file-header">
+        <span class="file-header__dot"></span>
+        <span class="file-header__path">src / team / <b>people.tsx</b></span>
+        <span class="file-header__lang">tsx</span>
+      </div>
+
+      <div class="team-call">
+        <div class="team-call__head">
+          <span class="kw">function</span> <span class="fn">Deonaeun</span><span class="punct">()</span> <span class="punct">{</span><br>
+          &nbsp;&nbsp;<span class="kw">return</span> <span class="punct">(</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="punct">&lt;</span><span class="fn">Team</span> <span style="color:var(--orange)">size</span><span class="punct">={</span><span class="num">42</span><span class="punct">}&gt;</span> <span class="cmt">// 7명만 미리 인사드릴게요</span><br>
+        </div>
+
+        <div class="team-grid">
+          <div class="person">
+            <div class="person__avatar" style="background:#FFE9DA">
+              <svg viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="20" r="3" fill="#FF752D"/>
+                <path d="M16 38c0-8 7-12 16-12s16 4 16 12" fill="#FF752D"/>
+                <circle cx="32" cy="34" r="13" fill="#FFE9DA" stroke="#1A1A1A" stroke-width="1.5"/>
+                <circle cx="26" cy="33" r="2.5" stroke="#1A1A1A" stroke-width="1.5" fill="white"/>
+                <circle cx="38" cy="33" r="2.5" stroke="#1A1A1A" stroke-width="1.5" fill="white"/>
+                <path d="M28 33h6" stroke="#1A1A1A" stroke-width="1.5"/>
+                <path d="M28 40c2 1.5 6 1.5 8 0" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="person__name">강민지</div>
+            <div class="person__role">CEO · 풀스택</div>
+            <div class="person__line"><span class="arr">→</span>“코드로 사람을 이롭게.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#1A1A1A">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M16 28c0-9 7-15 16-15s16 6 16 15v6H16z" fill="#FF752D"/>
+                <circle cx="32" cy="34" r="14" fill="#FFE9DA"/>
+                <circle cx="26" cy="34" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="34" r="1.8" fill="#1A1A1A"/>
+                <path d="M28 41c2 1.5 6 1.5 8 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="person__name">박서준</div>
+            <div class="person__role">CTO · 인프라</div>
+            <div class="person__line"><span class="arr">→</span>“복잡한 걸 단순하게.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#FAF8F2">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M14 40c0-14 8-22 18-22s18 8 18 22v8h-36z" fill="#1A1A1A"/>
+                <circle cx="32" cy="34" r="13" fill="#FFE9DA"/>
+                <circle cx="26" cy="33" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="33" r="1.8" fill="#1A1A1A"/>
+                <path d="M28 40c2 1 6 1 8 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="44" cy="36" r="2" fill="#FF752D"/>
+              </svg>
+            </div>
+            <div class="person__name">이하늘</div>
+            <div class="person__role">Design Lead</div>
+            <div class="person__line"><span class="arr">→</span>“알아채지 못할 친절함.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#FFE9DA">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M14 28h36l-6-10c-3-4-7-6-12-6s-9 2-12 6z" fill="#FF752D"/>
+                <rect x="12" y="26" width="40" height="4" rx="2" fill="#FF752D"/>
+                <circle cx="32" cy="38" r="13" fill="#FFE9DA" stroke="#1A1A1A" stroke-width="1.5"/>
+                <circle cx="26" cy="38" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="38" r="1.8" fill="#1A1A1A"/>
+                <path d="M28 44c2 1.5 6 1.5 8 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="person__name">정유진</div>
+            <div class="person__role">PM · AI팀</div>
+            <div class="person__line"><span class="arr">→</span>“복잡한 요구를 한 문장으로.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#FAF8F2">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M16 28c0-9 7-14 16-14s16 5 16 14" fill="#1A1A1A"/>
+                <circle cx="32" cy="34" r="14" fill="#FFE9DA" stroke="#1A1A1A" stroke-width="1.5"/>
+                <circle cx="26" cy="33" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="33" r="1.8" fill="#1A1A1A"/>
+                <path d="M22 40c0 6 4 10 10 10s10-4 10-10c-2 2-5 3-10 3s-8-1-10-3z" fill="#1A1A1A"/>
+              </svg>
+            </div>
+            <div class="person__name">최도현</div>
+            <div class="person__role">Backend · Data</div>
+            <div class="person__line"><span class="arr">→</span>“1초를 0.1초로.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#FFE9DA">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M18 22c0-2 4-8 14-8s14 6 14 8v18h-28z" fill="#FF752D"/>
+                <path d="M18 26c2 4 8 6 14 6s12-2 14-6" stroke="#1A1A1A" stroke-width="2"/>
+                <circle cx="32" cy="36" r="13" fill="#FFE9DA" stroke="#1A1A1A" stroke-width="1.5"/>
+                <circle cx="26" cy="36" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="36" r="1.8" fill="#1A1A1A"/>
+                <path d="M30 42h4" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="person__name">윤가람</div>
+            <div class="person__role">Frontend</div>
+            <div class="person__line"><span class="arr">→</span>“모두에게 동등한 UI.”</div>
+          </div>
+
+          <div class="person">
+            <div class="person__avatar" style="background:#1A1A1A">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M14 36a18 18 0 1 1 36 0" stroke="#FFE9DA" stroke-width="3" fill="none"/>
+                <rect x="10" y="34" width="8" height="14" rx="3" fill="#FF752D"/>
+                <rect x="46" y="34" width="8" height="14" rx="3" fill="#FF752D"/>
+                <circle cx="32" cy="34" r="14" fill="#FFE9DA"/>
+                <circle cx="26" cy="33" r="1.8" fill="#1A1A1A"/>
+                <circle cx="38" cy="33" r="1.8" fill="#1A1A1A"/>
+                <path d="M28 40c2 1.5 6 1.5 8 0" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="person__name">한지호</div>
+            <div class="person__role">DevOps · SRE</div>
+            <div class="person__line"><span class="arr">→</span>“잠을 자려고 자동화.”</div>
+          </div>
+
+          <div class="person" style="border-style:dashed; background:transparent">
+            <div class="person__avatar" style="background:repeating-linear-gradient(45deg, #F2EEE0, #F2EEE0 6px, #FAF8F2 6px, #FAF8F2 12px); border:1.5px dashed var(--gray-300)">
+              <svg viewBox="0 0 32 32" fill="none"><path d="M16 6v20M6 16h20" stroke="#FF752D" stroke-width="3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="person__name" style="color:var(--gray-600)">함께할 분</div>
+            <div class="person__role" style="color:var(--orange)">5 positions open</div>
+            <div class="person__line"><span class="arr">→</span>// TODO: your-name.tsx</div>
+          </div>
+        </div>
+
+        <div class="team-call__head" style="margin-top:28px; margin-bottom:0">
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="punct">&lt;/</span><span class="fn">Team</span><span class="punct">&gt;</span><br>
+          &nbsp;&nbsp;<span class="punct">)</span><br>
+          <span class="punct">}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CASES ============ -->
+    <section id="cases" style="margin-top:80px">
+      <div class="file-header">
+        <span class="file-header__dot"></span>
+        <span class="file-header__path">src / portfolio / <b>cases.csv</b></span>
+        <span class="file-header__lang">csv</span>
+      </div>
+
+      <div class="indent-block">
+        <span class="l cmt"># year, project, industry, scale, status</span>
+      </div>
+
+      <div class="cases">
+        <a class="case-row" href="#">
+          <div class="year">2025</div>
+          <div class="name">웰니스 헬스케어 SaaS<span class="indus">// healthcare</span></div>
+          <div class="meta">1.2M MAU · iOS · Web</div>
+          <div class="link">view ↗</div>
+        </a>
+        <a class="case-row" href="#">
+          <div class="year">2025</div>
+          <div class="name">물류 AI 추천 엔진<span class="indus">// logistics</span></div>
+          <div class="meta">RAG · 2주 PoC</div>
+          <div class="link">view ↗</div>
+        </a>
+        <a class="case-row" href="#">
+          <div class="year">2024</div>
+          <div class="name">에듀테크 학습 플랫폼<span class="indus">// edu</span></div>
+          <div class="meta">500K 학생 · 디자인시스템</div>
+          <div class="link">view ↗</div>
+        </a>
+        <a class="case-row" href="#">
+          <div class="year">2024</div>
+          <div class="name">핀테크 결제 인프라<span class="indus">// fintech</span></div>
+          <div class="meta">0.1s p99 · PCI-DSS</div>
+          <div class="link">view ↗</div>
+        </a>
+        <a class="case-row" href="#">
+          <div class="year">2023</div>
+          <div class="name">IoT 스마트팩토리 대시보드<span class="indus">// industry</span></div>
+          <div class="meta">실시간 · 8개 공장</div>
+          <div class="link">view ↗</div>
+        </a>
+        <a class="case-row" href="#" style="opacity:.5">
+          <div class="year">···</div>
+          <div class="name">+ 195건 더 보기</div>
+          <div class="meta"></div>
+          <div class="link">all cases →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section id="contact" class="cta-block">
+      <div class="cta-block__inner">
+        <div class="preface">/* @cta — let's build something better */</div>
+        <h2>다음 한 줄을<br>함께 <em>짓겠습니다</em>.</h2>
+        <p class="sub">
+          RFP, 막연한 아이디어, 또는 그저 안녕.<br>
+          무엇이든 좋습니다. 영업일 24시간 안에 답장 드립니다.
+        </p>
+        <div class="btns">
+          <a class="btn btn--primary" href="mailto:hello@deonaeun.com">$ start-project.sh →</a>
+          <a class="btn btn--ghost" href="#">→ careers / 5 open</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="footer__row">
+        <div>
+          <div class="footer__brand">
+            <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+              <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+              <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+              <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+              <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+              <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+              <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+            <b>deonaeun</b>
+          </div>
+          <p class="footer__copy">더 나은 소프트웨어로 더 나은 세상을 만듭니다. since 2009.</p>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#">SaaS 개발</a></li>
+            <li><a href="#">모바일 앱</a></li>
+            <li><a href="#">AI 플랫폼</a></li>
+            <li><a href="#">디자인 시스템</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Open source</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:hello@deonaeun.com">hello@deonaeun.com</a></li>
+            <li><a href="#">02-000-0000</a></li>
+            <li><a href="#">서울 강남구</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 deonaeun. All rights reserved.</span>
+        <span>last commit · #f7a3b21 · 3h ago</span>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // sticky nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8));
+
+  // populate the line-number gutter (decorative — fills the visible area)
+  const gutter = document.getElementById('gutter');
+  function fillGutter(){
+    const h = window.innerHeight;
+    const linesNeeded = Math.ceil(h / (15 * 1.8));
+    let html = '';
+    for (let i = 1; i <= linesNeeded; i++) {
+      html += `<span class="gutter__num">${String(i).padStart(3,'0')}</span>`;
+    }
+    gutter.innerHTML = html;
+  }
+  fillGutter();
+  window.addEventListener('resize', fillGutter);
+
+  // reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('section').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+</script>
+</body>
+</html>

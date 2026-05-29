@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>파트너 · (주)더나은</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles-shared.css">
+<style>
+  /* ============ PAGE-SPECIFIC ============ */
+  .page-hero h1 em{color:var(--orange); font-style:normal}
+
+  /* anchor / lead section */
+  .lead-section{
+    padding:80px 32px 40px; background:var(--paper);
+    border-bottom:1px solid var(--gray-200);
+  }
+  .lead-section__inner{max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start}
+  .lead-section h2{
+    font-size:clamp(28px, 3.4vw, 40px); font-weight:600; letter-spacing:-.025em;
+    line-height:1.1; margin:16px 0 0; text-wrap:balance;
+  }
+  .lead-section p{
+    color:var(--gray-500); line-height:1.7; font-size:15px; margin:0;
+  }
+  .lead-stats{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+    border-top:1px solid var(--gray-200); border-bottom:1px solid var(--gray-200);
+    margin-top:0;
+  }
+  .lead-stat{
+    padding:24px 24px 24px 0; border-right:1px solid var(--gray-200);
+  }
+  .lead-stat:last-child{border-right:0; padding-right:0}
+  .lead-stat .v{font-size:32px; font-weight:600; letter-spacing:-.02em}
+  .lead-stat .v small{font-size:16px; color:var(--orange); font-weight:500}
+  .lead-stat .k{font-family:var(--mono); font-size:11px; color:var(--gray-500); margin-top:4px}
+
+  /* partners grid */
+  .partners-section{
+    padding:100px 32px; background:var(--paper-2);
+  }
+  .partners-section__inner{max-width:1320px; margin:0 auto}
+  .partners-section__head{margin-bottom:64px; text-align:center}
+  .partners-section__head h2{
+    font-size:clamp(32px, 4.5vw, 56px); font-weight:600; letter-spacing:-.03em;
+    line-height:1.05; margin:24px 0 0; text-wrap:balance;
+  }
+  .partners-section__head h2 em{font-style:normal; color:var(--orange)}
+
+  .partners-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
+  }
+
+  .partner-card{
+    background:#fff; border:1px solid var(--gray-200); border-radius:20px;
+    padding:32px 28px; transition:all .25s; position:relative; overflow:hidden;
+    display:flex; flex-direction:column; gap:20px; min-height:300px;
+  }
+  .partner-card:hover{
+    border-color:var(--ink); transform:translateY(-3px);
+    box-shadow:0 16px 40px -12px rgba(0,0,0,.1);
+  }
+  .partner-card::after{
+    content:""; position:absolute; top:0; right:0; width:60px; height:60px;
+    background:radial-gradient(circle at top right, rgba(255,117,45,.1), transparent 70%);
+    pointer-events:none;
+  }
+
+  .partner-card__num{
+    font-family:var(--mono); font-size:11px; color:var(--gray-400); font-weight:500;
+  }
+
+  .partner-card__logo{
+    height:64px; display:flex; align-items:center;
+    border-bottom:1px dashed var(--gray-200); padding-bottom:20px;
+  }
+  .partner-card__logo svg, .partner-card__logo img{height:36px; width:auto}
+
+  /* stylized text logos (placeholders matching common brand look) */
+  .logo-tile{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font); font-weight:700; letter-spacing:-.02em;
+  }
+  .logo-tile__mark{
+    width:38px; height:38px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-weight:600; font-size:14px;
+    color:#fff; flex-shrink:0;
+  }
+  .logo-tile__text{font-size:20px}
+  .logo-tile__text small{
+    display:block; font-family:var(--mono); font-weight:400; font-size:10px;
+    color:var(--gray-500); letter-spacing:.05em; margin-top:2px;
+  }
+
+  .partner-card__name{
+    font-size:22px; font-weight:600; letter-spacing:-.02em; margin:0; line-height:1.2;
+  }
+  .partner-card__type{
+    font-family:var(--mono); font-size:11px; color:var(--orange);
+    text-transform:uppercase; letter-spacing:.06em; margin-top:-12px;
+  }
+  .partner-card__desc{
+    color:var(--gray-500); font-size:14px; line-height:1.6; margin:0; flex:1;
+  }
+  .partner-card__since{
+    font-family:var(--mono); font-size:11px; color:var(--gray-400);
+    border-top:1px dashed var(--gray-200); padding-top:14px; margin-top:auto;
+    display:flex; justify-content:space-between;
+  }
+  .partner-card__since b{color:var(--gray-700); font-weight:500}
+
+  /* connection note (dark) */
+  .connection-note{
+    padding:100px 32px; background:var(--ink); color:#fff;
+    position:relative; overflow:hidden;
+  }
+  .connection-note::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(circle at 50% 50%, rgba(255,117,45,.12), transparent 50%);
+  }
+  .connection-note__inner{
+    max-width:780px; margin:0 auto; text-align:center; position:relative;
+  }
+  .connection-note h2{
+    font-size:clamp(28px, 3.6vw, 44px); font-weight:600; letter-spacing:-.025em;
+    line-height:1.15; margin:24px 0; text-wrap:balance;
+  }
+  .connection-note h2 em{font-style:normal; color:var(--orange)}
+  .connection-note p{
+    color:#bdbdc4; line-height:1.7; font-size:16px; margin:0 auto 36px; max-width:50ch;
+  }
+  .connection-note__btns{display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center}
+  .connection-note .btn--ghost{color:#fff; border-color:rgba(255,255,255,.25)}
+  .connection-note .btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.05)}
+
+  /* mobile */
+  @media (max-width:980px){
+    .partners-grid{grid-template-columns:1fr 1fr}
+    .lead-section__inner{grid-template-columns:1fr; gap:32px}
+  }
+  @media (max-width:640px){
+    .partners-grid{grid-template-columns:1fr}
+    .lead-stats{grid-template-columns:1fr 1fr}
+    .lead-stat:nth-child(2n){border-right:0}
+  }
+</style>
+</head>
+<body data-screen-label="Partners">
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="index.html">
+      <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+        <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <span>deonaeun</span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html">더나은</a>
+      <a href="services.html">서비스</a>
+      <a href="partners.html" class="active">파트너</a>
+      <a href="location.html">오시는길</a>
+    </div>
+    <div class="nav__cta">
+      <a class="btn btn--primary" href="mailto:contact@deonaeun.com" style="height:40px; padding:0 18px; font-size:13px">Contact →</a>
+      <button class="nav__burger" id="navBurger" aria-label="메뉴" aria-expanded="false" aria-controls="navSheet">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ SIDE NAV ============ -->
+<aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
+  <span class="side-nav__track"></span>
+  <button class="side-nav__dot active" data-target="hero"><span class="side-nav__label"><small>01</small>파트너</span></button>
+  <button class="side-nav__dot" data-target="lead"><span class="side-nav__label"><small>02</small>네트워크</span></button>
+  <button class="side-nav__dot" data-target="partners"><span class="side-nav__label"><small>03</small>파트너사</span></button>
+  <button class="side-nav__dot" data-target="contact"><span class="side-nav__label"><small>04</small>제휴</span></button>
+</aside>
+
+<!-- ============ MOBILE NAV SHEET ============ -->
+<div class="nav__sheet" id="navSheet" aria-hidden="true">
+  <a href="index.html">더나은</a>
+  <a href="services.html">서비스</a>
+  <a href="partners.html" class="active">파트너</a>
+  <a href="location.html">오시는길</a>
+  <a href="mailto:contact@deonaeun.com">문의</a>
+  <div class="nav__sheet__contact">
+    // contact<br>
+    <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a><br>
+    TEL. <a href="tel:0437507007">043.750.7007</a><br>
+    <b>충북 음성 · 경동스마트밸리</b>
+  </div>
+</div>
+
+<!-- ============ HERO with abstract SVG (overlapping orbits) ============ -->
+<section class="page-hero snap" id="hero">
+  <div class="page-hero__inner">
+    <div class="page-hero__left">
+      <div class="page-hero__crumb">
+        <a href="index.html">deonaeun</a> <span>/</span> <b>partners</b>
+      </div>
+      <div class="eyebrow" style="margin-bottom:20px">// partners · 파트너십</div>
+      <h1>
+        혼자 갈 수 없는 길,<br><em>함께</em> 가고 있습니다.
+      </h1>
+      <p class="page-hero__lede">
+        국가기관부터 정보시스템 전문기업까지 — 신뢰할 수 있는 파트너들과 함께
+        공공 정보화 사업을 짓고 운영합니다. 더나은은 그 점들을 잇는 연결점입니다.
+      </p>
+    </div>
+
+    <div class="page-hero__visual" aria-hidden="true">
+      <svg viewBox="0 0 520 520">
+        <!-- rotating outer orbit (visual interest) -->
+        <g style="transform-origin:260px 260px">
+          <circle cx="260" cy="260" r="230" fill="none" stroke="#FF752D" stroke-width="1" opacity="0.15" stroke-dasharray="2 8"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="60s" repeatCount="indefinite"/>
+        </g>
+        <!-- six outer partner orbits -->
+        <g fill="none" stroke-width="2">
+          <circle cx="180" cy="180" r="100" stroke="#FF752D" opacity="0.85"/>
+          <circle cx="320" cy="120" r="80" stroke="#424242" opacity="0.4"/>
+          <circle cx="400" cy="280" r="95" stroke="#FF752D" opacity="0.7"/>
+          <circle cx="120" cy="340" r="78" stroke="#424242" opacity="0.4"/>
+          <circle cx="240" cy="420" r="88" stroke="#FF752D" opacity="0.8"/>
+          <circle cx="420" cy="420" r="70" stroke="#424242" opacity="0.4"/>
+        </g>
+        <!-- center "us" node with pulse -->
+        <circle cx="260" cy="260" r="42" fill="#FF752D" opacity="0.18">
+          <animate attributeName="r" values="32;58;32" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.25;0;0.25" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="260" cy="260" r="34" fill="#FF752D"/>
+        <text x="260" y="258" font-family="Pretendard, Pretendard Variable, sans-serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">더나은</text>
+        <text x="260" y="272" font-family="JetBrains Mono, monospace" font-size="8" font-weight="500" fill="#FFE9DA" text-anchor="middle" opacity="0.85">since 2018</text>
+        <!-- dashed connector lines from center (with subtle pulse) -->
+        <g stroke="#FF752D" stroke-width="1.4" opacity="0.7" stroke-dasharray="5 5" fill="none">
+          <line x1="260" y1="260" x2="180" y2="180"/>
+          <line x1="260" y1="260" x2="320" y2="120"/>
+          <line x1="260" y1="260" x2="400" y2="280"/>
+          <line x1="260" y1="260" x2="120" y2="340"/>
+          <line x1="260" y1="260" x2="240" y2="420"/>
+          <line x1="260" y1="260" x2="420" y2="420"/>
+          <animate attributeName="stroke-dashoffset" values="0;-20" dur="3s" repeatCount="indefinite"/>
+        </g>
+        <!-- partner dots (with staggered pulse) -->
+        <circle cx="180" cy="180" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="120" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0.4s" repeatCount="indefinite"/></circle>
+        <circle cx="400" cy="280" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0.8s" repeatCount="indefinite"/></circle>
+        <circle cx="120" cy="340" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="420" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="420" cy="420" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="2s" repeatCount="indefinite"/></circle>
+        <!-- partner labels (larger, bolder, with bg pill) -->
+        <g font-family="Pretendard, Pretendard Variable, sans-serif" font-size="13" font-weight="600" fill="#0E0E10">
+          <rect x="148" y="148" width="64" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="180" y="164" text-anchor="middle">KEIS</text>
+          <rect x="286" y="88" width="68" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="320" y="104" text-anchor="middle">가온아이</text>
+          <rect x="360" y="248" width="80" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="400" y="264" text-anchor="middle">티지소프트</text>
+          <rect x="82" y="308" width="76" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="120" y="324" text-anchor="middle">세찬아이앤씨</text>
+          <rect x="204" y="452" width="72" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="240" y="468" text-anchor="middle">vitasoft</text>
+          <rect x="388" y="452" width="64" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
+          <text x="420" y="468" text-anchor="middle">RIAN</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="lead-section snap" id="lead">
+  <div class="lead-section__inner">
+    <div>
+      <div class="eyebrow">// network</div>
+      <h2>한 회사가 모두를<br>만들 수는 없습니다.</h2>
+      <p style="margin-top:24px">우리는 작지만 정확한 회사가 되겠다고 정했습니다. 그래서 잘하는 파트너와 함께, 각자의 강점이 한 시스템 위에서 만나도록 일합니다. 책임은 함께, 기여는 명확하게.</p>
+    </div>
+    <div>
+      <div class="lead-stats">
+        <div class="lead-stat">
+          <div class="v">6<small>+</small></div>
+          <div class="k">// trusted partners</div>
+        </div>
+        <div class="lead-stat">
+          <div class="v">2018<small>~</small></div>
+          <div class="k">// partnerships since</div>
+        </div>
+        <div class="lead-stat">
+          <div class="v">공공<small>중심</small></div>
+          <div class="k">// public sector focus</div>
+        </div>
+      </div>
+      <p style="margin-top:24px; font-family:var(--mono); font-size:13px; color:var(--gray-500); line-height:1.7">
+        // 발주처 · 협력사 · 솔루션 파트너의<br>
+        // 세 갈래로 네트워크를 운영합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="partners-section snap" id="partners">
+  <div class="partners-section__inner">
+    <div class="partners-section__head">
+      <div class="eyebrow" style="justify-content:center; display:flex">// trusted by · working with</div>
+      <h2>더나은이 <em>함께</em> 하고 있습니다.</h2>
+    </div>
+
+    <div class="partners-grid">
+
+      <!-- 한국고용정보원 -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_01 · 발주처</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#1F4FA8">KEIS</div>
+            <div class="logo-tile__text">
+              한국고용정보원
+              <small>Korea Employment Information Service</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">한국고용정보원</h3>
+        <div class="partner-card__type">국가 발주기관</div>
+        <p class="partner-card__desc">대한민국 국가고용정보기관. 워크넷·고용안정정보망 등 주요 국가 고용서비스의 기획·운영을 맡고 있는 기관입니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>발주처</b>
+        </div>
+      </div>
+
+      <!-- KI 가온아이 -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_02 · 솔루션</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#1976D2; font-family:var(--font); font-size:18px; font-weight:800">KI</div>
+            <div class="logo-tile__text">
+              가온아이
+              <small>GROUPWARE &amp; COLLABORATION</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">(주) 가온아이</h3>
+        <div class="partner-card__type">솔루션 파트너</div>
+        <p class="partner-card__desc">그룹웨어 &amp; 협업솔루션 No.1 전문기업. 기업의 일하는 방식을 단단하게 받치는 솔루션을 제공합니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>솔루션</b>
+        </div>
+      </div>
+
+      <!-- TG (티지소프트) -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_03 · 협력사</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#0EBFA0; font-family:var(--font); font-weight:800">TG</div>
+            <div class="logo-tile__text">
+              티지소프트
+              <small>SOFTWARE · R&amp;D</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">티지소프트</h3>
+        <div class="partner-card__type">개발 협력</div>
+        <p class="partner-card__desc">소프트웨어 개발·공급, 자문 및 학술 연구 용역. 기술 자문이 필요한 영역에서 함께 손을 잡습니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>협력사</b>
+        </div>
+      </div>
+
+      <!-- 세찬아이앤씨 -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_04 · 협력사</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#0F62A8; font-size:11px">SC</div>
+            <div class="logo-tile__text">
+              세찬아이앤씨
+              <small>SECHAN I&amp;C CORP.</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">(주) 세찬아이앤씨</h3>
+        <div class="partner-card__type">IT 컨설팅</div>
+        <p class="partner-card__desc">IT 컨설팅과 정보시스템 소프트웨어 개발. 컨설팅 단계부터 함께 들어가는 사업의 든든한 동반자입니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>협력사</b>
+        </div>
+      </div>
+
+      <!-- vitasoft -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_05 · SI</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#5C9C2E; font-family:var(--font); font-weight:800; font-size:13px">vt</div>
+            <div class="logo-tile__text">
+              vitasoft
+              <small>STRATEGY · SI</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">비타소프트</h3>
+        <div class="partner-card__type">SI · 컨설팅</div>
+        <p class="partner-card__desc">정보화 전략 컨설팅과 시스템 통합 사업. 큰 그림과 실행을 모두 챙기는 파트너입니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>협력사</b>
+        </div>
+      </div>
+
+      <!-- RIAN -->
+      <div class="partner-card">
+        <div class="partner-card__num">// partner_06 · 전자정부</div>
+        <div class="partner-card__logo">
+          <div class="logo-tile">
+            <div class="logo-tile__mark" style="background:#D9442D; font-family:var(--font); font-weight:800; font-size:13px">RA</div>
+            <div class="logo-tile__text">
+              RIAN
+              <small>SMART e-GOVERNMENT</small>
+            </div>
+          </div>
+        </div>
+        <h3 class="partner-card__name">(주) 리안커뮤니케이션즈</h3>
+        <div class="partner-card__type">전자정부 전문</div>
+        <p class="partner-card__desc">지능형 전자정부시스템 개발 전문회사. 행정 시스템의 다음 세대를 함께 설계합니다.</p>
+        <div class="partner-card__since">
+          <span>// type</span><b>협력사</b>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="connection-note snap" id="contact">
+  <div class="connection-note__inner">
+    <div class="eyebrow" style="color:var(--orange); justify-content:center; display:flex">// become a partner</div>
+    <h2>또 하나의 노드가<br><em>되어주시겠어요?</em></h2>
+    <p>
+      공공 정보화 사업의 협력, 솔루션 제휴, 기술 자문 — 새로운 파트너십을 환영합니다.<br>
+      가벼운 인사부터 정식 협력 제안까지, 무엇이든 좋습니다.
+    </p>
+    <div class="connection-note__btns">
+      <a class="btn btn--orange" href="mailto:contact@deonaeun.com">✉ 파트너십 문의 <span class="arrow">→</span></a>
+      <a class="btn btn--ghost" href="services.html">서비스 영역 보기</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="row">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+          <path d="M142 71.5H3" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M142 42.5V71.5" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M117.5 42.5H142" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M90 34.5H104" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M54 57H79" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M54 34.5V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M90 35V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <span>deonaeun</span>
+      </div>
+      <p style="margin:0; max-width:32ch; line-height:1.6">더 나은 소프트웨어로 더 나은 세상을 만듭니다.<br>since 2018.</p>
+    </div>
+    <div>
+      <h5>사이트</h5>
+      <ul>
+        <li><a href="index.html">더나은</a></li>
+        <li><a href="services.html">서비스</a></li>
+        <li><a href="partners.html">파트너</a></li>
+        <li><a href="location.html">오시는길</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>사업영역</h5>
+      <ul>
+        <li><a href="services.html">공공 SI · 시스템 구축</a></li>
+        <li><a href="services.html">시스템 운영 (SM)</a></li>
+        <li><a href="services.html">웹접근성 인증</a></li>
+        <li><a href="services.html">IT 컨설팅</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a></li>
+        <li>TEL. <a href="tel:0437507007">043.750.7007</a></li>
+        <li>FAX. 043.901.4220</li>
+        <li><a href="https://www.deonaeun.com" target="_blank" rel="noopener">www.deonaeun.com</a></li>
+        <li style="font-size:13px; line-height:1.6; padding-top:6px"><a href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener">충청북도 음성군 맹동면<br>용두 3길 5, 206호<br><span style="color:#FF752D">경동스마트밸리 ↗</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2026 <span class="nowrap-name">(주)더나은</span> · deonaeun. All rights reserved.</span>
+    <span>// crafted in 충북 음성</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8));
+
+  // mobile burger
+  const burger = document.getElementById('navBurger');
+  const sheet = document.getElementById('navSheet');
+  function setSheet(open){
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    sheet.classList.toggle('is-open', open);
+    sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  burger.addEventListener('click', () => setSheet(!sheet.classList.contains('is-open')));
+  sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
+
+  // ============ SIDE NAV ============
+  const sideNav = document.getElementById('sideNav');
+  if (sideNav) {
+    const dots = sideNav.querySelectorAll('.side-nav__dot');
+    const sectionIds = ['hero','lead','partners','contact'];
+    const darkSections = new Set(['contact']);
+    dots.forEach(d => d.addEventListener('click', () => {
+      const el = document.getElementById(d.dataset.target);
+      if (el) window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
+    }));
+    function updateActive(){
+      const probe = window.scrollY + window.innerHeight * 0.35;
+      let activeId = sectionIds[0];
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop - 60 <= probe) activeId = id;
+      });
+      const idx = sectionIds.indexOf(activeId);
+      dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+      sideNav.classList.toggle('is-dark', darkSections.has(activeId));
+    }
+    window.addEventListener('scroll', updateActive, { passive:true });
+    window.addEventListener('resize', updateActive);
+    updateActive();
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.lead-section, .partners-section, .connection-note').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+</script>
+</body>
+</html>

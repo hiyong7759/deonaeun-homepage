@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>더나은 — IDE 컨셉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0f12;
+    --bg-2:#14171c;
+    --bg-3:#1a1e25;
+    --panel:#0a0c10;
+    --line:#23272f;
+    --line-soft:#1a1e25;
+    --text:#e6e8ec;
+    --text-2:#a8acb3;
+    --text-3:#6b7079;
+    --orange:#FF752D;
+    --orange-soft:#FFB689;
+    --green:#7BD88F;
+    --blue:#7EB1FF;
+    --purple:#C6A0F6;
+    --pink:#F5A3C7;
+    --yellow:#F0DC8B;
+    --red:#F47174;
+    --font:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  ::selection{background:rgba(255,117,45,.35);color:#fff}
+
+  /* ============ TITLE BAR ============ */
+  .titlebar{
+    height:36px; background:var(--bg-2); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; padding:0 12px; gap:12px;
+    font-family:var(--mono); font-size:11px; color:var(--text-3);
+    position:sticky; top:0; z-index:50;
+  }
+  .traffic{display:flex; gap:7px;}
+  .traffic span{width:12px;height:12px;border-radius:50%;background:#3a3f48;display:block}
+  .traffic span:nth-child(1){background:#ff5f57}
+  .traffic span:nth-child(2){background:#febc2e}
+  .traffic span:nth-child(3){background:#28c840}
+  .titlebar__path{flex:1; text-align:center; letter-spacing:.02em}
+  .titlebar__path b{color:var(--orange); font-weight:500}
+  .titlebar__right{display:flex; gap:14px; align-items:center}
+  .titlebar__right .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+
+  /* ============ LAYOUT ============ */
+  .ide{display:grid; grid-template-columns:48px 240px 1fr; min-height:calc(100vh - 36px)}
+
+  /* Activity bar */
+  .actbar{background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; align-items:center; padding:12px 0; gap:6px;
+    position:sticky; top:36px; height:calc(100vh - 36px)}
+  .actbar button{
+    width:36px; height:36px; border-radius:8px; border:0; background:transparent;
+    color:var(--text-3); display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:all .15s;
+  }
+  .actbar button:hover{color:var(--text); background:rgba(255,255,255,.04)}
+  .actbar button.active{color:var(--orange); background:rgba(255,117,45,.08); box-shadow:inset 2px 0 0 var(--orange)}
+  .actbar button svg{width:20px; height:20px}
+  .actbar__spacer{flex:1}
+
+  /* Sidebar - file explorer */
+  .sidebar{background:var(--panel); border-right:1px solid var(--line); padding:14px 0;
+    position:sticky; top:36px; height:calc(100vh - 36px); overflow-y:auto}
+  .sidebar__title{
+    font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--text-3); padding:0 16px 10px;
+  }
+  .tree{font-family:var(--mono); font-size:12.5px}
+  .tree__group{margin-bottom:8px}
+  .tree__folder, .tree__file{
+    display:flex; align-items:center; gap:6px; padding:3px 16px 3px;
+    color:var(--text-2); cursor:pointer; line-height:1.7;
+  }
+  .tree__folder{color:var(--text)}
+  .tree__file:hover, .tree__folder:hover{background:rgba(255,255,255,.03); color:var(--text)}
+  .tree__file.active{background:rgba(255,117,45,.08); color:var(--orange)}
+  .tree__chev{width:10px; color:var(--text-3); font-size:9px}
+  .tree__indent{padding-left:30px}
+  .tree__icon{width:14px; color:var(--text-3); flex-shrink:0}
+  .tree__dot{color:var(--orange); margin-left:auto; font-size:8px}
+
+  /* ============ EDITOR ============ */
+  .editor{background:var(--bg); min-width:0}
+
+  .tabs{
+    display:flex; background:var(--bg-2); border-bottom:1px solid var(--line);
+    height:36px; align-items:flex-end;
+  }
+  .tab{
+    display:flex; align-items:center; gap:8px; padding:0 14px; height:36px;
+    font-family:var(--mono); font-size:12px; color:var(--text-3);
+    border-right:1px solid var(--line); cursor:pointer; position:relative;
+  }
+  .tab.active{background:var(--bg); color:var(--text)}
+  .tab.active::before{content:""; position:absolute; top:0; left:0; right:0; height:1.5px; background:var(--orange)}
+  .tab__dot{width:7px;height:7px;border-radius:50%; background:var(--text-3)}
+  .tab.active .tab__dot{background:var(--orange)}
+
+  /* ============ HERO ============ */
+  .hero{padding:80px 60px 60px; max-width:1180px; position:relative}
+  .hero > *:not(.hero-preview){max-width:720px}
+  @media (max-width:1100px){ .hero > *:not(.hero-preview){max-width:none} }
+  .hero__breadcrumb{
+    font-family:var(--mono); font-size:11px; color:var(--text-3); margin-bottom:32px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .hero__breadcrumb b{color:var(--orange); font-weight:500}
+
+  .code-block{font-family:var(--mono); font-size:14px; line-height:1.7; color:var(--text-2)}
+  .lnum{display:inline-block; width:32px; text-align:right; color:var(--text-3); user-select:none; margin-right:18px; opacity:.6}
+  .kw{color:var(--pink)} /* keyword: const, function, return */
+  .fn{color:var(--blue)} /* function name */
+  .str{color:var(--green)} /* string */
+  .num{color:var(--orange-soft)} /* number */
+  .cmt{color:#5e6473; font-style:italic} /* comment */
+  .var{color:var(--yellow)} /* variable */
+  .punct{color:var(--text-3)}
+  .prop{color:var(--purple)}
+
+  .hero__h1{
+    font-family:var(--font); font-size:clamp(48px, 6.5vw, 88px); font-weight:700;
+    letter-spacing:-.035em; line-height:.98; color:var(--text); margin:36px 0 28px;
+    text-wrap:balance;
+  }
+  .hero__h1 .accent{color:var(--orange); position:relative; display:inline-block}
+  .hero__h1 .accent::after{
+    content:""; position:absolute; left:0; right:0; bottom:6px; height:14px;
+    background:rgba(255,117,45,.18); z-index:-1;
+  }
+
+  .hero__caret::after{
+    content:""; display:inline-block; width:.5em; height:1em; background:var(--orange);
+    margin-left:.1em; vertical-align:-.12em; animation:blink 1s steps(2) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  .hero__lede{
+    font-size:18px; line-height:1.65; color:var(--text-2); max-width:60ch;
+    margin:0 0 40px;
+  }
+  .hero__cta{display:flex; gap:12px; align-items:center}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:13px 22px; border-radius:8px;
+    font-family:var(--mono); font-size:13px; font-weight:500; border:1px solid transparent;
+    transition:all .15s; cursor:pointer; text-decoration:none;
+  }
+  .btn--primary{background:var(--orange); color:#fff}
+  .btn--primary:hover{background:#E5601A; transform:translateY(-1px)}
+  .btn--ghost{background:transparent; color:var(--text); border-color:var(--line)}
+  .btn--ghost:hover{border-color:var(--text-3); background:rgba(255,255,255,.03)}
+  .btn .kbd{
+    font-family:var(--mono); font-size:11px; padding:2px 6px; border-radius:4px;
+    background:rgba(0,0,0,.2); color:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.1);
+  }
+
+  /* hero code preview floating right */
+  .hero-preview{
+    position:absolute; right:60px; top:120px; width:380px;
+    background:var(--bg-2); border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.4);
+    font-family:var(--mono); font-size:12.5px; line-height:1.75;
+  }
+  .hero-preview__head{padding:8px 12px; border-bottom:1px solid var(--line); background:var(--bg-3); display:flex; align-items:center; gap:8px}
+  .hero-preview__head .traffic span{width:9px;height:9px}
+  .hero-preview__head em{margin-left:auto; font-style:normal; font-size:11px; color:var(--text-3)}
+  .hero-preview__body{padding:14px 8px 14px 0; color:var(--text-2)}
+  @media (max-width:1100px){ .hero-preview{display:none} }
+
+  /* terminal panel below hero */
+  .terminal{
+    margin:24px 60px 0; background:var(--bg-2); border:1px solid var(--line); border-radius:10px 10px 0 0;
+    overflow:hidden;
+  }
+  .terminal__head{display:flex; height:32px; background:var(--bg-3); border-bottom:1px solid var(--line); align-items:center; padding:0 12px; gap:14px}
+  .terminal__head__tabs{display:flex; gap:2px; font-family:var(--mono); font-size:11px}
+  .terminal__head__tabs span{padding:5px 10px; border-radius:4px 4px 0 0; color:var(--text-3)}
+  .terminal__head__tabs span.active{background:var(--bg); color:var(--text)}
+  .terminal__head__icon{margin-left:auto; display:flex; gap:8px; color:var(--text-3)}
+  .terminal__body{padding:14px 18px; font-family:var(--mono); font-size:12.5px; line-height:1.8; color:var(--text-2)}
+  .term-line{display:block}
+  .term-prompt{color:var(--green); margin-right:8px}
+  .term-arrow{color:var(--orange); margin-right:8px}
+
+  /* ============ SECTIONS ============ */
+  section.editor-section{padding:80px 60px; border-top:1px solid var(--line); position:relative}
+  .section-header{display:flex; align-items:baseline; gap:24px; margin-bottom:60px}
+  .section-header__num{
+    font-family:var(--mono); font-size:13px; color:var(--orange);
+    padding:4px 8px; border:1px solid rgba(255,117,45,.3); border-radius:4px;
+    background:rgba(255,117,45,.05);
+  }
+  .section-header__title{
+    font-family:var(--font); font-size:clamp(28px,4vw,48px); font-weight:600;
+    letter-spacing:-.025em; line-height:1.1; color:var(--text); margin:0; flex:1;
+  }
+  .section-header__title .cmt{font-style:italic; font-weight:400; font-family:var(--mono); font-size:14px}
+
+  /* about: import statements */
+  .imports-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:60px; align-items:start}
+  .import-list{font-family:var(--mono); font-size:14px; line-height:2.1}
+  .import-list .l-num{color:var(--text-3); margin-right:18px; opacity:.5}
+  .about-side{padding:24px; background:var(--bg-2); border:1px solid var(--line); border-radius:12px}
+  .about-side h4{font-family:var(--mono); font-size:11px; color:var(--text-3); margin:0 0 16px; text-transform:uppercase; letter-spacing:.1em}
+  .stat-row{display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line-soft); font-family:var(--mono); font-size:13px}
+  .stat-row:last-child{border-bottom:0}
+  .stat-row .v{color:var(--orange); font-weight:500; font-size:18px}
+
+  /* services as code blocks */
+  .services-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:24px}
+  .service-card{
+    background:var(--bg-2); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    transition:all .25s; position:relative;
+  }
+  .service-card:hover{border-color:var(--orange); transform:translateY(-3px)}
+  .service-card__head{padding:14px 18px; background:var(--bg-3); border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px}
+  .service-card__head .traffic span{width:10px;height:10px}
+  .service-card__head em{margin-left:auto; font-style:normal; font-family:var(--mono); font-size:11px; color:var(--text-3)}
+  .service-card__body{padding:24px; font-family:var(--mono); font-size:13.5px; line-height:1.85; color:var(--text-2); min-height:200px}
+  .service-card__foot{
+    padding:16px 24px; border-top:1px solid var(--line-soft); display:flex; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:12px; color:var(--text-3);
+  }
+  .service-card__foot .run{color:var(--green)}
+
+  /* team as commits */
+  .commits{font-family:var(--mono); font-size:13px}
+  .commit{
+    display:grid; grid-template-columns:auto 240px 1fr auto auto; gap:20px; align-items:center;
+    padding:18px 0; border-bottom:1px solid var(--line-soft); cursor:pointer; transition:background .15s;
+  }
+  .commit:hover{background:rgba(255,255,255,.02)}
+  .commit__avatar{
+    width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:600; color:#fff; font-family:var(--font);
+  }
+  .commit__name{color:var(--text); font-weight:500}
+  .commit__role{color:var(--text-3); font-size:12px}
+  .commit__msg{color:var(--text-2)}
+  .commit__msg .br{color:var(--purple)}
+  .commit__hash{color:var(--text-3); font-size:12px}
+  .commit__time{color:var(--text-3); font-size:12px; text-align:right}
+
+  /* CTA */
+  .cta-block{
+    padding:80px 60px; text-align:center; background:linear-gradient(180deg,transparent,rgba(255,117,45,.04));
+    border-top:1px solid var(--line);
+  }
+  .cta-block h2{font-family:var(--font); font-size:clamp(36px,5vw,64px); font-weight:600; letter-spacing:-.03em; line-height:1.05; max-width:18ch; margin:0 auto 24px}
+  .cta-block h2 b{color:var(--orange); font-weight:600}
+  .cta-block .sub{color:var(--text-2); font-size:16px; margin:0 auto 36px; max-width:50ch}
+  .cta-block__btns{display:inline-flex; gap:12px}
+
+  /* status bar */
+  .statusbar{
+    height:28px; background:var(--orange); color:#1a0d04; display:flex; align-items:center;
+    padding:0 16px; gap:16px; font-family:var(--mono); font-size:11px; font-weight:500;
+    position:sticky; bottom:0; z-index:40;
+  }
+  .statusbar > span{display:inline-flex; align-items:center; gap:6px}
+  .statusbar .br{padding-right:16px; border-right:1px solid rgba(0,0,0,.2)}
+  .statusbar__right{margin-left:auto; display:inline-flex; gap:16px}
+
+  /* footer */
+  footer{padding:48px 60px 32px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12px; color:var(--text-3)}
+  footer .row{display:grid; grid-template-columns:repeat(4,1fr); gap:40px; margin-bottom:32px}
+  footer h5{color:var(--text); font-size:11px; text-transform:uppercase; letter-spacing:.1em; margin:0 0 14px}
+  footer ul{list-style:none; padding:0; margin:0; line-height:2}
+  footer a{color:var(--text-2); text-decoration:none}
+  footer a:hover{color:var(--orange)}
+  footer .copy{padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px}
+
+  /* mobile collapse */
+  @media (max-width:900px){
+    .ide{grid-template-columns:1fr}
+    .actbar, .sidebar{display:none}
+    .hero, section.editor-section, .cta-block, footer, .terminal{padding-left:24px; padding-right:24px; margin-left:0; margin-right:0}
+    .imports-grid, .services-grid{grid-template-columns:1fr}
+    .commit{grid-template-columns:auto 1fr; gap:14px}
+    .commit__hash, .commit__time, .commit__msg{display:none}
+  }
+
+  /* tweaks panel container override */
+  body.is-light{background:#FAF9F6;}
+
+  /* reveal */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .8s ease, transform .8s ease}
+  .reveal.in{opacity:1; transform:none}
+
+  /* highlight cursor on typing */
+  .typing-cursor::after{content:""; display:inline-block; width:.55em; height:1.05em; background:var(--orange); vertical-align:-.18em; margin-left:.05em; animation:blink 1s steps(2) infinite}
+</style>
+</head>
+<body data-screen-label="A · IDE">
+
+<!-- ============ TITLEBAR ============ -->
+<div class="titlebar">
+  <div class="traffic"><span></span><span></span><span></span></div>
+  <div class="titlebar__path">deonaeun / <b>better-world.tsx</b> — main</div>
+  <div class="titlebar__right">
+    <span class="dot"></span>
+    <span>build: passing</span>
+  </div>
+</div>
+
+<div class="ide">
+
+  <!-- ============ ACTIVITY BAR ============ -->
+  <aside class="actbar">
+    <button class="active" title="Explorer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h7l2 3h9v13H3z"/></svg></button>
+    <button title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></button>
+    <button title="Git"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M6 8.5v7M8.5 6h7M8.5 18h7"/></svg></button>
+    <button title="People"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="17" cy="6" r="2.5"/><path d="M22 17c0-2.5-2-4-4.5-4"/></svg></button>
+    <button title="Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.2L12 16.8l-5.5 2.6 1-6.2L3 8.9 9 8z"/></svg></button>
+    <div class="actbar__spacer"></div>
+    <button title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </aside>
+
+  <!-- ============ SIDEBAR / EXPLORER ============ -->
+  <aside class="sidebar">
+    <div class="sidebar__title">EXPLORER · DEONAEUN</div>
+    <div class="tree">
+      <div class="tree__group">
+        <div class="tree__folder"><span class="tree__chev">▾</span>📁 src</div>
+        <div class="tree__indent">
+          <div class="tree__file active">📄 hero.tsx<span class="tree__dot">●</span></div>
+          <div class="tree__file">📄 about.tsx</div>
+          <div class="tree__file">📄 services.tsx</div>
+          <div class="tree__file">📄 team.tsx</div>
+          <div class="tree__file">📄 contact.tsx</div>
+        </div>
+      </div>
+      <div class="tree__group">
+        <div class="tree__folder"><span class="tree__chev">▾</span>📁 values</div>
+        <div class="tree__indent">
+          <div class="tree__file">⚙ trust.json</div>
+          <div class="tree__file">⚙ craft.json</div>
+          <div class="tree__file">⚙ openness.json</div>
+        </div>
+      </div>
+      <div class="tree__group">
+        <div class="tree__folder"><span class="tree__chev">▾</span>📁 portfolio</div>
+        <div class="tree__indent">
+          <div class="tree__file">📄 2024-fintech.md</div>
+          <div class="tree__file">📄 2024-edu.md</div>
+          <div class="tree__file">📄 2025-iot.md</div>
+        </div>
+      </div>
+      <div class="tree__group">
+        <div class="tree__folder"><span class="tree__chev">▸</span>📁 public</div>
+      </div>
+      <div class="tree__group">
+        <div class="tree__file">📄 README.md</div>
+        <div class="tree__file">📄 package.json</div>
+        <div class="tree__file">📄 .env.example</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ EDITOR ============ -->
+  <main class="editor">
+
+    <!-- tabs -->
+    <div class="tabs">
+      <div class="tab active"><span class="tab__dot"></span> hero.tsx</div>
+      <div class="tab"><span class="tab__dot"></span> about.tsx</div>
+      <div class="tab"><span class="tab__dot"></span> services.tsx</div>
+      <div class="tab"><span class="tab__dot"></span> team.tsx</div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__breadcrumb">
+        <span>src</span> <span>/</span> <span>pages</span> <span>/</span> <b>hero.tsx</b>
+      </div>
+
+      <div class="code-block">
+        <span class="lnum">01</span><span class="cmt">// 더 나은 세상을 위한 코드 한 줄.</span><br>
+        <span class="lnum">02</span><span class="cmt">// We write code that makes the world a little better.</span><br>
+        <span class="lnum">03</span><br>
+        <span class="lnum">04</span><span class="kw">export const</span> <span class="var">mission</span> <span class="punct">=</span> <span class="punct">{</span><br>
+      </div>
+
+      <h1 class="hero__h1">
+        <span class="cmt mono" style="font-size:14px; display:block; margin-bottom:8px">/** @mission */</span>
+        더 나은 세상을 위해,<br>
+        <span class="accent">더나은</span>이 함께합니다<span class="hero__caret"></span>
+      </h1>
+
+      <p class="hero__lede">
+        소프트웨어로 사람과 사람을, 문제와 해결을, 오늘과 더 나은 내일을 잇습니다.
+        15년 동안 200+ 프로젝트를 통해 쌓아온 신뢰와 기술로, 우리는 매일 코드를 한 줄씩 씁니다.
+      </p>
+
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#services">
+          ▶ run services.tsx <span class="kbd">⏎</span>
+        </a>
+        <a class="btn btn--ghost" href="#contact">
+          $ ./contact.sh
+        </a>
+      </div>
+
+      <!-- floating preview -->
+      <div class="hero-preview">
+        <div class="hero-preview__head">
+          <div class="traffic"><span></span><span></span><span></span></div>
+          <em>preview · readme.md</em>
+        </div>
+        <div class="hero-preview__body">
+<span class="lnum">1</span><span class="cmt"># deonaeun</span><br>
+<span class="lnum">2</span><span class="cmt">> 더 나은 소프트웨어, 더 나은 세상</span><br>
+<span class="lnum">3</span><br>
+<span class="lnum">4</span><span class="cmt">## What we do</span><br>
+<span class="lnum">5</span>- <span class="str">B2B SaaS 개발</span><br>
+<span class="lnum">6</span>- <span class="str">모바일 / 웹 앱</span><br>
+<span class="lnum">7</span>- <span class="str">AI / 데이터 플랫폼</span><br>
+<span class="lnum">8</span>- <span class="str">디자인 시스템</span><br>
+<span class="lnum">9</span><br>
+<span class="lnum">10</span><span class="cmt">## How we work</span><br>
+<span class="lnum">11</span>- <span class="kw">신뢰</span>를 코드로<br>
+<span class="lnum">12</span>- <span class="kw">사람</span>을 중심으로<br>
+<span class="lnum">13</span>- <span class="kw">함께</span>의 힘으로<br>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMINAL -->
+    <div class="terminal">
+      <div class="terminal__head">
+        <div class="terminal__head__tabs">
+          <span class="active">▸ PROBLEMS 0</span>
+          <span>OUTPUT</span>
+          <span>DEBUG CONSOLE</span>
+          <span>TERMINAL</span>
+        </div>
+        <div class="terminal__head__icon">
+          <span>zsh</span><span>+</span><span>⌃</span><span>✕</span>
+        </div>
+      </div>
+      <div class="terminal__body">
+        <span class="term-line"><span class="term-prompt">deonaeun@team ~ $</span> npm run vision</span>
+        <span class="term-line"><span class="term-arrow">→</span> <span style="color:var(--green)">✓</span> Loading mission... <span style="color:var(--text-3)">(success)</span></span>
+        <span class="term-line"><span class="term-arrow">→</span> <span style="color:var(--green)">✓</span> Connecting people × code × purpose</span>
+        <span class="term-line"><span class="term-arrow">→</span> <span style="color:var(--green)">✓</span> Ready to build a better world. <span style="color:var(--orange)">[ready]</span></span>
+        <span class="term-line"><span class="term-prompt">deonaeun@team ~ $</span> <span class="typing-cursor"></span></span>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="editor-section" id="about">
+      <div class="section-header">
+        <span class="section-header__num">/* 01 */</span>
+        <h2 class="section-header__title">
+          About us
+          <span class="cmt">// import { history, people, value } from './deonaeun'</span>
+        </h2>
+      </div>
+
+      <div class="imports-grid">
+        <div class="import-list code-block">
+          <span class="l-num">01</span> <span class="kw">import</span> <span class="punct">{</span> <span class="var">Trust</span><span class="punct">,</span> <span class="var">Craft</span><span class="punct">,</span> <span class="var">Openness</span> <span class="punct">}</span> <span class="kw">from</span> <span class="str">'./values'</span><br>
+          <span class="l-num">02</span> <span class="kw">import</span> <span class="var">People</span> <span class="kw">from</span> <span class="str">'./team'</span><br>
+          <span class="l-num">03</span> <span class="kw">import</span> <span class="punct">{</span> <span class="var">since</span> <span class="punct">}</span> <span class="kw">from</span> <span class="str">'2009'</span><br>
+          <span class="l-num">04</span><br>
+          <span class="l-num">05</span> <span class="cmt">/**</span><br>
+          <span class="l-num">06</span> <span class="cmt"> * 우리는 작은 코드 한 줄이</span><br>
+          <span class="l-num">07</span> <span class="cmt"> * 누군가의 하루를 바꿀 수 있다고 믿습니다.</span><br>
+          <span class="l-num">08</span> <span class="cmt"> * </span><br>
+          <span class="l-num">09</span> <span class="cmt"> * 그래서 우리는</span><br>
+          <span class="l-num">10</span> <span class="cmt"> *   <span class="kw" style="font-style:normal">신뢰</span>를 첫째로,</span><br>
+          <span class="l-num">11</span> <span class="cmt"> *   <span class="kw" style="font-style:normal">사람</span>을 중심으로,</span><br>
+          <span class="l-num">12</span> <span class="cmt"> *   <span class="kw" style="font-style:normal">함께</span>의 힘으로 일합니다.</span><br>
+          <span class="l-num">13</span> <span class="cmt"> */</span><br>
+          <span class="l-num">14</span><br>
+          <span class="l-num">15</span> <span class="kw">export default</span> <span class="kw">function</span> <span class="fn">Deonaeun</span><span class="punct">()</span> <span class="punct">{</span><br>
+          <span class="l-num">16</span> &nbsp;&nbsp;<span class="kw">return</span> <span class="punct">&lt;</span><span class="fn">BetterWorld</span> <span class="prop">team</span><span class="punct">={</span><span class="var">People</span><span class="punct">}</span> <span class="punct">/&gt;</span><br>
+          <span class="l-num">17</span> <span class="punct">}</span>
+        </div>
+
+        <div class="about-side">
+          <h4>// company.json</h4>
+          <div class="stat-row"><span>설립</span><span class="v">2009</span></div>
+          <div class="stat-row"><span>프로젝트</span><span class="v">200+</span></div>
+          <div class="stat-row"><span>구성원</span><span class="v">42</span></div>
+          <div class="stat-row"><span>리텐션</span><span class="v">96%</span></div>
+          <div class="stat-row"><span>오픈소스 기여</span><span class="v">38</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="editor-section" id="services">
+      <div class="section-header">
+        <span class="section-header__num">/* 02 */</span>
+        <h2 class="section-header__title">
+          What we build
+          <span class="cmt">// 4 modules, infinite combinations</span>
+        </h2>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-card__head">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <em>saas.tsx</em>
+          </div>
+          <div class="service-card__body">
+<span class="cmt">// B2B 업무 자동화</span><br>
+<span class="kw">function</span> <span class="fn">buildSaaS</span><span class="punct">(</span><span class="var">client</span><span class="punct">) {</span><br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="punct">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">stack</span>: <span class="str">'React, Nest, Postgres'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">scale</span>: <span class="str">'1M+ MAU'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">ship</span>: <span class="str">'8주~'</span><br>
+&nbsp;&nbsp;<span class="punct">}</span><br>
+<span class="punct">}</span>
+          </div>
+          <div class="service-card__foot">
+            <span><span class="run">●</span> ready to deploy</span><span>→ 자세히</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__head">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <em>mobile.tsx</em>
+          </div>
+          <div class="service-card__body">
+<span class="cmt">// iOS / Android 네이티브</span><br>
+<span class="kw">function</span> <span class="fn">buildMobile</span><span class="punct">(</span><span class="var">brand</span><span class="punct">) {</span><br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="punct">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">stack</span>: <span class="str">'Swift, Kotlin, RN'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">design</span>: <span class="str">'in-house team'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">store</span>: <span class="str">'한 번에 통과'</span><br>
+&nbsp;&nbsp;<span class="punct">}</span><br>
+<span class="punct">}</span>
+          </div>
+          <div class="service-card__foot">
+            <span><span class="run">●</span> ready to deploy</span><span>→ 자세히</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__head">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <em>ai-platform.tsx</em>
+          </div>
+          <div class="service-card__body">
+<span class="cmt">// 데이터 · AI · 자동화</span><br>
+<span class="kw">function</span> <span class="fn">buildAI</span><span class="punct">(</span><span class="var">data</span><span class="punct">) {</span><br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="punct">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">stack</span>: <span class="str">'LLM, RAG, Vector DB'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">deploy</span>: <span class="str">'AWS, GCP, on-prem'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">poc</span>: <span class="str">'2주'</span><br>
+&nbsp;&nbsp;<span class="punct">}</span><br>
+<span class="punct">}</span>
+          </div>
+          <div class="service-card__foot">
+            <span><span class="run">●</span> ready to deploy</span><span>→ 자세히</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__head">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <em>design-system.tsx</em>
+          </div>
+          <div class="service-card__body">
+<span class="cmt">// 토큰 · 컴포넌트 · 문서</span><br>
+<span class="kw">function</span> <span class="fn">buildDS</span><span class="punct">(</span><span class="var">brand</span><span class="punct">) {</span><br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="punct">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">tokens</span>: <span class="str">'Figma → Code'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">docs</span>: <span class="str">'Storybook'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="prop">adopt</span>: <span class="str">'팀 전체 교육 포함'</span><br>
+&nbsp;&nbsp;<span class="punct">}</span><br>
+<span class="punct">}</span>
+          </div>
+          <div class="service-card__foot">
+            <span><span class="run">●</span> ready to deploy</span><span>→ 자세히</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM (as commits) -->
+    <section class="editor-section" id="team">
+      <div class="section-header">
+        <span class="section-header__num">/* 03 */</span>
+        <h2 class="section-header__title">
+          People
+          <span class="cmt">// $ git log --pretty=people</span>
+        </h2>
+      </div>
+
+      <div class="commits">
+        <div class="commit">
+          <div class="commit__avatar" style="background:#FF752D">강</div>
+          <div><div class="commit__name">강민지</div><div class="commit__role">CEO · 풀스택</div></div>
+          <div class="commit__msg">feat<span class="br">(vision)</span>: 15년차 — 코드로 사람을 이롭게 하는 일</div>
+          <div class="commit__hash">#a83f24c</div>
+          <div class="commit__time">since 2009</div>
+        </div>
+        <div class="commit">
+          <div class="commit__avatar" style="background:#7EB1FF">박</div>
+          <div><div class="commit__name">박서준</div><div class="commit__role">CTO · 아키텍처</div></div>
+          <div class="commit__msg">refactor<span class="br">(infra)</span>: 분산 시스템을 단순하게 만드는 사람</div>
+          <div class="commit__hash">#f12c8d9</div>
+          <div class="commit__time">since 2012</div>
+        </div>
+        <div class="commit">
+          <div class="commit__avatar" style="background:#7BD88F">이</div>
+          <div><div class="commit__name">이하늘</div><div class="commit__role">디자인 리드</div></div>
+          <div class="commit__msg">style<span class="br">(brand)</span>: 사용자가 알아채지 못할 정도의 친절함을 디자인합니다</div>
+          <div class="commit__hash">#2b91e4f</div>
+          <div class="commit__time">since 2015</div>
+        </div>
+        <div class="commit">
+          <div class="commit__avatar" style="background:#C6A0F6">정</div>
+          <div><div class="commit__name">정유진</div><div class="commit__role">PM · AI 팀</div></div>
+          <div class="commit__msg">docs<span class="br">(handoff)</span>: 복잡한 요구사항을 짧은 문장으로 정리하는 일</div>
+          <div class="commit__hash">#5d4b1a2</div>
+          <div class="commit__time">since 2018</div>
+        </div>
+        <div class="commit">
+          <div class="commit__avatar" style="background:#F5A3C7">최</div>
+          <div><div class="commit__name">최도현</div><div class="commit__role">백엔드 · 데이터</div></div>
+          <div class="commit__msg">perf<span class="br">(query)</span>: 응답 시간 1초를 0.1초로 만드는 즐거움</div>
+          <div class="commit__hash">#9e3f72d</div>
+          <div class="commit__time">since 2020</div>
+        </div>
+        <div class="commit">
+          <div class="commit__avatar" style="background:#F0DC8B; color:#1a0d04">윤</div>
+          <div><div class="commit__name">윤가람</div><div class="commit__role">프론트엔드</div></div>
+          <div class="commit__msg">feat<span class="br">(a11y)</span>: 모두에게 동등한 인터페이스를 만드는 일</div>
+          <div class="commit__hash">#71ad8c5</div>
+          <div class="commit__time">since 2022</div>
+        </div>
+        <div class="commit" style="opacity:.6">
+          <div class="commit__avatar" style="background:#3a3f48; color:var(--text-2)">+</div>
+          <div><div class="commit__name">함께할 분</div><div class="commit__role">채용 진행 중 · 5명</div></div>
+          <div class="commit__msg" style="font-style:italic; color:var(--text-3)">// TODO: your-name.tsx</div>
+          <div class="commit__hash">#open</div>
+          <div class="commit__time">→ careers</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <h2>
+        <span class="cmt mono" style="display:block; font-size:14px; margin-bottom:16px">/** @cta — let's build something */</span>
+        함께 만들 <b>다음 한 줄</b>이<br>있다면, 알려주세요.
+      </h2>
+      <p class="sub">RFP, 막연한 아이디어, 또는 그저 안녕. 무엇이든 좋습니다.</p>
+      <div class="cta-block__btns">
+        <a class="btn btn--primary" href="#">$ ./start-project.sh</a>
+        <a class="btn btn--ghost" href="#">hello@deonaeun.com</a>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="row">
+        <div>
+          <h5>// deonaeun</h5>
+          <p style="color:var(--text-2); line-height:1.7; margin:0">더 나은 소프트웨어로<br>더 나은 세상을 만듭니다.<br>since 2009.</p>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#">SaaS 개발</a></li>
+            <li><a href="#">모바일 앱</a></li>
+            <li><a href="#">AI 플랫폼</a></li>
+            <li><a href="#">디자인 시스템</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Open source</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:hello@deonaeun.com">hello@deonaeun.com</a></li>
+            <li><a href="#">02-000-0000</a></li>
+            <li><a href="#">서울 강남구</a></li>
+            <li><a href="#" style="color:var(--orange)">github / deonaeun ↗</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copy">
+        <span>© 2026 deonaeun. All rights reserved.</span>
+        <span>마지막 커밋: #f7a3b21 · 3시간 전</span>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <span class="br">⎇ main</span>
+  <span class="br">↓ 0 ↑ 0</span>
+  <span class="br">⚠ 0 ⓘ 0</span>
+  <span>Ln 1, Col 1</span>
+  <div class="statusbar__right">
+    <span>UTF-8</span>
+    <span>TSX</span>
+    <span>● Live</span>
+  </div>
+</div>
+
+<script>
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section, .cta-block').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+</script>
+</body>
+</html>

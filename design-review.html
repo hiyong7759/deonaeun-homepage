@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>deonaeun — 홈페이지 리뉴얼 시안 비교</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  html, body{margin:0; font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif; background:#f0eee9}
+  .dc-artboard-frame{
+    position:absolute; inset:0; width:100%; height:100%;
+    border:0; pointer-events:auto; background:#fff;
+  }
+  .dc-fullscreen-link{
+    position:absolute; right:8px; bottom:8px; z-index:20;
+    background:rgba(255,255,255,.95); color:#1a1a1a; backdrop-filter:blur(8px);
+    border-radius:999px; padding:6px 12px; font-size:11px; font-weight:500;
+    text-decoration:none; box-shadow:0 4px 12px rgba(0,0,0,.12);
+    font-family:"JetBrains Mono",monospace;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:all .15s;
+  }
+  .dc-fullscreen-link:hover{background:#FF752D; color:#fff; transform:translateY(-1px)}
+  .concept-meta{
+    padding:16px 20px; background:#fff; border-bottom:1px solid #eee;
+    font-family:"JetBrains Mono",monospace; font-size:12px; color:#555;
+    display:flex; align-items:center; gap:12px;
+  }
+  .concept-meta .dot{width:8px;height:8px;border-radius:50%; background:#FF752D}
+  .concept-meta b{color:#1a1a1a; font-weight:600; font-family:"Pretendard Variable",Pretendard,sans-serif; font-size:14px}
+  .concept-meta .tag{
+    margin-left:auto; padding:3px 8px; background:#f0eee9; border-radius:999px; font-size:10px;
+  }
+  .intro-panel{
+    padding:48px 56px;
+    background:linear-gradient(180deg,#fff,#fafaf7);
+    font-family:"Pretendard Variable",Pretendard,sans-serif;
+    color:#1a1a1a;
+    height:100%;
+    display:flex; flex-direction:column; gap:24px;
+    overflow-y:auto;
+  }
+  .intro-panel h1{
+    font-size:48px; font-weight:600; letter-spacing:-.03em; margin:0; line-height:1.05;
+  }
+  .intro-panel h1 b{color:#FF752D}
+  .intro-panel .mono{font-family:"JetBrains Mono",monospace; font-size:13px; color:#666; line-height:1.7}
+  .intro-panel .mono b{color:#1a1a1a; font-weight:600}
+  .intro-panel ul{margin:0; padding-left:20px; line-height:1.9; font-size:14px}
+  .intro-panel ul li b{color:#FF752D}
+  .intro-panel .footer-note{margin-top:auto; font-size:12px; color:#999; padding-top:24px; border-top:1px solid #eee; font-family:"JetBrains Mono",monospace}
+  .concept-summary{
+    padding:32px 36px;
+    font-family:"Pretendard Variable",Pretendard,sans-serif;
+    height:100%; overflow-y:auto;
+  }
+  .concept-summary h2{
+    font-family:"JetBrains Mono",monospace; font-size:13px; color:#FF752D; margin:0 0 6px;
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  .concept-summary h3{
+    font-size:28px; font-weight:600; letter-spacing:-.02em; margin:0 0 16px; line-height:1.15;
+  }
+  .concept-summary p{font-size:14px; color:#555; line-height:1.7; margin:0 0 12px}
+  .concept-summary .bullets{margin:18px 0 0; padding:0; list-style:none; font-size:13px; line-height:1.9}
+  .concept-summary .bullets li{padding-left:18px; position:relative; color:#444}
+  .concept-summary .bullets li::before{content:"→"; position:absolute; left:0; color:#FF752D; font-family:"JetBrains Mono",monospace}
+  .concept-summary .moodboard{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:24px;
+  }
+  .concept-summary .swatch{
+    aspect-ratio:1; border-radius:8px; display:flex; align-items:flex-end; padding:8px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; color:#fff;
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+  const { useState } = React;
+
+  function ConceptFrame({ src }) {
+    return (
+      <>
+        <iframe
+          className="dc-artboard-frame"
+          src={src}
+          title={src}
+          loading="lazy"
+        />
+        <a
+          className="dc-fullscreen-link"
+          href={src}
+          target="_blank"
+          rel="noopener"
+          onClick={(e) => e.stopPropagation()}
+        >
+          ↗ open full
+        </a>
+      </>
+    );
+  }
+
+  function ConceptSummary({ tag, title, lede, bullets, palette }) {
+    return (
+      <div className="concept-summary">
+        <h2>{tag}</h2>
+        <h3>{title}</h3>
+        <p>{lede}</p>
+        <ul className="bullets">
+          {bullets.map((b, i) => <li key={i}>{b}</li>)}
+        </ul>
+        <div className="moodboard">
+          {palette.map((p, i) => (
+            <div key={i} className="swatch" style={{ background: p.bg, color: p.fg }}>{p.label}</div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function Intro() {
+    return (
+      <div className="intro-panel">
+        <div className="mono">// brief.md · v1</div>
+        <h1>
+          <b>더나은</b> 홈페이지<br/>
+          리뉴얼 시안
+        </h1>
+        <p className="mono">
+          <b>// concept</b><br/>
+          로고가 가진 <b>점(노드) · 선(연결) · 주황(인간성)</b>의 비주얼 DNA를<br/>
+          확장해, '소프트웨어 개발사'와 '다양한 사람이 짓는 회사'<br/>
+          두 가지 아이덴티티를 동시에 표현합니다.
+        </p>
+        <div>
+          <div className="mono" style={{marginBottom:8}}><b>// 3 directions</b></div>
+          <ul>
+            <li><b>A · IDE</b> — 실제 코드 에디터처럼 보이는 다크 사이트. 가장 직접적·기술적.</li>
+            <li><b>B · Graph</b> — 로고의 노드/라인을 페이지 전체로 확장. 균형감, 친화적.</li>
+            <li><b>C · Manifesto</b> — 페이지 전체가 한 편의 시적인 코드. 가장 실험적·새로운.</li>
+          </ul>
+        </div>
+        <div className="mono">
+          <b>// how to read</b><br/>
+          오른쪽 3개 아트보드를 비교하고,<br/>
+          각 아트보드 우하단의 <b>↗ open full</b>로 풀스크린에서<br/>
+          스크롤하며 검토할 수 있습니다.
+        </div>
+        <div className="footer-note">
+          last updated · #v1.0<br/>
+          common · Pretendard · JetBrains Mono · #FF752D
+        </div>
+      </div>
+    );
+  }
+
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection
+          id="brief"
+          title="더나은 홈페이지 리뉴얼"
+          subtitle="브리프 · 컨셉 요약 — 오른쪽에서 시작하세요"
+        >
+          <DCArtboard id="intro" label="brief · v1" width={520} height={760}>
+            <Intro />
+          </DCArtboard>
+          <DCArtboard id="summary-a" label="A · summary" width={400} height={760}>
+            <ConceptSummary
+              tag="// concept_a"
+              title="IDE — 다크, 실제 코드 에디터 메타포"
+              lede="VS Code를 닮은 화면. 파일트리·탭·터미널이 회사 사이트맵으로, 신택스 하이라이팅이 컨텐츠로 동작합니다. 가장 직접적인 '개발사' 표현."
+              bullets={[
+                "다크 모드 기반, 모노스페이스 강조",
+                "파일트리 = 사이트맵 / 탭 = 페이지",
+                "팀은 git commit log로 표현",
+                "터미널 패널에 실제 동작하는 hero 카피",
+                "엔지니어 채용에 특히 강함"
+              ]}
+              palette={[
+                { bg: "#0d0f12", fg: "#fff", label: "#0d0f12" },
+                { bg: "#FF752D", fg: "#fff", label: "#FF752D" },
+                { bg: "#7BD88F", fg: "#0d0f12", label: "syntax" }
+              ]}
+            />
+          </DCArtboard>
+          <DCArtboard id="summary-b" label="B · summary" width={400} height={760}>
+            <ConceptSummary
+              tag="// concept_b"
+              title="Graph — 노드/라인 다이어그램"
+              lede="로고의 점-선-원 모티브를 페이지 전체로 확장. 히어로의 인터랙티브 노드 그래프, 섹션 간 연결선, 팀원 = 노드. 가장 균형 잡힌 안."
+              bullets={[
+                "라이트(페이퍼) ↔ 다크 섹션 교차",
+                "히어로에 라이브 그래프 (자동 라인 드로잉)",
+                "팀은 일러스트 아바타 노드",
+                "B2B 클라이언트와 채용 모두 효과적",
+                "현재 사이트와 가장 자연스러운 연결"
+              ]}
+              palette={[
+                { bg: "#F6F4EF", fg: "#1a1a1a", label: "#F6F4EF" },
+                { bg: "#0E0E10", fg: "#fff", label: "#0E0E10" },
+                { bg: "#FF752D", fg: "#fff", label: "#FF752D" }
+              ]}
+            />
+          </DCArtboard>
+          <DCArtboard id="summary-c" label="C · summary" width={400} height={760}>
+            <ConceptSummary
+              tag="// concept_c"
+              title="Manifesto — 시적인 코드 문서"
+              lede="페이지 전체가 하나의 거대한 코드 파일처럼 읽힙니다. 들여쓰기로 위계, 주석으로 회사 가치, 함수 호출로 서비스. 가장 실험적·차별화."
+              bullets={[
+                "왼쪽 라인 넘버 거터가 전체 페이지를 관통",
+                "거대한 디스플레이 타이포로 강한 인상",
+                "들여쓰기 매니페스토로 회사 가치 표현",
+                "라이트 베이스 + 다크 values 섹션",
+                "'실험적인 회사' 포지셔닝에 최적"
+              ]}
+              palette={[
+                { bg: "#FAF8F2", fg: "#1a1a1a", label: "#FAF8F2" },
+                { bg: "#1A1A1A", fg: "#fff", label: "#1A1A1A" },
+                { bg: "#FF752D", fg: "#fff", label: "#FF752D" }
+              ]}
+            />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="recommended"
+          title="★ 추천 방향 — B + 소스 블럭"
+          subtitle="B(그래프)를 베이스로 하고, 소스 입력 형태만 핵심 섹션에 부분 적용. 이게 메인입니다."
+        >
+          <DCArtboard id="B-v2" label="B v2 · 메인 (Graph + Source Blocks)" width={1440} height={900}>
+            <ConceptFrame src="concept-b-graph-v2.html" />
+          </DCArtboard>
+          <DCArtboard id="services" label="services.html · 서비스 상세" width={1440} height={900}>
+            <ConceptFrame src="services.html" />
+          </DCArtboard>
+          <DCArtboard id="partners" label="partners.html · 파트너" width={1440} height={900}>
+            <ConceptFrame src="partners.html" />
+          </DCArtboard>
+          <DCArtboard id="location" label="location.html · 오시는길" width={1440} height={900}>
+            <ConceptFrame src="location.html" />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="full-mockups"
+          title="3 Full-page Mockups (initial)"
+          subtitle="실제 데스크탑 뷰포트 (1440 × 900) — 처음 제안한 3시안. 풀스크린은 우하단 링크."
+        >
+          <DCArtboard id="A-ide" label="A · IDE (dark / code editor)" width={1440} height={900}>
+            <ConceptFrame src="concept-a-ide.html" />
+          </DCArtboard>
+          <DCArtboard id="B-graph" label="B · Graph (light + dark, node diagram)" width={1440} height={900}>
+            <ConceptFrame src="concept-b-graph.html" />
+          </DCArtboard>
+          <DCArtboard id="C-manifesto" label="C · Manifesto (poetic code document)" width={1440} height={900}>
+            <ConceptFrame src="concept-c-manifesto.html" />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="notes"
+          title="다음 단계"
+          subtitle="피드백 받을 포인트"
+        >
+          <DCArtboard id="next-steps" label="next-steps.md" width={620} height={420}>
+            <div style={{padding:"32px 36px", fontFamily:"Pretendard Variable, Pretendard, sans-serif", lineHeight:1.7, fontSize:14, color:"#333"}}>
+              <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:12, color:"#FF752D", marginBottom:12}}>// next-steps.md</div>
+              <h3 style={{margin:"0 0 16px", fontSize:22, fontWeight:600}}>피드백 주실 부분</h3>
+              <ol style={{paddingLeft:20, margin:0}}>
+                <li><b>방향성 결정</b> — A / B / C 중 하나, 또는 둘을 합친 방향</li>
+                <li><b>톤 강도</b> — 코드 메타포를 더 많이? 더 적게? 한글 중심으로?</li>
+                <li><b>실제 카피</b> — 슬로건/About/Service 텍스트를 실제 회사 정보로 교체</li>
+                <li><b>팀 사진</b> — 일러스트 아바타 유지 vs 실제 사진</li>
+                <li><b>인터랙션</b> — 모션 강도, 코드 타이핑 효과 등 결정</li>
+              </ol>
+              <div style={{marginTop:24, padding:16, background:"#f6f4ef", borderRadius:8, fontFamily:"JetBrains Mono, monospace", fontSize:12, color:"#666"}}>
+                개인 추천: <b style={{color:"#FF752D"}}>B + C의 하이브리드</b><br/>
+                — Graph의 히어로 인터랙션 + Manifesto의 about/values 서술 톤을 조합하면<br/>
+                새롭지만 부담 없는 균형이 나옵니다.
+              </div>
+            </div>
+          </DCArtboard>
+          <DCArtboard id="design-tokens" label="design tokens (공통)" width={620} height={420}>
+            <div style={{padding:"32px 36px", fontFamily:"Pretendard Variable, Pretendard, sans-serif", fontSize:13, lineHeight:1.8, color:"#333"}}>
+              <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:12, color:"#FF752D", marginBottom:12}}>// tokens.css — 세 시안 공통</div>
+              <div style={{display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:6, marginBottom:20}}>
+                {[
+                  {c:"#FF752D",l:"orange"},
+                  {c:"#E5601A",l:"orange-d"},
+                  {c:"#FFE9DA",l:"orange-s"},
+                  {c:"#1A1A1A",l:"ink"},
+                  {c:"#424242",l:"gray-9"},
+                  {c:"#FAF8F2",l:"paper"},
+                  {c:"#F6F4EF",l:"paper-w"},
+                  {c:"#7BD88F",l:"syntax-g"},
+                  {c:"#7EB1FF",l:"syntax-b"},
+                  {c:"#C6A0F6",l:"syntax-p"}
+                ].map((s,i) => (
+                  <div key={i} style={{textAlign:"center"}}>
+                    <div style={{aspectRatio:"1/1", background:s.c, borderRadius:6, border:"1px solid rgba(0,0,0,.06)"}}/>
+                    <div style={{fontSize:10, fontFamily:"JetBrains Mono, monospace", color:"#666", marginTop:4}}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:11, color:"#666"}}>
+                <div><b style={{color:"#1a1a1a"}}>font-family</b>: Pretendard Variable / JetBrains Mono</div>
+                <div><b style={{color:"#1a1a1a"}}>display</b>: 56-132px / -.045em / 600-700</div>
+                <div><b style={{color:"#1a1a1a"}}>body</b>: 15-16px / 1.55-1.7 / 400</div>
+                <div><b style={{color:"#1a1a1a"}}>mono</b>: 11-14px / .02em / 500</div>
+                <div><b style={{color:"#1a1a1a"}}>radius</b>: 4 / 8 / 12 / 24 / 999</div>
+              </div>
+            </div>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

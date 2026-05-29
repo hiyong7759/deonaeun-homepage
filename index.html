@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>더나은 — 그래프 컨셉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+  :root{
+    --orange:#FF752D;
+    --orange-deep:#E5601A;
+    --orange-soft:#FFE9DA;
+    --ink:#0E0E10;
+    --ink-2:#1B1B1F;
+    --ink-3:#2A2A2F;
+    --paper:#F6F4EF;
+    --paper-2:#EDEAE2;
+    --white:#FFFFFF;
+    --paper-warm:#F0EBDE;
+    --gray-800:#3A3A3F;
+    --gray-700:#3F3F46;
+    --gray-500:#6B6B72;
+    --gray-400:#9C9CA3;
+    --gray-300:#C5C3BB;
+    --gray-200:#DDDAD0;
+    --gray-100:#EDEAE2;
+    --font:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--font);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased; word-break:keep-all}
+  body{overflow-x:hidden}
+  ::selection{background:var(--orange); color:#fff}
+  a{color:inherit; text-decoration:none}
+  img, svg{display:block; max-width:100%}
+
+  /* ============ NAV ============ */
+  .nav{
+    position:sticky; top:0; z-index:60; background:rgba(246,244,239,.78);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent; transition:all .2s;
+  }
+  .nav.scrolled{border-bottom-color:var(--gray-200)}
+  .nav__inner{max-width:1320px; margin:0 auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; gap:32px}
+  .nav__logo{display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:14px; font-weight:500}
+  .nav__logo svg{height:26px; width:auto}
+  .nav__links{display:flex; gap:2px; align-items:center}
+  .nav__links a{padding:9px 14px; font-size:14px; font-weight:500; color:var(--gray-700); border-radius:999px; transition:all .15s}
+  .nav__links a:hover{background:rgba(0,0,0,.04); color:var(--ink)}
+  .nav__links a.active{color:var(--ink)}
+  .nav__links a.active::after{content:""; display:block; width:5px; height:5px; border-radius:50%; background:var(--orange); margin:3px auto 0}
+  .nav__cta{display:flex; gap:8px}
+
+  /* ============ MOBILE BURGER + SHEET ============ */
+  .nav__burger{display:none}
+  .nav__sheet{
+    position:fixed; inset:0; z-index:90; background:var(--paper);
+    padding:84px 32px 40px; flex-direction:column;
+    transform:translateX(100%); transition:transform .35s cubic-bezier(.4,0,.2,1);
+    visibility:hidden;
+    display:none; /* hidden on desktop */
+  }
+  .nav__sheet.is-open{transform:translateX(0); visibility:visible}
+  .nav__sheet a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 4px; font-size:24px; font-weight:600; color:var(--ink);
+    letter-spacing:-.02em; border-bottom:1px solid var(--gray-200);
+    transition:color .15s;
+  }
+  .nav__sheet a:hover, .nav__sheet a.active{color:var(--orange)}
+  .nav__sheet a::after{content:"→"; font-family:var(--mono); font-size:18px; color:var(--gray-400); transition:transform .2s, color .15s}
+  .nav__sheet a:hover::after{color:var(--orange); transform:translateX(4px)}
+  .nav__sheet__contact{
+    margin-top:auto; font-family:var(--mono); font-size:13px; color:var(--gray-500);
+    padding-top:24px; line-height:1.85;
+  }
+  .nav__sheet__contact a{font-size:13px; padding:0; border:0; color:var(--gray-500)}
+  .nav__sheet__contact a::after{display:none}
+  .nav__sheet__contact b{color:var(--orange); font-weight:500}
+
+  /* ============ BUTTONS ============ */
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:13px 22px; height:46px;
+    border-radius:999px; font-size:14px; font-weight:500; border:1.5px solid transparent;
+    transition:all .2s; cursor:pointer;
+  }
+  .btn--primary{background:var(--ink); color:#fff}
+  .btn--primary:hover{background:var(--orange); transform:translateY(-1px)}
+  .btn--ghost{background:transparent; color:var(--ink); border-color:var(--gray-300)}
+  .btn--ghost:hover{border-color:var(--ink)}
+  .btn--orange{background:var(--orange); color:#fff}
+  .btn--orange:hover{background:var(--orange-deep)}
+  .section--dark .btn--ghost{color:#fff; border-color:rgba(255,255,255,.25)}
+  .section--dark .btn--ghost:hover{border-color:#fff}
+  .arrow{transition:transform .2s}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  /* ============ EYEBROW ============ */
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; font-weight:500; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--gray-500);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:24px; height:1.5px; background:var(--orange); display:inline-block}
+  .section--dark .eyebrow{color:#9C9C9F}
+
+  /* ============ HERO (graph canvas) ============ */
+  .hero{
+    position:relative;
+    padding:100px 32px 120px;
+    overflow:hidden;
+  }
+  .hero__bg{
+    position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,.04) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+  .hero__inner{max-width:1320px; margin:0 auto; position:relative; display:grid; grid-template-columns:1.05fr 1fr; gap:80px; align-items:center}
+
+  .hero__left{position:relative; z-index:2}
+  /* main hero shares page-hero crumb style */
+  .hero .page-hero__crumb{
+    font-family:var(--mono); font-size:12px; color:var(--gray-500); margin-bottom:24px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .hero .page-hero__crumb b{color:var(--orange); font-weight:500}
+  .hero__tag .dot{
+    width:8px; height:8px; border-radius:50%; background:var(--orange);
+    box-shadow:0 0 0 4px rgba(255,117,45,.18);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(255,117,45,0)}}
+
+  .hero h1{
+    font-size:clamp(40px, 5vw, 68px); font-weight:600; letter-spacing:-.035em;
+    line-height:1.02; margin:0 0 24px; text-wrap:balance;
+    word-break:keep-all;
+  }
+  .hero h1 .underline-line{
+    position:relative; display:inline-block;
+  }
+  .hero h1 .underline-line::after{
+    content:""; position:absolute; left:-4px; right:-4px; bottom:6px; height:14px;
+    background:var(--orange); z-index:-1; opacity:.4;
+  }
+  .hero h1 .node-word{
+    display:inline-flex; align-items:center; gap:14px; white-space:nowrap;
+  }
+  .hero h1 .node-word::before{
+    content:""; width:24px; height:24px; border-radius:50%; border:4px solid var(--orange);
+    display:inline-block; flex-shrink:0;
+  }
+  .hero h1 .underline-line{white-space:nowrap}
+  .hero__lede{font-size:18px; line-height:1.6; color:var(--gray-700); max-width:52ch; margin:0 0 36px; text-wrap:pretty}
+  .hero__cta{display:flex; gap:12px; flex-wrap:wrap}
+
+  /* graph canvas */
+  .hero__graph{position:relative; aspect-ratio:1/1; max-width:580px; justify-self:end; width:100%}
+  .hero__graph svg{position:absolute; inset:0; width:100%; height:100%}
+  .hero__graph .node{
+    position:absolute; transform:translate(-50%,-50%);
+    background:#fff; border:1.5px solid var(--ink); border-radius:14px;
+    padding:14px 16px; font-family:var(--mono); font-size:13px; font-weight:500;
+    box-shadow:0 8px 24px -8px rgba(0,0,0,.15);
+    display:flex; align-items:center; gap:10px;
+    white-space:nowrap;
+    animation:node-in .6s ease both;
+  }
+  .hero__graph .node--orange{background:var(--orange); border-color:var(--orange); color:#fff}
+  .hero__graph .node--ink{background:var(--ink); border-color:var(--ink); color:#fff}
+  .hero__graph .node__dot{width:8px;height:8px;border-radius:50%;background:var(--orange); animation:node-dot-pulse 2.4s ease-in-out infinite}
+  .hero__graph .node--orange .node__dot{background:#fff}
+  .hero__graph .node--ink .node__dot{background:var(--orange)}
+  .hero__graph .node-ring{
+    position:absolute; transform:translate(-50%,-50%);
+    width:36px; height:36px; border-radius:50%; border:5px solid var(--orange); background:var(--paper);
+  }
+  .hero__graph .node-ring::before, .hero__graph .node-ring::after{
+    content:""; position:absolute; inset:-7px; border-radius:50%; border:1.5px solid var(--orange);
+    opacity:0; pointer-events:none;
+  }
+  .hero__graph .node-ring::before{ animation:ring-pulse 3s ease-out infinite }
+  .hero__graph .node-ring::after{ animation:ring-pulse 3s ease-out 1.5s infinite }
+  @keyframes ring-pulse{
+    0%   { transform:scale(.9); opacity:.5 }
+    100% { transform:scale(1.8); opacity:0 }
+  }
+  @keyframes node-float{
+    0%, 100% { translate:0 0 }
+    50%      { translate:0 -3px }
+  }
+  @keyframes node-dot-pulse{
+    0%, 100% { transform:scale(1); opacity:1 }
+    50%      { transform:scale(1.4); opacity:.6 }
+  }
+  @keyframes node-in{from{opacity:0; transform:translate(-50%,-50%) scale(.85)} to{opacity:1; transform:translate(-50%,-50%) scale(1)}}
+
+  .hero__graph .node[data-pos="tl"]{top:8%; left:18%; animation-delay:.1s}
+  .hero__graph .node[data-pos="tr"]{top:18%; right:6%; left:auto; transform:translate(50%,-50%); animation-delay:.25s}
+  .hero__graph .node[data-pos="tr"]{animation-delay:.25s}
+  .hero__graph .node[data-pos="ml"]{top:50%; left:6%; animation-delay:.4s}
+  .hero__graph .node[data-pos="mr"]{top:55%; right:8%; left:auto; transform:translate(50%,-50%); animation-delay:.55s}
+  .hero__graph .node[data-pos="bl"]{bottom:14%; left:22%; top:auto; transform:translate(-50%,50%); animation-delay:.7s}
+  .hero__graph .node[data-pos="br"]{bottom:8%; right:18%; left:auto; top:auto; transform:translate(50%,50%); animation-delay:.85s}
+  .hero__graph .node-ring[data-pos="c"]{top:46%; left:50%; animation-delay:0s}
+
+  /* line draw + endless drift */
+  .hero__graph svg path{
+    stroke:var(--orange); stroke-width:2; fill:none; stroke-linecap:round;
+    stroke-dasharray:600; stroke-dashoffset:600;
+    animation:draw 2s ease-out forwards;
+  }
+  .hero__graph svg path.ink{stroke:var(--ink); opacity:.4; animation:draw 2.5s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+
+  /* hero stats */
+  .hero__stats{
+    margin-top:80px; max-width:1320px; margin-left:auto; margin-right:auto;
+    padding:0 32px; display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border-top:1px solid var(--gray-200); border-bottom:1px solid var(--gray-200);
+  }
+  .hero__stat{padding:24px 24px; border-right:1px solid var(--gray-200); position:relative}
+  .hero__stat:last-child{border-right:0}
+  .hero__stat .v{font-size:36px; font-weight:600; letter-spacing:-.02em; display:flex; align-items:baseline; gap:4px}
+  .hero__stat .v small{font-size:18px; color:var(--orange); font-weight:500}
+  .hero__stat .k{font-family:var(--mono); font-size:12px; color:var(--gray-500); margin-top:4px}
+
+  /* ============ SECTIONS ============ */
+  .section{padding:140px 32px; position:relative}
+  .section__inner{max-width:1320px; margin:0 auto}
+  .section--dark{background:var(--ink); color:#fff}
+  .section--paper-2{background:var(--paper-2)}
+  .section--white{background:#fff}
+
+  /* connecting line between sections */
+  .connector{
+    position:absolute; left:50%; top:-1px; transform:translateX(-50%);
+    width:1.5px; height:60px; background:var(--orange); z-index:5;
+  }
+  .connector::before, .connector::after{
+    content:""; position:absolute; left:50%; transform:translateX(-50%);
+    width:10px; height:10px; border-radius:50%; border:2.5px solid var(--orange); background:var(--paper);
+  }
+  .connector::before{top:-5px}
+  .connector::after{bottom:-5px; background:var(--orange)}
+  .section--dark .connector::before{background:var(--ink)}
+  .section--paper-2 .connector::before{background:var(--paper-2)}
+  .section--white .connector::before{background:#fff}
+
+  /* ============ ABOUT (indented manifesto) ============ */
+  .about-grid{display:grid; grid-template-columns:.85fr 1fr; gap:80px; align-items:start}
+  .about-grid h2{font-size:clamp(36px,4.5vw,64px); font-weight:600; letter-spacing:-.03em; line-height:1.05; margin:24px 0 0; text-wrap:balance}
+  .manifesto{
+    font-family:var(--mono); font-size:15px; line-height:2.1; color:var(--gray-500);
+  }
+  .manifesto .line{display:block}
+  .manifesto .ind-1{padding-left:28px}
+  .manifesto .ind-2{padding-left:56px}
+  .manifesto b{color:var(--ink); font-weight:500; font-family:var(--font); font-size:17px}
+  .manifesto .arrow-r{color:var(--orange)}
+  .manifesto .punct{color:var(--gray-300)}
+  .section--dark .manifesto{color:#9C9C9F}
+  .section--dark .manifesto b{color:#fff}
+
+  /* ============ CODE WINDOW (source block) ============ */
+  .code-window{
+    background:#0E0E10; color:#e6e8ec; border-radius:14px; overflow:hidden;
+    box-shadow:0 28px 60px -24px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.04);
+    font-family:var(--mono);
+  }
+  .code-window--light{
+    background:var(--paper); color:var(--ink);
+    box-shadow:0 16px 40px -16px rgba(0,0,0,.12), 0 0 0 1px var(--gray-200);
+  }
+  .code-window__chrome{
+    display:flex; align-items:center; gap:12px; padding:12px 18px;
+    background:rgba(255,255,255,.03); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .code-window--light .code-window__chrome{background:var(--paper-warm); border-bottom-color:var(--gray-200)}
+  .code-window__traffic{display:flex; gap:7px}
+  .code-window__traffic span{width:11px; height:11px; border-radius:50%; display:block}
+  .code-window__traffic span:nth-child(1){background:#ff5f57}
+  .code-window__traffic span:nth-child(2){background:#febc2e}
+  .code-window__traffic span:nth-child(3){background:#28c840}
+  .code-window__filename{flex:1; text-align:center; font-size:12px; color:#9C9CA3; letter-spacing:.02em}
+  .code-window__filename b{color:#fff; font-weight:500}
+  .code-window--light .code-window__filename{color:var(--gray-500)}
+  .code-window--light .code-window__filename b{color:var(--ink)}
+  .code-window__lang{
+    font-size:10px; padding:3px 8px; border-radius:999px; background:rgba(255,117,45,.15);
+    color:var(--orange); text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+  }
+  .code-window__body{padding:24px 0; font-size:14px; line-height:2; display:flex}
+  .code-window__gutter{
+    width:52px; text-align:right; padding:0 16px 0 8px; flex-shrink:0;
+    color:rgba(255,255,255,.25); user-select:none; font-size:12px; line-height:2;
+  }
+  .code-window--light .code-window__gutter{color:var(--gray-300)}
+  .code-window__code{flex:1; padding-right:28px; min-width:0; overflow-x:auto}
+  .code-window .line{display:block}
+
+  /* syntax tokens (dark) */
+  .cw-kw{color:#FF752D; font-weight:500}
+  .cw-fn{color:#7EB1FF; font-weight:500}
+  .cw-var{color:#fff; font-weight:500}
+  .cw-prop{color:#eaeaee}
+  .cw-str{color:#7BD88F}
+  .cw-num{color:#FFB689}
+  .cw-cmt{color:#5e6473; font-style:italic}
+  .cw-punct{color:#5e6473}
+  .cw-tag{color:#C6A0F6}
+  .cw-big{font-family:var(--font); color:#fff; font-weight:500; font-size:17px}
+  .code-window--light .cw-var{color:var(--ink)}
+  .code-window--light .cw-prop{color:var(--ink-2)}
+  .code-window--light .cw-cmt{color:var(--gray-400)}
+  .code-window--light .cw-punct{color:var(--gray-300)}
+  .code-window--light .cw-fn{color:#3057C8}
+  .code-window--light .cw-big{color:var(--ink)}
+
+  .cw-ind-1{padding-left:24px}
+  .cw-ind-2{padding-left:48px}
+  .cw-ind-3{padding-left:72px}
+  .cw-arr{color:#FF752D; margin-right:6px}
+
+  /* small inline snippet for service cards */
+  .code-snippet{
+    font-family:var(--mono); font-size:11.5px; line-height:1.8;
+    background:var(--ink); color:#bdbdc4; border-radius:8px;
+    padding:12px 14px 12px 18px; margin:0 0 16px;
+    position:relative; overflow:hidden;
+  }
+  .code-snippet::before{
+    content:""; position:absolute; top:0; left:0; bottom:0; width:3px; background:var(--orange);
+  }
+  .code-snippet .line{display:block}
+
+  /* hero floating code chip */
+  .hero__code-chip{
+    position:absolute; bottom:-32px; left:-12px; z-index:3;
+    background:var(--ink); color:#e6e8ec; border-radius:12px;
+    padding:14px 18px; font-family:var(--mono); font-size:12.5px; line-height:1.85;
+    box-shadow:0 16px 40px -16px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
+    animation:node-in .6s ease both; animation-delay:1s;
+    max-width:280px;
+  }
+  .hero__code-chip__head{
+    display:flex; align-items:center; gap:6px; margin-bottom:10px;
+    font-size:11px; color:#6b7079; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .hero__code-chip__head .dot{width:7px; height:7px; border-radius:50%; background:#28c840}
+  @media (max-width:980px){ .hero__code-chip{display:none} }
+
+  /* ============ VALUES (3 nodes connected) ============ */
+  .values-canvas{position:relative; padding:60px 0}
+  .values-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:32px; position:relative; z-index:2}
+  .value-card{
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:20px;
+    padding:32px; transition:all .25s;
+  }
+  .value-card:hover{background:rgba(255,117,45,.08); border-color:var(--orange); transform:translateY(-4px)}
+  .value-card__num{
+    font-family:var(--mono); font-size:11px; color:var(--orange); margin-bottom:24px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .value-card__num::after{content:""; flex:1; height:1px; background:rgba(255,255,255,.1)}
+  .value-card__icon{
+    width:64px; height:64px; border-radius:16px; background:rgba(255,117,45,.12);
+    display:flex; align-items:center; justify-content:center; margin-bottom:24px;
+  }
+  .value-card h3{font-size:24px; font-weight:600; margin:0 0 12px; letter-spacing:-.02em}
+  .value-card p{margin:0; color:#9C9C9F; line-height:1.6; font-size:15px}
+  .values-connector{position:absolute; inset:0; pointer-events:none; z-index:1}
+  .values-connector svg{width:100%; height:100%}
+  .values-connector path{stroke:var(--orange); stroke-width:1.5; fill:none; stroke-dasharray:4 6; opacity:.4}
+
+  /* ============ SERVICES ============ */
+  .services-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:24px}
+  .service{
+    background:#fff; border:1px solid var(--gray-200); border-radius:20px; padding:28px;
+    transition:all .25s; cursor:pointer; position:relative; overflow:hidden;
+  }
+  .service:hover{border-color:var(--ink); transform:translateY(-3px); box-shadow:0 16px 40px -12px rgba(0,0,0,.1)}
+  .service__head{display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:20px}
+  .service__num{font-family:var(--mono); font-size:13px; color:var(--gray-500)}
+  .service__arrow{width:40px; height:40px; border-radius:50%; border:1.5px solid var(--gray-300); display:flex; align-items:center; justify-content:center; transition:all .25s}
+  .service:hover .service__arrow{background:var(--orange); border-color:var(--orange); color:#fff; transform:rotate(-45deg)}
+  .service h3{font-size:24px; font-weight:600; letter-spacing:-.02em; margin:0 0 10px; line-height:1.15}
+  .service p{margin:0 0 16px; color:var(--gray-500); line-height:1.55; font-size:14px}
+  .service__tech{display:flex; flex-wrap:wrap; gap:6px}
+  .service__tech span{
+    font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:999px;
+    background:var(--paper); color:var(--gray-700);
+  }
+
+  .service__status{
+    font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.08em;
+    padding:4px 10px; border-radius:999px; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .service__status::before{content:""; width:6px; height:6px; border-radius:50%}
+  .service__status--core{background:rgba(46,125,91,.1); color:#2E7D5B}
+  .service__status--core::before{background:#2E7D5B; box-shadow:0 0 0 3px rgba(46,125,91,.18); animation:pulse 2s ease-in-out infinite}
+  .service__status--prep{background:rgba(255,117,45,.1); color:var(--orange-deep)}
+  .service__status--prep::before{background:var(--orange)}
+  .service--prep{background:linear-gradient(180deg,#fff,#FFF8F3); border-style:dashed; border-color:var(--gray-300)}
+  .service--prep:hover{border-color:var(--orange); border-style:solid}
+
+  /* ============ PROCESS (horizontal node flow) ============ */
+  .process-flow{
+    position:relative; padding:60px 0;
+  }
+  .process-line{
+    position:absolute; top:96px; left:5%; right:5%; height:2px;
+    background:repeating-linear-gradient(to right, var(--orange) 0 8px, transparent 8px 16px);
+    z-index:1;
+  }
+  .process-steps{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; position:relative; z-index:2}
+  .process-step{text-align:center}
+  .process-step__node{
+    width:72px; height:72px; border-radius:50%; background:#fff; border:2px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 24px;
+    font-family:var(--mono); font-size:18px; font-weight:600; position:relative;
+    transition:all .25s;
+  }
+  .process-step:hover .process-step__node{background:var(--orange); border-color:var(--orange); color:#fff}
+  .process-step:nth-child(odd) .process-step__node{background:var(--orange); color:#fff; border-color:var(--orange)}
+  .process-step h4{font-size:17px; font-weight:600; margin:0 0 6px}
+  .process-step p{font-size:13px; color:var(--gray-500); margin:0; line-height:1.5}
+
+  /* ============ TEAM (avatar nodes) ============ */
+  .team-canvas{position:relative; padding:40px 0}
+  .team-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:32px}
+  .person{text-align:center; cursor:pointer; transition:all .25s}
+  .person:hover{transform:translateY(-4px)}
+  .person__avatar{
+    width:120px; height:120px; border-radius:50%; margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    border:2px solid var(--ink); background:#fff;
+  }
+  .person:nth-child(3n+1) .person__avatar{background:var(--orange); border-color:var(--orange)}
+  .person:nth-child(3n+2) .person__avatar{background:var(--ink); border-color:var(--ink)}
+  .person:nth-child(3n+3) .person__avatar{background:#fff; border-color:var(--ink)}
+  .person__avatar svg{width:64px; height:64px}
+  .person__avatar::after{
+    content:""; position:absolute; bottom:-2px; right:-2px; width:24px; height:24px;
+    background:var(--orange); border:3px solid var(--paper); border-radius:50%;
+  }
+  .person__name{font-size:17px; font-weight:600; letter-spacing:-.01em}
+  .person__role{font-family:var(--mono); font-size:12px; color:var(--gray-500); margin-top:2px}
+  .person__quote{font-size:13px; color:var(--gray-500); margin-top:10px; font-style:italic; line-height:1.5; max-width:22ch; margin-left:auto; margin-right:auto}
+  .person__tag{
+    display:inline-block; font-family:var(--mono); font-size:14px; font-weight:500;
+    color:var(--ink); background:var(--paper-2); padding:5px 12px; border-radius:6px;
+    margin-bottom:4px;
+  }
+  .person__tag .punct{color:var(--gray-400)}
+  .person__tag .name{color:var(--orange)}
+
+  /* team CTA banner (joining us) */
+  .team-cta{
+    margin-top:40px; padding:32px 40px;
+    background:#fff; border:1.5px dashed var(--gray-300); border-radius:20px;
+    display:flex; align-items:center; justify-content:space-between; gap:32px;
+    flex-wrap:wrap; transition:all .25s;
+  }
+  .team-cta:hover{border-color:var(--orange); background:var(--paper)}
+  .team-cta__left{display:flex; align-items:center; gap:24px; flex:1; min-width:280px}
+  .team-cta__icon{
+    width:64px; height:64px; border-radius:50%;
+    background:repeating-linear-gradient(45deg, var(--paper-2), var(--paper-2) 6px, #fff 6px, #fff 12px);
+    border:1.5px dashed var(--gray-300); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .team-cta__icon svg{width:28px; height:28px}
+  .team-cta__title{font-size:20px; font-weight:600; letter-spacing:-.015em; margin:0 0 4px}
+  .team-cta__sub{font-family:var(--mono); font-size:13px; color:var(--gray-500)}
+  .team-cta__sub b{color:var(--orange); font-weight:500}
+
+  /* connecting lines between team members */
+  .team-lines{position:absolute; inset:0; pointer-events:none; z-index:0}
+  .team-lines path{stroke:var(--orange); stroke-width:1.5; fill:none; opacity:.3; stroke-dasharray:3 6}
+
+  /* ============ MARQUEE (clients/keywords) ============ */
+  .marquee-section{padding:60px 0; border-top:1px solid var(--gray-200); border-bottom:1px solid var(--gray-200); overflow:hidden; background:var(--paper)}
+  .marquee{display:flex; gap:64px; width:max-content; animation:slide 40s linear infinite; font-family:var(--mono); font-size:14px; color:var(--gray-500)}
+  .marquee span{display:flex; align-items:center; gap:14px}
+  .marquee span::after{content:""; width:6px; height:6px; border-radius:50%; background:var(--orange)}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ============ CTA ============ */
+  .cta{
+    background:var(--ink); color:#fff; padding:160px 32px; text-align:center; position:relative; overflow:hidden;
+  }
+  .cta__bg{
+    position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(circle at 50% 40%, rgba(255,117,45,.15), transparent 50%);
+  }
+  .cta__inner{max-width:900px; margin:0 auto; position:relative}
+  .cta h2{font-size:clamp(48px,6vw,84px); font-weight:600; letter-spacing:-.035em; line-height:1.05; margin:24px 0 24px; text-wrap:balance}
+  .cta h2 em{font-style:normal; color:var(--orange)}
+  .cta p{font-size:18px; color:#9C9C9F; max-width:50ch; margin:0 auto 40px; line-height:1.55}
+  .cta__btns{display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center}
+  .cta .btn--orange:hover{background:#fff; color:var(--ink)}
+  .cta .btn--ghost{color:#fff; border-color:rgba(255,255,255,.25)}
+  .cta .btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.05)}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--ink); color:#9C9C9F; padding:64px 32px 32px; position:relative; border-top:1px solid rgba(255,255,255,.08)}
+  footer::before{
+    content:""; position:absolute; top:-1px; left:50%; transform:translateX(-50%);
+    width:120px; height:3px; background:var(--orange); border-radius:0 0 4px 4px;
+  }
+  footer .row{max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px}
+  footer h5{color:#fff; font-size:13px; font-weight:600; margin:0 0 16px; letter-spacing:-.01em}
+  footer ul{list-style:none; padding:0; margin:0; line-height:2}
+  footer a{color:#9C9C9F; font-size:14px}
+  footer a:hover{color:var(--orange)}
+  footer .copy{max-width:1320px; margin:0 auto; padding-top:24px; border-top:1px solid rgba(255,255,255,.08); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13px; font-family:var(--mono)}
+  footer .brand{display:flex; align-items:center; gap:12px; font-family:var(--mono); margin-bottom:14px; color:#fff}
+  footer .brand svg{height:28px}
+
+  /* ============ REVEAL ============ */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .8s ease, transform .8s ease}
+  .reveal.in{opacity:1; transform:none}
+
+  /* ============ FULLPAGE SNAP + SIDE NAV ============ */
+  html{ scroll-behavior:smooth; scroll-snap-type:y proximity; }
+  body{ scroll-padding-top:0 }
+
+  /* sections fill the viewport and snap */
+  .snap{
+    min-height:100vh; min-height:100svh;
+    scroll-snap-align:start; scroll-snap-stop:normal;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .snap > .section__inner, .snap > .hero__inner, .snap > .cta__inner{ width:100% }
+
+  /* side-nav (right rail) */
+  .side-nav{
+    position:fixed; right:24px; top:50%; transform:translateY(-50%);
+    z-index:55; display:flex; flex-direction:column; gap:6px;
+    padding:10px 6px; border-radius:999px;
+    background:rgba(255,255,255,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(0,0,0,.06);
+    transition:background .3s, border-color .3s;
+  }
+  .side-nav.is-dark{
+    background:rgba(14,14,16,.55); border-color:rgba(255,255,255,.1);
+  }
+  .side-nav__dot{
+    position:relative; width:32px; height:32px; padding:0; border:0; cursor:pointer;
+    background:transparent; transition:none;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .side-nav__dot::before{
+    content:""; display:block; width:10px; height:10px;
+    border-radius:999px; background:rgba(0,0,0,.22);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+  }
+  .side-nav.is-dark .side-nav__dot::before{ background:rgba(255,255,255,.22) }
+  .side-nav__dot:hover::before{ background:var(--orange); transform:scale(1.4) }
+  .side-nav__dot.active::before{
+    background:var(--orange);
+    width:10px; height:28px;
+    box-shadow:0 0 0 4px rgba(255,117,45,.15);
+  }
+  .side-nav__label{
+    position:absolute; right:calc(100% + 6px); top:50%; transform:translateY(-50%);
+    white-space:nowrap; font-family:var(--mono); font-size:11px; font-weight:500;
+    color:var(--ink); background:var(--white);
+    padding:5px 10px; border-radius:6px;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+    opacity:0; pointer-events:none; transition:opacity .15s, transform .15s;
+    letter-spacing:.01em;
+  }
+  .side-nav.is-dark .side-nav__label{ background:#fff; color:var(--ink) }
+  .side-nav__dot:hover .side-nav__label{ opacity:1; transform:translateY(-50%) translateX(-4px) }
+  .side-nav__dot .side-nav__label small{ color:var(--gray-400); margin-right:6px }
+
+  /* progress bar inside the rail */
+  .side-nav__track{
+    position:absolute; left:50%; top:14px; bottom:14px;
+    width:1px; background:rgba(0,0,0,.08);
+    transform:translateX(-50%); pointer-events:none; z-index:-1;
+  }
+  .side-nav.is-dark .side-nav__track{ background:rgba(255,255,255,.1) }
+
+  /* ============ MOBILE ============ */
+  @media (max-width:980px){
+    .hero__inner, .about-grid{grid-template-columns:1fr; gap:48px}
+    .hero__graph{max-width:380px; margin:0 auto}
+    .nav__links{display:none}
+    .nav__cta .btn{display:none}
+    .nav__burger{
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      width:42px; height:42px; border-radius:10px;
+      background:transparent; border:1.5px solid var(--gray-300);
+      padding:0; cursor:pointer; gap:4px; transition:border-color .15s, background .15s;
+    }
+    .nav__burger:hover, .nav__burger[aria-expanded="true"]{border-color:var(--ink); background:var(--paper-warm)}
+    .nav__burger span{
+      display:block; width:18px; height:1.8px; background:var(--ink);
+      border-radius:999px; transition:all .25s cubic-bezier(.4,0,.2,1);
+    }
+    .nav__burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5.8px) rotate(45deg)}
+    .nav__burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+    .nav__burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5.8px) rotate(-45deg)}
+    .nav__sheet{display:flex} /* enable on mobile */
+    .hero__stats, .team-grid{grid-template-columns:1fr 1fr}
+    .values-grid, .services-grid{grid-template-columns:1fr}
+    .values-connector{display:none}
+    /* process: switch to vertical timeline on mobile */
+    .process-flow{padding:20px 0 40px}
+    .process-steps{grid-template-columns:1fr; gap:28px}
+    .process-step{
+      display:grid; grid-template-columns:72px 1fr; gap:20px;
+      text-align:left; align-items:start;
+    }
+    .process-step__node{margin:0}
+    .process-step h4{grid-column:2; margin:14px 0 6px}
+    .process-step p{grid-column:2; margin:0}
+    .process-line{
+      top:36px; bottom:36px; left:36px; right:auto;
+      width:2px; height:auto;
+      background:repeating-linear-gradient(to bottom, var(--orange) 0 8px, transparent 8px 16px);
+      transform:translateX(-1px);
+    }
+    .hero__stat{border-right:0; border-bottom:1px solid var(--gray-200); padding:18px 16px}
+    .hero__stat .v{font-size:24px !important; line-height:1.3 !important}
+    .hero__stat .v small{font-size:14px !important}
+    .hero__stat .k{font-size:11px}
+    /* hero: reduce mobile top whitespace + shrink graph */
+    .hero{padding:32px 20px 60px}
+    .hero__inner{gap:28px}
+    .hero__graph{max-width:300px}
+    .hero__graph .node{padding:8px 12px; font-size:11px; border-radius:10px}
+    .hero__graph .node[data-pos="br"]{display:none}
+    .hero__graph .node[data-pos="bl"]{display:none}
+    /* team CTA banner: compact on mobile */
+    .team-cta{padding:20px; gap:16px; margin-top:32px}
+    .team-cta__left{min-width:0; gap:16px}
+    .team-cta__icon{width:48px; height:48px}
+    .team-cta__title{font-size:17px}
+    footer .row{grid-template-columns:1fr 1fr}
+    /* compact side-nav on mobile (keep visible but smaller) */
+    .side-nav{
+      right:4px; gap:2px; padding:6px 3px;
+      background:rgba(255,255,255,.4); border-color:rgba(0,0,0,.04);
+    }
+    .side-nav.is-dark{ background:rgba(14,14,16,.4) }
+    .side-nav__dot{ width:22px; height:22px }
+    .side-nav__dot::before{ width:6px; height:6px }
+    .side-nav__dot.active::before{ width:6px; height:18px }
+    .side-nav__label{ display:none }
+    .side-nav__track{ top:8px; bottom:8px }
+  }
+</style>
+</head>
+<body data-screen-label="B · Graph">
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="#">
+      <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+        <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
+        <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <span>deonaeun</span>
+    </a>
+    <div class="nav__links">
+      <a href="#hero" class="active">더나은</a>
+      <a href="services.html">서비스</a>
+      <a href="partners.html">파트너</a>
+      <a href="location.html">오시는길</a>
+    </div>
+    <div class="nav__cta">
+      <a class="btn btn--primary" href="mailto:contact@deonaeun.com" style="height:40px; padding:0 18px; font-size:13px">Contact →</a>
+      <button class="nav__burger" id="navBurger" aria-label="메뉴" aria-expanded="false" aria-controls="navSheet">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ SIDE NAV (right rail dots) ============ -->
+<aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
+  <span class="side-nav__track"></span>
+  <button class="side-nav__dot active" data-target="hero" aria-label="더나은">
+    <span class="side-nav__label"><small>01</small>더나은</span>
+  </button>
+  <button class="side-nav__dot" data-target="about" aria-label="회사">
+    <span class="side-nav__label"><small>02</small>회사 소개</span>
+  </button>
+  <button class="side-nav__dot" data-target="values" aria-label="약속">
+    <span class="side-nav__label"><small>03</small>세 가지 약속</span>
+  </button>
+  <button class="side-nav__dot" data-target="services" aria-label="서비스">
+    <span class="side-nav__label"><small>04</small>서비스</span>
+  </button>
+  <button class="side-nav__dot" data-target="process" aria-label="프로세스">
+    <span class="side-nav__label"><small>05</small>프로세스</span>
+  </button>
+  <button class="side-nav__dot" data-target="team" aria-label="사람들">
+    <span class="side-nav__label"><small>06</small>사람들</span>
+  </button>
+  <button class="side-nav__dot" data-target="contact" aria-label="문의">
+    <span class="side-nav__label"><small>07</small>문의</span>
+  </button>
+</aside>
+
+<!-- ============ MOBILE NAV SHEET ============ -->
+<div class="nav__sheet" id="navSheet" aria-hidden="true">
+  <a href="#hero" data-target="hero" class="active">더나은</a>
+  <a href="services.html">서비스</a>
+  <a href="partners.html">파트너</a>
+  <a href="location.html">오시는길</a>
+  <a href="mailto:contact@deonaeun.com">문의</a>
+  <div class="nav__sheet__contact">
+    // contact<br>
+    <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a><br>
+    TEL. <a href="tel:0437507007">043.750.7007</a><br>
+    <b>충북 음성 · 경동스마트밸리</b>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero snap" id="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__inner">
+    <div class="hero__left">
+      <div class="page-hero__crumb">
+        <a href="#hero">deonaeun</a> <span>/</span> <b>home</b>
+      </div>
+      <div class="eyebrow" style="margin-bottom:20px">// since 2018 · 공공 SI · SM · 충북 음성</div>
+      <h1>
+        더 나은 세상을<br>
+        <span class="node-word">만드는</span><br>
+        <span class="underline-line">소프트웨어</span>를 짓습니다
+      </h1>
+      <p class="hero__lede">
+        사람과 사람을, 문제와 해결을, 오늘과 더 나은 내일을 잇는 코드.<br>
+        2018년부터 공공기관 SI·SM 현장에서 한 줄씩 쌓아 왔습니다.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#services">우리의 일 보기 <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="#contact">함께 만들어요</a>
+      </div>
+    </div>
+
+    <div class="hero__graph" aria-hidden="true">
+      <!-- Lines drawn first (behind nodes) -->
+      <svg viewBox="0 0 600 600" preserveAspectRatio="none">
+        <path d="M 130 80 L 300 290" />
+        <path d="M 510 130 L 300 290" />
+        <path d="M 70 320 L 300 290" />
+        <path d="M 540 350 L 300 290" />
+        <path d="M 190 520 L 300 290" />
+        <path d="M 460 540 L 300 290" />
+        <path class="ink" d="M 130 80 Q 320 -20 510 130" />
+        <path class="ink" d="M 70 320 Q -30 430 190 520" />
+        <path class="ink" d="M 540 350 Q 620 480 460 540" />
+      </svg>
+
+      <!-- Center node ring (logo's circle) -->
+      <div class="node-ring" data-pos="c"></div>
+
+      <!-- Around nodes -->
+      <div class="node node--ink" data-pos="tl"><span class="node__dot"></span>사람</div>
+      <div class="node node--orange" data-pos="tr"><span class="node__dot"></span>코드</div>
+      <div class="node" data-pos="ml"><span class="node__dot"></span>신뢰</div>
+      <div class="node node--ink" data-pos="mr"><span class="node__dot"></span>도전</div>
+      <div class="node node--orange" data-pos="bl"><span class="node__dot"></span>협업</div>
+      <div class="node" data-pos="br"><span class="node__dot"></span>지속가능성</div>
+    </div>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="hero__stats">
+    <div class="hero__stat">
+      <div class="v">2018<small>.04</small></div>
+      <div class="k">// founded</div>
+    </div>
+    <div class="hero__stat">
+      <div class="v">25<small>명+</small></div>
+      <div class="k">// 정규직 + 파트너십 프리랜서</div>
+    </div>
+    <div class="hero__stat">
+      <div class="v" style="font-size:24px; line-height:1.3; padding-top:4px">공공기관<br>SI · SM</div>
+      <div class="k">// core business</div>
+    </div>
+    <div class="hero__stat">
+      <div class="v" style="font-size:24px; line-height:1.3; padding-top:4px">충북 음성<br>경동스마트밸리</div>
+      <div class="k">// HQ</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee-section">
+  <div class="marquee">
+    <span>// 공공기관</span><span>// 행정·지자체</span><span>// 교육</span><span>// 보건·의료</span><span>// 국방</span><span>// 컨설팅</span><span>// AI 인프라</span><span>// 데이터</span><span>// 신사업</span>
+    <span>// 공공기관</span><span>// 행정·지자체</span><span>// 교육</span><span>// 보건·의료</span><span>// 국방</span><span>// 컨설팅</span><span>// AI 인프라</span><span>// 데이터</span><span>// 신사업</span>
+  </div>
+</div>
+
+<!-- ============ ABOUT (manifesto with indent) ============ -->
+<section class="section section--paper-2 snap" id="about">
+  <div class="connector"></div>
+  <div class="section__inner">
+    <div class="about-grid">
+      <div>
+        <div class="eyebrow">/* 01 — about us */</div>
+        <h2>다양한 사람이<br>한 줄씩 짓는 회사.</h2>
+        <p style="color:var(--gray-500); margin-top:24px; max-width:34ch; line-height:1.65">우리는 회사라기보다는, 코드처럼 모듈로 이루어진 사람들의 협업체입니다. 각자가 한 줄씩 더하면, 전체가 더 나아집니다.</p>
+        <a class="btn btn--ghost" href="#" style="margin-top:24px">회사 이야기 <span class="arrow">→</span></a>
+      </div>
+      <div class="code-window">
+        <div class="code-window__chrome">
+          <div class="code-window__traffic"><span></span><span></span><span></span></div>
+          <div class="code-window__filename">deonaeun · <b>mission.json</b> — main</div>
+          <span class="code-window__lang">json</span>
+        </div>
+        <div class="code-window__body">
+          <div class="code-window__gutter">
+            <span class="line">01</span><span class="line">02</span><span class="line">03</span><span class="line">04</span><span class="line">05</span><span class="line">06</span><span class="line">07</span><span class="line">08</span><span class="line">09</span><span class="line">10</span><span class="line">11</span><span class="line">12</span><span class="line">13</span><span class="line">14</span>
+          </div>
+          <div class="code-window__code">
+<span class="line"><span class="cw-punct">{</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">mission</span><span class="cw-punct">:</span> <span class="cw-str">"더 나은 세상을 위해 더나은이 함께합니다"</span><span class="cw-punct">,</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">founded</span><span class="cw-punct">:</span> <span class="cw-str">"2018-04"</span><span class="cw-punct">,</span> <span class="cw-var">hq</span><span class="cw-punct">:</span> <span class="cw-str">"충북 음성"</span><span class="cw-punct">,</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">believe</span><span class="cw-punct">: [</span></span>
+<span class="line cw-ind-2"><span class="cw-cmt">// 작은 코드 한 줄이 누군가의 하루를 바꿀 수 있다,</span></span>
+<span class="line cw-ind-2"><span class="cw-cmt">// 다양한 사람이 모이면 더 다양한 답을 만든다,</span></span>
+<span class="line cw-ind-2"><span class="cw-cmt">// 빠른 것보다 함께 가는 것이 멀리 간다</span></span>
+<span class="line cw-ind-1"><span class="cw-punct">],</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">core</span><span class="cw-punct">: [</span><span class="cw-str">"공공 SI · SM"</span><span class="cw-punct">,</span> <span class="cw-str">"IT 컨설팅"</span><span class="cw-punct">],</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">next</span><span class="cw-punct">: [</span><span class="cw-str">"사내 AI 도입"</span><span class="cw-punct">,</span> <span class="cw-str">"신사업 확장"</span><span class="cw-punct">], </span><span class="cw-cmt">// preparing</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">team</span><span class="cw-punct">: {</span> <span class="cw-prop">fulltime</span><span class="cw-punct">:</span> <span class="cw-num">25</span><span class="cw-punct">,</span> <span class="cw-prop">partners</span><span class="cw-punct">:</span> <span class="cw-str">"고정 프리랜서"</span> <span class="cw-punct">},</span> <span class="cw-var">partnership</span><span class="cw-punct">:</span> <span class="cw-str">"장기"</span><span class="cw-punct">,</span></span>
+<span class="line cw-ind-1"><span class="cw-arr">→</span> <span class="cw-var">status</span><span class="cw-punct">:</span> <span class="cw-str">"hiring"</span> <span class="cw-cmt">// 직군 무관</span></span>
+<span class="line"><span class="cw-punct">}</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VALUES (dark, connected nodes) ============ -->
+<section class="section section--dark snap" id="values">
+  <div class="connector"></div>
+  <div class="section__inner">
+    <div style="text-align:center; margin-bottom:80px">
+      <div class="eyebrow">/* 02 — values */</div>
+      <h2 style="font-size:clamp(36px,4.5vw,64px); font-weight:600; letter-spacing:-.03em; margin:24px 0 0; line-height:1.05; text-wrap:balance">더 나은 세상을 위한<br>세 가지 약속.</h2>
+      <p style="color:#bdbdc4; font-family:var(--mono); font-size:14px; max-width:48ch; margin:24px auto 0; line-height:1.8">
+        고객에게는 <b style="color:#fff; font-weight:500">더 나은 서비스</b>를, 직원에게는 <b style="color:#fff; font-weight:500">더 나은 삶</b>을,<br>
+        그래서 세상에는 <b style="color:#fff; font-weight:500">더 나은 가치</b>를.
+      </p>
+    </div>
+
+    <div class="values-canvas">
+      <div class="values-connector">
+        <svg viewBox="0 0 1000 200" preserveAspectRatio="none">
+          <path d="M 200 100 L 500 100" />
+          <path d="M 500 100 L 800 100" />
+          <circle cx="200" cy="100" r="5" fill="#FF752D" stroke="none"/>
+          <circle cx="500" cy="100" r="5" fill="#FF752D" stroke="none"/>
+          <circle cx="800" cy="100" r="5" fill="#FF752D" stroke="none"/>
+        </svg>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-card__num">promise_01 / for customers</div>
+          <div class="value-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF752D" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 10 5-1 9-5 9-10V7l-9-5z"/></svg>
+          </div>
+          <h3>고객에게<br><span style="color:var(--orange)">더 나은 서비스</span>를.</h3>
+          <p>한 줄의 코드도, 한 번의 약속도 책임집니다. 2018년부터 공공 SI·SM 현장에서 쌓은 운영의 난이도로 고객의 시스템에 답합니다.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-card__num">promise_02 / for our team</div>
+          <div class="value-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF752D" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h3>직원에게<br><span style="color:var(--orange)">더 나은 삶</span>을.</h3>
+          <p>일하는 사람이 잘 자야 좋은 코드가 나옵니다. 안정된 일자리, 성장할 기회, 그리고 일상의 여유 — 우리는 사람에게도 책임 있게 투자합니다.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-card__num">promise_03 / for the world</div>
+          <div class="value-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF752D" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          </div>
+          <h3>세상에는<br><span style="color:var(--orange)">더 나은 가치</span>를.</h3>
+          <p>우리가 짓는 시스템은 누군가의 구직, 교육, 권리와 연결됩니다. 공공의 일을 맡는 무게로, 한 줄도 가벼이 쓰지 않습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="section section--white snap" id="services">
+  <div class="connector"></div>
+  <div class="section__inner">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; gap:48px; flex-wrap:wrap">
+      <div>
+        <div class="eyebrow">/* 03 — services */</div>
+        <h2 style="font-size:clamp(32px,4vw,52px); font-weight:600; letter-spacing:-.03em; margin:24px 0 0; line-height:1.05; max-width:14ch">짓고, 잇고,<br>지속하는 일.</h2>
+      </div>
+      <p style="color:var(--gray-500); max-width:44ch; line-height:1.6">공공기관 SI · SM과 IT 컨설팅을 주력으로, AI 인프라와 새로운 영역으로의 확장을 함께 준비하고 있습니다.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service">
+        <div class="service__head">
+          <span class="service__num">// 01</span>
+          <span class="service__status service__status--core">core</span>
+        </div>
+        <h3>공공기관 SI · SM</h3>
+        <p>국가·지자체·공공기관의 정보화 사업을 설계·구축·운영합니다. 안정적으로, 책임 있게, 오래.</p>
+        <div class="code-snippet">
+<span class="line"><span class="cw-cmt">// 안정 운영이 곧 신뢰</span></span>
+<span class="line"><span class="cw-kw">while</span> <span class="cw-punct">(</span><span class="cw-var">service</span><span class="cw-punct">.</span><span class="cw-prop">isLive</span><span class="cw-punct">) {</span></span>
+<span class="line">&nbsp;&nbsp;<span class="cw-fn">maintain</span><span class="cw-punct">();</span> <span class="cw-fn">improve</span><span class="cw-punct">();</span></span>
+<span class="line"><span class="cw-punct">}</span></span>
+        </div>
+        <div class="service__tech"><span>Java</span><span>Spring</span><span>Oracle</span><span>전자정부 표준</span></div>
+      </div>
+      <div class="service">
+        <div class="service__head">
+          <span class="service__num">// 02</span>
+          <span class="service__status service__status--core">core</span>
+        </div>
+        <h3>IT 컨설팅</h3>
+        <p>현황 진단부터 ISP·ISMP, 아키텍처 설계, 사업 발주 지원까지. 무엇을 어떻게 만들지 먼저 정합니다.</p>
+        <div class="code-snippet">
+<span class="line"><span class="cw-kw">function</span> <span class="cw-fn">consult</span><span class="cw-punct">(</span><span class="cw-prop">problem</span><span class="cw-punct">) {</span></span>
+<span class="line">&nbsp;&nbsp;<span class="cw-kw">return</span> <span class="cw-fn">analyze</span><span class="cw-punct">().</span><span class="cw-fn">design</span><span class="cw-punct">().</span><span class="cw-fn">guide</span><span class="cw-punct">();</span></span>
+<span class="line"><span class="cw-punct">}</span></span>
+        </div>
+        <div class="service__tech"><span>ISP / ISMP</span><span>아키텍처</span><span>사업 발주</span><span>현황 진단</span></div>
+      </div>
+      <div class="service service--prep">
+        <div class="service__head">
+          <span class="service__num">// 03</span>
+          <span class="service__status service__status--prep">preparing</span>
+        </div>
+        <h3>사내 AI 인프라</h3>
+        <p>우리 팀이 먼저 AI를 잘 쓰는 조직이 되도록, 사내 LLM 운영 환경과 개발 자동화 파이프라인을 준비하고 있습니다. <em style="color:var(--gray-500); font-style:normal">(외부 구축 서비스 아님)</em></p>
+        <div class="code-snippet">
+<span class="line"><span class="cw-cmt">// internal capability — in progress</span></span>
+<span class="line"><span class="cw-kw">const</span> <span class="cw-var">team</span> <span class="cw-punct">=</span> <span class="cw-fn">learn</span><span class="cw-punct">().</span><span class="cw-fn">apply</span><span class="cw-punct">(</span><span class="cw-str">'AI'</span><span class="cw-punct">);</span></span>
+        </div>
+        <div class="service__tech"><span>사내 역량 내재화</span><span>개발 자동화</span><span>R&amp;D</span></div>
+      </div>
+      <div class="service service--prep">
+        <div class="service__head">
+          <span class="service__num">// 04</span>
+          <span class="service__status service__status--prep">preparing</span>
+        </div>
+        <h3>신사업 확장</h3>
+        <p>공공 SI · IT 컨설팅에서 쌓은 역량을 토대로, 새로운 영역과 새로운 고객을 만나기 위한 다음 한 줄을 짓고 있습니다.</p>
+        <div class="code-snippet">
+<span class="line"><span class="cw-cmt">// next — TBA</span></span>
+<span class="line"><span class="cw-kw">if</span> <span class="cw-punct">(</span><span class="cw-var">market</span><span class="cw-punct">.</span><span class="cw-fn">isReady</span><span class="cw-punct">())</span></span>
+<span class="line">&nbsp;&nbsp;<span class="cw-fn">expand</span><span class="cw-punct">(</span><span class="cw-str">'new-domain'</span><span class="cw-punct">);</span></span>
+        </div>
+        <div class="service__tech"><span>R&amp;D</span><span>파트너십</span><span>PoC</span><span>탐색 중</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section section--paper-2 snap" id="process">
+  <div class="connector"></div>
+  <div class="section__inner">
+    <div style="text-align:center; margin-bottom:24px">
+      <div class="eyebrow">/* 04 — process */</div>
+      <h2 style="font-size:clamp(36px,4.5vw,56px); font-weight:600; letter-spacing:-.03em; margin:24px 0 0; line-height:1.05">분석에서 운영까지,<br>한 호흡으로.</h2>
+      <p style="color:var(--gray-500); margin:20px auto 0; max-width:46ch; line-height:1.7; font-size:15px">공공 SI 표준 단계를 고수하되, 프로젝트 규모에 맞게 유연하게 대응합니다.</p>
+    </div>
+
+    <div class="process-flow">
+      <div class="process-line"></div>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="process-step__node">01</div>
+          <h4>분석</h4>
+          <p>현황·요구사항·범위 정의. 이해할 때까지 듣고, 문서로 남깁니다.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">02</div>
+          <h4>설계</h4>
+          <p>아키텍처·DB·화면 설계. 전자정부 표준·보안·접근성을 먼저.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">03</div>
+          <h4>구현</h4>
+          <p>표준 준수 코드, 단위·통합 테스트. 주간 단위 진척 보고.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">04</div>
+          <h4>안정화</h4>
+          <p>통합 시험·인수 시험, 이행·오픈 이후 집중 모니터링.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">05</div>
+          <h4>운영</h4>
+          <p>SLA 기반 SM, 장애 대응, 개선 반영. 장기 파트너로 함께.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section class="section section--white snap" id="team">
+  <div class="connector"></div>
+  <div class="section__inner">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:64px; gap:48px; flex-wrap:wrap">
+      <div>
+        <div class="eyebrow">/* 05 — people */</div>
+        <h2 style="font-size:clamp(36px,4.5vw,64px); font-weight:600; letter-spacing:-.03em; margin:24px 0 0; line-height:1.05; max-width:16ch">서로 다른 우리가<br>하나의 그래프를 만듭니다.</h2>
+      </div>
+      <p style="color:var(--gray-500); max-width:44ch; line-height:1.6">경영지원·SI사업·전략기술·UI/UX — 작지만 서로의 결을 채우는 네 부서가 함께 짓습니다.</p>
+    </div>
+
+    <div class="team-canvas">
+      <div class="team-grid">
+        <div class="person">
+          <div class="person__avatar">
+            <!-- 경영지원부: glasses + bun -->
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="20" r="3" fill="#FF752D"/>
+              <path d="M16 40c0-8 7-12 16-12s16 4 16 12" stroke="white" stroke-width="2.5" fill="white"/>
+              <circle cx="32" cy="32" r="14" fill="white"/>
+              <circle cx="26" cy="32" r="3" stroke="#0E0E10" stroke-width="1.5" fill="white"/>
+              <circle cx="38" cy="32" r="3" stroke="#0E0E10" stroke-width="1.5" fill="white"/>
+              <path d="M29 32h6" stroke="#0E0E10" stroke-width="1.5"/>
+              <path d="M28 39c2 2 6 2 8 0" stroke="#0E0E10" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="person__tag"><span class="punct">&lt;</span><span class="name">경영지원부</span><span class="punct"> /&gt;</span></div>
+          <div class="person__quote">“팀이 본연의 일에 집중하도록.”</div>
+        </div>
+        <div class="person">
+          <div class="person__avatar">
+            <!-- SI사업: cap (실용/현장) -->
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M14 28h36l-6-10c-3-4-7-6-12-6s-9 2-12 6z" fill="#FF752D"/>
+              <rect x="12" y="26" width="40" height="4" rx="2" fill="#FF752D"/>
+              <circle cx="32" cy="38" r="13" fill="white"/>
+              <circle cx="26" cy="38" r="1.8" fill="#0E0E10"/>
+              <circle cx="38" cy="38" r="1.8" fill="#0E0E10"/>
+              <path d="M28 44c2 1.5 6 1.5 8 0" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="person__tag"><span class="punct">&lt;</span><span class="name">SI사업부</span><span class="punct"> /&gt;</span></div>
+          <div class="person__quote">“안정 운영이 곧 신뢰.”</div>
+        </div>
+        <div class="person">
+          <div class="person__avatar">
+            <!-- 전략기술부: short hair (개척/도전) -->
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M16 30c0-10 7-16 16-16s16 6 16 16v6H16z" fill="#0E0E10"/>
+              <circle cx="32" cy="34" r="14" fill="#FFE9DA"/>
+              <circle cx="26" cy="34" r="1.8" fill="#0E0E10"/>
+              <circle cx="38" cy="34" r="1.8" fill="#0E0E10"/>
+              <path d="M28 41c2 1.5 6 1.5 8 0" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="person__tag"><span class="punct">&lt;</span><span class="name">전략기술부</span><span class="punct"> /&gt;</span></div>
+          <div class="person__quote">“다음 시장을 먼저 본다.”</div>
+        </div>
+        <div class="person">
+          <div class="person__avatar">
+            <!-- UI/UX부: long hair (감각/디자인) -->
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M14 40c0-14 8-22 18-22s18 8 18 22v8h-36z" fill="#0E0E10"/>
+              <circle cx="32" cy="34" r="13" fill="#FFE9DA"/>
+              <circle cx="26" cy="33" r="1.8" fill="#0E0E10"/>
+              <circle cx="38" cy="33" r="1.8" fill="#0E0E10"/>
+              <path d="M28 40c2 1 6 1 8 0" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="44" cy="36" r="2" fill="#FF752D"/>
+            </svg>
+          </div>
+          <div class="person__tag"><span class="punct">&lt;</span><span class="name">UI/UX부</span><span class="punct"> /&gt;</span></div>
+          <div class="person__quote">“기획부터 화면까지, 한 흐름으로.”</div>
+        </div>
+      </div>
+
+      <!-- Join us banner -->
+      <div class="team-cta">
+        <div class="team-cta__left">
+          <div class="team-cta__icon">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M16 6v20M6 16h20" stroke="#FF752D" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="team-cta__title">함께 만들어 가실 분을 찾고 있어요.</div>
+            <div class="team-cta__sub">// TODO: <b>your-name.tsx</b> — 직군 무관. 우선 안녕부터.</div>
+          </div>
+        </div>
+        <a class="btn btn--primary" href="#">채용 정보 보기 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta snap" id="contact">
+  <div class="cta__bg"></div>
+  <div class="cta__inner">
+    <div class="eyebrow" style="color:var(--orange)">// let's connect</div>
+    <h2>다음 노드는<br><em>당신의 아이디어</em>입니다.</h2>
+    <p>RFP, 막연한 아이디어, 또는 그저 안녕. 무엇이든 좋습니다. 영업일 기준 24시간 안에 답장 드립니다.</p>
+    <div class="cta__btns">
+      <a class="btn btn--orange" href="mailto:contact@deonaeun.com">✉ contact@deonaeun.com <span class="arrow">→</span></a>
+      <a class="btn btn--ghost" href="tel:0437507007">☎ 043.750.7007</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="row">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
+          <path d="M142 71.5H3" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M142 42.5V71.5" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M117.5 42.5H142" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M90 34.5H104" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M54 57H79" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M54 34.5V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M90 35V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
+          <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+          <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <span>deonaeun</span>
+      </div>
+      <p style="margin:0; max-width:32ch; line-height:1.6">더 나은 소프트웨어로 더 나은 세상을 만듭니다.<br>since 2018.</p>
+    </div>
+    <div>
+      <h5>사이트</h5>
+      <ul>
+        <li><a href="#hero">더나은</a></li>
+        <li><a href="services.html">서비스</a></li>
+        <li><a href="partners.html">파트너</a></li>
+        <li><a href="location.html">오시는길</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>사업영역</h5>
+      <ul>
+        <li><a href="services.html">공공 SI · 시스템 구축</a></li>
+        <li><a href="services.html">시스템 운영 (SM)</a></li>
+        <li><a href="services.html">웹접근성 인증</a></li>
+        <li><a href="services.html">IT 컨설팅</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a></li>
+        <li>TEL. <a href="tel:0437507007">043.750.7007</a></li>
+        <li>FAX. 043.901.4220</li>
+        <li><a href="https://www.deonaeun.com" target="_blank" rel="noopener">www.deonaeun.com</a></li>
+        <li style="font-size:13px; line-height:1.6; padding-top:6px"><a href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener">충청북도 음성군 맹동면<br>용두 3길 5, 206호<br><span style="color:#FF752D">경동스마트밸리 ↗</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2026 <span class="nowrap-name">(주)더나은</span> · deonaeun. All rights reserved.</span>
+    <span>// crafted in 충북 음성</span>
+  </div>
+</footer>
+
+<script>
+  // sticky nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8));
+
+  // mobile burger ↔ sheet
+  const burger = document.getElementById('navBurger');
+  const sheet = document.getElementById('navSheet');
+  function setSheet(open){
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    sheet.classList.toggle('is-open', open);
+    sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  burger.addEventListener('click', () => setSheet(!sheet.classList.contains('is-open')));
+  sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
+
+  // ============ SIDE NAV — scrollspy (반응성 안정) ============
+  const sideNav = document.getElementById('sideNav');
+  const dots = sideNav.querySelectorAll('.side-nav__dot');
+  const sectionIds = ['hero','about','values','services','process','team','contact'];
+  const darkSections = new Set(['values','contact']);
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const el = document.getElementById(dot.dataset.target);
+      if (!el) return;
+      window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+    });
+  });
+
+  function updateActive(){
+    const probe = window.scrollY + window.innerHeight * 0.35;
+    let activeId = sectionIds[0];
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= probe) activeId = id;
+    });
+    const idx = sectionIds.indexOf(activeId);
+    dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+    sideNav.classList.toggle('is-dark', darkSections.has(activeId));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  window.addEventListener('resize', updateActive);
+  updateActive();
+
+  // reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.section, .cta, .hero__stats, .marquee-section').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+</script>
+</body>
+</html>
