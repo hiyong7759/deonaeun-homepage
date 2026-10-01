@@ -662,6 +662,8 @@
     .side-nav__track{ top:8px; bottom:8px }
   }
 </style>
+<link rel="stylesheet" href="hero-refinements.css">
+<script src="hero-motion.js" defer></script>
 </head>
 <body data-screen-label="B · Graph">
 
@@ -767,21 +769,25 @@
     </div>
 
     <div class="hero__graph" aria-hidden="true">
-      <!-- Lines drawn first (behind nodes) -->
-      <svg viewBox="0 0 600 600" preserveAspectRatio="none">
-        <path d="M 130 80 L 300 290" />
-        <path d="M 510 130 L 300 290" />
-        <path d="M 70 320 L 300 290" />
-        <path d="M 540 350 L 300 290" />
-        <path d="M 190 520 L 300 290" />
-        <path d="M 460 540 L 300 290" />
-        <path class="ink" d="M 130 80 Q 320 -20 510 130" />
-        <path class="ink" d="M 70 320 Q -30 430 190 520" />
-        <path class="ink" d="M 540 350 Q 620 480 460 540" />
+      <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+        <defs><linearGradient id="home-link" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9bfa0"/><stop offset=".5" stop-color="#ec8b53"/><stop offset="1" stop-color="#a9b9c0"/></linearGradient></defs>
+        <path d="M120 110 C200 105 195 260 300 290"/>
+        <path d="M470 115 C390 105 405 255 300 290"/>
+        <path d="M90 300 C165 250 205 325 300 290"/>
+        <path d="M515 340 C440 390 405 255 300 290"/>
+        <path d="M180 495 C160 400 265 400 300 290"/>
+        <path d="M420 505 C465 410 330 405 300 290"/>
+        <path class="ink" d="M120 110 Q295 -15 470 115"/>
+        <path class="ink" d="M90 300 Q10 475 180 495"/>
+        <path class="ink" d="M515 340 Q570 490 420 505"/>
+        <path class="signal" d="M120 110 C200 105 195 260 300 290" pathLength="100" style="animation-delay:-0s"/>
+        <path class="signal" d="M470 115 C390 105 405 255 300 290" pathLength="100" style="animation-delay:-2s"/>
+        <path class="signal" d="M90 300 C165 250 205 325 300 290" pathLength="100" style="animation-delay:-4s"/>
+        <path class="signal" d="M515 340 C440 390 405 255 300 290" pathLength="100" style="animation-delay:-6s"/>
+        <path class="signal" d="M180 495 C160 400 265 400 300 290" pathLength="100" style="animation-delay:-8s"/>
+        <path class="signal" d="M420 505 C465 410 330 405 300 290" pathLength="100" style="animation-delay:-10s"/>
       </svg>
-
-      <!-- Center node ring (logo's circle) -->
-      <div class="node-ring" data-pos="c"></div>
+      <div class="node-ring" data-pos="c"><b>deonaeun</b><small>사람과 기술을 잇다</small></div>
 
       <!-- Around nodes -->
       <div class="node node--ink" data-pos="tl"><span class="node__dot"></span>사람</div>

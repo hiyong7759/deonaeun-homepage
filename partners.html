@@ -137,6 +137,8 @@
     .lead-stat:nth-child(2n){border-right:0}
   }
 </style>
+<link rel="stylesheet" href="hero-refinements.css">
+<script src="hero-motion.js" defer></script>
 </head>
 <body data-screen-label="Partners">
 
@@ -217,73 +219,74 @@
       </p>
     </div>
 
-    <div class="page-hero__visual" aria-hidden="true">
-      <svg viewBox="0 0 520 520">
-        <!-- rotating outer orbit (visual interest) -->
-        <g style="transform-origin:260px 260px">
-          <circle cx="260" cy="260" r="230" fill="none" stroke="#FF752D" stroke-width="1" opacity="0.15" stroke-dasharray="2 8"/>
-          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="60s" repeatCount="indefinite"/>
+    <div class="page-hero__visual hero-visual--partners" aria-hidden="true">
+      <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="partner-atmosphere" cx=".45" cy=".4" r=".65">
+            <stop stop-color="#fff" stop-opacity=".75"/>
+            <stop offset="1" stop-color="#dee8e8" stop-opacity=".08"/>
+          </radialGradient>
+          <linearGradient id="partner-card" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#fff"/><stop offset="1" stop-color="#fbfcfa"/>
+          </linearGradient>
+          <linearGradient id="partner-core" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#42555f"/><stop offset="1" stop-color="#1a272d"/>
+          </linearGradient>
+          <linearGradient id="partner-link" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#9eafb6"/><stop offset=".5" stop-color="#f1b68d"/><stop offset="1" stop-color="#e7a674"/>
+          </linearGradient>
+          <filter id="partner-shadow" x="-35%" y="-45%" width="170%" height="205%">
+            <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#4b5e61" flood-opacity=".12"/>
+          </filter>
+        </defs>
+        <!-- Six real partners orbit the shared point of collaboration. -->
+        <circle cx="260" cy="260" r="210" fill="url(#partner-atmosphere)" stroke="#b5c3c7" stroke-opacity=".28"/>
+        <circle cx="260" cy="260" r="180" fill="none" stroke="#ddbc9f" stroke-opacity=".26"/>
+        <circle cx="260" cy="260" r="231" fill="none" stroke="#a6b4b8" stroke-opacity=".32" stroke-dasharray="1 12"/>
+        <g fill="none" stroke-linecap="round">
+          <circle cx="260" cy="260" r="210" stroke="#ebaa79" stroke-width="2" stroke-dasharray="70 1249" transform="rotate(-80 260 260)">
+            <animateTransform attributeName="transform" type="rotate" from="-80 260 260" to="280 260 260" dur="90s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="260" cy="260" r="180" stroke="#9aafb9" stroke-width="1.5" stroke-dasharray="34 1097" transform="rotate(110 260 260)"/>
         </g>
-        <!-- six outer partner orbits -->
-        <g fill="none" stroke-width="2">
-          <circle cx="180" cy="180" r="100" stroke="#FF752D" opacity="0.85"/>
-          <circle cx="320" cy="120" r="80" stroke="#424242" opacity="0.4"/>
-          <circle cx="400" cy="280" r="95" stroke="#FF752D" opacity="0.7"/>
-          <circle cx="120" cy="340" r="78" stroke="#424242" opacity="0.4"/>
-          <circle cx="240" cy="420" r="88" stroke="#FF752D" opacity="0.8"/>
-          <circle cx="420" cy="420" r="70" stroke="#424242" opacity="0.4"/>
+        <g fill="none" stroke="url(#partner-link)" stroke-width="1.2" opacity=".7">
+          <path d="M154 130C154 214 232 192 260 260"/>
+          <path d="M366 130C366 214 288 192 260 260"/>
+          <path d="M430 260C378 228 322 228 260 260"/>
+          <path d="M366 405C366 316 288 326 260 260"/>
+          <path d="M154 405C154 316 232 326 260 260"/>
+          <path d="M90 260C142 292 198 292 260 260"/>
         </g>
-        <!-- center "us" node with pulse -->
-        <circle cx="260" cy="260" r="42" fill="#FF752D" opacity="0.18">
-          <animate attributeName="r" values="32;58;32" dur="3s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.25;0;0.25" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="260" cy="260" r="34" fill="#FF752D"/>
-        <text x="260" y="258" font-family="Pretendard, Pretendard Variable, sans-serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">더나은</text>
-        <text x="260" y="272" font-family="JetBrains Mono, monospace" font-size="8" font-weight="500" fill="#FFE9DA" text-anchor="middle" opacity="0.85">since 2018</text>
-        <!-- dashed connector lines from center (with subtle pulse) -->
-        <g stroke="#FF752D" stroke-width="1.4" opacity="0.7" stroke-dasharray="5 5" fill="none">
-          <line x1="260" y1="260" x2="180" y2="180"/>
-          <line x1="260" y1="260" x2="320" y2="120"/>
-          <line x1="260" y1="260" x2="400" y2="280"/>
-          <line x1="260" y1="260" x2="120" y2="340"/>
-          <line x1="260" y1="260" x2="240" y2="420"/>
-          <line x1="260" y1="260" x2="420" y2="420"/>
-          <animate attributeName="stroke-dashoffset" values="0;-20" dur="3s" repeatCount="indefinite"/>
+        <g fill="#f19b5f">
+          <circle r="2.8"><animateMotion dur="14s" repeatCount="indefinite" path="M154 130C154 214 232 192 260 260"/></circle>
+          <circle r="2.8"><animateMotion dur="14s" begin="-5s" repeatCount="indefinite" path="M430 260C378 228 322 228 260 260"/></circle>
+          <circle r="2.8"><animateMotion dur="14s" begin="-9s" repeatCount="indefinite" path="M154 405C154 316 232 326 260 260"/></circle>
         </g>
-        <!-- partner dots (with staggered pulse) -->
-        <circle cx="180" cy="180" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0s" repeatCount="indefinite"/></circle>
-        <circle cx="320" cy="120" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0.4s" repeatCount="indefinite"/></circle>
-        <circle cx="400" cy="280" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="0.8s" repeatCount="indefinite"/></circle>
-        <circle cx="120" cy="340" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></circle>
-        <circle cx="240" cy="420" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.6s" repeatCount="indefinite"/></circle>
-        <circle cx="420" cy="420" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="2s" repeatCount="indefinite"/></circle>
-        <!-- Partner logos on white plates preserve original brand colors. -->
-        <g>
-          <g>
-            <rect x="114" y="106" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/keis.png" x="126" y="117" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-          </g>
-          <g>
-            <rect x="254" y="46" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/kaon.png" x="266" y="57" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-          </g>
-          <g>
-            <rect x="334" y="206" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/tg.png" x="380" y="216" width="40" height="40" preserveAspectRatio="xMidYMid meet"/>
-          </g>
-          <g>
-            <rect x="54" y="266" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/sechan.png" x="66" y="277" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-          </g>
-          <g>
-            <rect x="174" y="430" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/vitasoft.png" x="186" y="441" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-          </g>
-          <g>
-            <rect x="354" y="430" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
-            <image href="assets/rian.png" x="383" y="443" width="74" height="34" preserveAspectRatio="xMidYMid meet"/>
-          </g>
+        <circle cx="260" cy="260" r="82" fill="#fff" fill-opacity=".52" stroke="#fff"/>
+        <circle cx="260" cy="260" r="71" fill="none" stroke="#e1b99a" stroke-opacity=".6"/>
+        <circle cx="260" cy="260" r="58" fill="url(#partner-core)" stroke="#71858f" stroke-opacity=".35" filter="url(#partner-shadow)"/>
+        <circle cx="260" cy="234" r="3" fill="#ff9b60"/>
+        <text x="260" y="261" font-family="Pretendard, Pretendard Variable, sans-serif" font-size="18" font-weight="600" fill="#fff" text-anchor="middle">더나은</text>
+        <text x="260" y="280" font-family="JetBrains Mono, monospace" font-size="8" fill="#b9c7cc" text-anchor="middle">since 2018</text>
+        <!-- Neutral plates preserve every original logo and its proportions. -->
+        <g fill="url(#partner-card)" stroke="#fff" filter="url(#partner-shadow)">
+          <rect x="88" y="95" width="132" height="70" rx="18"/>
+          <rect x="300" y="95" width="132" height="70" rx="18"/>
+          <rect x="364" y="225" width="132" height="70" rx="18"/>
+          <rect x="24" y="225" width="132" height="70" rx="18"/>
+          <rect x="88" y="370" width="132" height="70" rx="18"/>
+          <rect x="300" y="370" width="132" height="70" rx="18"/>
+        </g>
+        <image href="assets/keis.png" x="100" y="111" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+        <image href="assets/kaon.png" x="312" y="111" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+        <image href="assets/tg.png" x="408" y="238" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>
+        <image href="assets/sechan.png" x="36" y="241" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+        <image href="assets/vitasoft.png" x="100" y="386" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+        <image href="assets/rian.png" x="327" y="387" width="78" height="36" preserveAspectRatio="xMidYMid meet"/>
+        <g fill="#f3a16c" stroke="#fff" stroke-width="3">
+          <circle cx="154" cy="165" r="4"/><circle cx="366" cy="165" r="4"/>
+          <circle cx="364" cy="260" r="4"/><circle cx="156" cy="260" r="4"/>
+          <circle cx="154" cy="370" r="4"/><circle cx="366" cy="370" r="4"/>
         </g>
       </svg>
     </div>
