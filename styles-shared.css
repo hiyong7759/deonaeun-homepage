@@ -225,7 +225,7 @@ footer .brand svg{height:28px}
   opacity:0; pointer-events:none; transition:opacity .15s, transform .15s;
   letter-spacing:.01em;
 }
-.side-nav__dot:hover .side-nav__label{opacity:1; transform:translateY(-50%) translateX(-4px)}
+.side-nav:hover .side-nav__label, .side-nav:focus-within .side-nav__label{opacity:1; transform:translateY(-50%) translateX(-4px)}
 .side-nav__dot .side-nav__label small{color:var(--gray-400); margin-right:6px}
 .side-nav__track{
   position:absolute; left:50%; top:14px; bottom:14px;

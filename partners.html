@@ -75,27 +75,15 @@
   }
 
   .partner-card__logo{
-    height:64px; display:flex; align-items:center;
+    height:104px; display:flex; align-items:center;
     border-bottom:1px dashed var(--gray-200); padding-bottom:20px;
   }
-  .partner-card__logo svg, .partner-card__logo img{height:36px; width:auto}
-
-  /* stylized text logos (placeholders matching common brand look) */
-  .logo-tile{
-    display:inline-flex; align-items:center; gap:10px;
-    font-family:var(--font); font-weight:700; letter-spacing:-.02em;
+  .partner-card__logo img{
+    display:block; width:auto; height:auto; max-width:100%; max-height:52px;
+    object-fit:contain; object-position:left center;
   }
-  .logo-tile__mark{
-    width:38px; height:38px; border-radius:9px;
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--mono); font-weight:600; font-size:14px;
-    color:#fff; flex-shrink:0;
-  }
-  .logo-tile__text{font-size:20px}
-  .logo-tile__text small{
-    display:block; font-family:var(--mono); font-weight:400; font-size:10px;
-    color:var(--gray-500); letter-spacing:.05em; margin-top:2px;
-  }
+  .partner-card__logo .partner-logo--tg{width:72px; max-height:72px}
+  .partner-card__logo .partner-logo--vitasoft{width:168px}
 
   .partner-card__name{
     font-size:22px; font-weight:600; letter-spacing:-.02em; margin:0; line-height:1.2;
@@ -270,20 +258,32 @@
         <circle cx="120" cy="340" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></circle>
         <circle cx="240" cy="420" r="9" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="1.6s" repeatCount="indefinite"/></circle>
         <circle cx="420" cy="420" r="8" fill="#FF752D"><animate attributeName="r" values="7;11;7" dur="2.4s" begin="2s" repeatCount="indefinite"/></circle>
-        <!-- partner labels (larger, bolder, with bg pill) -->
-        <g font-family="Pretendard, Pretendard Variable, sans-serif" font-size="13" font-weight="600" fill="#0E0E10">
-          <rect x="148" y="148" width="64" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="180" y="164" text-anchor="middle">KEIS</text>
-          <rect x="286" y="88" width="68" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="320" y="104" text-anchor="middle">가온아이</text>
-          <rect x="360" y="248" width="80" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="400" y="264" text-anchor="middle">티지소프트</text>
-          <rect x="82" y="308" width="76" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="120" y="324" text-anchor="middle">세찬아이앤씨</text>
-          <rect x="204" y="452" width="72" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="240" y="468" text-anchor="middle">vitasoft</text>
-          <rect x="388" y="452" width="64" height="22" rx="6" fill="#fff" stroke="#FF752D" stroke-width="1.5"/>
-          <text x="420" y="468" text-anchor="middle">RIAN</text>
+        <!-- Partner logos on white plates preserve original brand colors. -->
+        <g>
+          <g>
+            <rect x="114" y="106" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/keis.png" x="126" y="117" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+          </g>
+          <g>
+            <rect x="254" y="46" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/kaon.png" x="266" y="57" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+          </g>
+          <g>
+            <rect x="334" y="206" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/tg.png" x="380" y="216" width="40" height="40" preserveAspectRatio="xMidYMid meet"/>
+          </g>
+          <g>
+            <rect x="54" y="266" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/sechan.png" x="66" y="277" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+          </g>
+          <g>
+            <rect x="174" y="430" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/vitasoft.png" x="186" y="441" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+          </g>
+          <g>
+            <rect x="354" y="430" width="132" height="60" rx="10" fill="#fff" stroke="#E6E6E8"/>
+            <image href="assets/rian.png" x="383" y="443" width="74" height="34" preserveAspectRatio="xMidYMid meet"/>
+          </g>
         </g>
       </svg>
     </div>
@@ -333,13 +333,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_01 · 발주처</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#1F4FA8">KEIS</div>
-            <div class="logo-tile__text">
-              한국고용정보원
-              <small>Korea Employment Information Service</small>
-            </div>
-          </div>
+          <img class="partner-logo--keis" src="assets/keis.png" alt="한국고용정보원 로고" width="200" height="46" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">한국고용정보원</h3>
         <div class="partner-card__type">국가 발주기관</div>
@@ -353,13 +347,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_02 · 솔루션</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#1976D2; font-family:var(--font); font-size:18px; font-weight:800">KI</div>
-            <div class="logo-tile__text">
-              가온아이
-              <small>GROUPWARE &amp; COLLABORATION</small>
-            </div>
-          </div>
+          <img class="partner-logo--kaon" src="assets/kaon.png" alt="가온아이 로고" width="185" height="46" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">(주) 가온아이</h3>
         <div class="partner-card__type">솔루션 파트너</div>
@@ -373,13 +361,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_03 · 협력사</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#0EBFA0; font-family:var(--font); font-weight:800">TG</div>
-            <div class="logo-tile__text">
-              티지소프트
-              <small>SOFTWARE · R&amp;D</small>
-            </div>
-          </div>
+          <img class="partner-logo--tg" src="assets/tg.png" alt="티지소프트 로고" width="109" height="109" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">티지소프트</h3>
         <div class="partner-card__type">개발 협력</div>
@@ -393,13 +375,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_04 · 협력사</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#0F62A8; font-size:11px">SC</div>
-            <div class="logo-tile__text">
-              세찬아이앤씨
-              <small>SECHAN I&amp;C CORP.</small>
-            </div>
-          </div>
+          <img class="partner-logo--sechan" src="assets/sechan.png" alt="세찬아이앤씨 로고" width="200" height="42" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">(주) 세찬아이앤씨</h3>
         <div class="partner-card__type">IT 컨설팅</div>
@@ -413,13 +389,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_05 · SI</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#5C9C2E; font-family:var(--font); font-weight:800; font-size:13px">vt</div>
-            <div class="logo-tile__text">
-              vitasoft
-              <small>STRATEGY · SI</small>
-            </div>
-          </div>
+          <img class="partner-logo--vitasoft" src="assets/vitasoft.png" alt="비타소프트 로고" width="200" height="62" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">비타소프트</h3>
         <div class="partner-card__type">SI · 컨설팅</div>
@@ -433,13 +403,7 @@
       <div class="partner-card">
         <div class="partner-card__num">// partner_06 · 전자정부</div>
         <div class="partner-card__logo">
-          <div class="logo-tile">
-            <div class="logo-tile__mark" style="background:#D9442D; font-family:var(--font); font-weight:800; font-size:13px">RA</div>
-            <div class="logo-tile__text">
-              RIAN
-              <small>SMART e-GOVERNMENT</small>
-            </div>
-          </div>
+          <img class="partner-logo--rian" src="assets/rian.png" alt="리안커뮤니케이션즈 로고" width="101" height="45" loading="lazy" decoding="async">
         </div>
         <h3 class="partner-card__name">(주) 리안커뮤니케이션즈</h3>
         <div class="partner-card__type">전자정부 전문</div>
