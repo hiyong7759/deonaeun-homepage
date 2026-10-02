@@ -1,3 +1,4 @@
+const { gsap } = window;
 /* One illustration changes with the original five process steps. */
 (() => {
   const section = document.getElementById('process');
@@ -145,7 +146,7 @@
       operation: selected === 4 ? 1 : 0,
       orbit: selected === 4 ? .55 : 0
     };
-    const moving = animate && active && !reduced.matches && !!window.gsap;
+    const moving = animate && active && !reduced.matches && !!gsap;
     if (!moving) {
       target.forEach((layout, i) => { Object.assign(values[i], layout); draw(i); });
       Object.assign(opacity, targetOpacity); drawLayers();
@@ -153,7 +154,7 @@
       layers.review.removeAttribute('transform');
       return;
     }
-    animation = window.gsap.timeline({ defaults: { duration: .85, ease: 'power3.inOut' } });
+    animation = gsap.timeline({ defaults: { duration: .85, ease: 'power3.inOut' } });
     target.forEach((layout, i) => {
       const destination = { ...layout, onUpdate: () => draw(i) };
       if (entrance) {

@@ -1,0 +1,19 @@
+# Merge these locations into the company's existing HTTPS server block.
+# Serve the HTML files and assets/css/js/includes directories from the document root.
+# Keep the existing TLS and deonaeun.com -> www.deonaeun.com redirect configuration.
+index index.html;
+
+location = /index.html { return 301 /; }
+location = /aboutus.html { return 301 "/#about"; }
+location = /service.html { return 301 /services.html; }
+location = /partner.html { return 301 /partners.html; }
+location = /contact.html { return 301 /location.html; }
+
+location / { try_files $uri $uri/ =404; }
+error_page 404 /404.html;
+
+# File names stay readable; revalidate to receive edits after deployment.
+location ~* \.(html|xml|txt|css|js|png|svg)$ {
+    add_header Cache-Control "no-cache";
+    try_files $uri =404;
+}

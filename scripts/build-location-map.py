@@ -10,7 +10,7 @@ import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-data = json.loads((ROOT / 'assets/location-map-data.json').read_text())
+data = json.loads((ROOT / 'scripts/data/location-map-data.json').read_text())
 p = data['projection']
 
 def project(point):
@@ -99,8 +99,9 @@ out.append(f'''        <g transform="translate(45 666)" class="location-map__sca
 for i,item in enumerate(data['places'][:-1],1):
     out.append(f'        <li><span>{i:02d}</span>{escape(item["name"])}</li>')
 out.append('      </ol>\n      <!-- /LOCATION MAP -->')
-page=ROOT/'location.html'; text=page.read_text()
-start=text.index('      <!-- LOCATION MAP:') if '<!-- LOCATION MAP:' in text else text.index('      <svg class="location-map"')
-end=text.index('      <!-- /LOCATION MAP -->',start)+len('      <!-- /LOCATION MAP -->') if '<!-- /LOCATION MAP -->' in text else text.index('      </svg>',start)+len('      </svg>')
-page.write_text(text[:start]+'\n'.join(out)+text[end:])
+page = ROOT / 'location.html'
+text = page.read_text()
+start = text.index('<!-- LOCATION MAP:')
+end = text.index('<!-- /LOCATION MAP -->', start) + len('<!-- /LOCATION MAP -->')
+page.write_text(text[:start] + '\n'.join(out).strip() + text[end:])
 print(f'Generated {len(roads)} road ways and {len(data["places"])} georeferenced places.')

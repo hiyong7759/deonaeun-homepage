@@ -40,48 +40,12 @@
 .hero h1 .node-word::before{width:22px; height:22px; border-width:3px; box-shadow:0 0 0 6px #ff752d0a}
 .hero h1 .underline-line::after{height:8px; bottom:8px; border-radius:8px; background:linear-gradient(90deg,#ff752d80,#ffb27c35); opacity:1}
 .hero__bg{opacity:.3; background-size:80px 80px}
-.hero__graph, .page-hero__visual{isolation:isolate; max-width:580px}
-.hero__graph::before, .page-hero__visual::before{
+.page-hero__visual{isolation:isolate; max-width:580px}
+.page-hero__visual::before{
   content:""; position:absolute; inset:8%; z-index:-1; border-radius:50%; pointer-events:none;
   background:radial-gradient(circle at 65% 25%,#fff8,transparent 62%),radial-gradient(circle at 45% 60%,#ffc09d24,transparent 70%);
   box-shadow:0 0 90px 20px #f5b3850a;
 }
-.hero__graph::after{
-  content:""; position:absolute; inset:12%; border:1px solid #c8c7bd40; border-radius:50%;
-  box-shadow:0 0 0 36px #fffc,0 0 0 37px #d4d5ce28; z-index:-1; pointer-events:none;
-}
-.hero__graph .node{
-  border:1px solid #fff; background:linear-gradient(140deg,#ffffffeb,#f1f4f3e8);
-  padding:14px 19px; border-radius:18px; font-family:var(--font); font-size:14px; font-weight:600;
-  box-shadow:0 12px 26px -18px #29435155,inset 0 0 0 1px #7c919914;
-  animation:hero-node-arrive .9s cubic-bezier(.2,.7,.2,1) both;
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-}
-.hero__graph .node--ink{background:linear-gradient(140deg,#39464c,#1c252a); color:#fff; border-color:#4a575e; box-shadow:0 14px 28px -18px #182e4970}
-.hero__graph .node--orange{background:linear-gradient(140deg,#ff985d,#f17636); color:#fff; border-color:#ffbc91; box-shadow:0 14px 28px -18px #dd5e3280}
-.hero__graph .node__dot{width:6px; height:6px; animation:none; box-shadow:0 0 0 4px #ff752d0d}
-.hero__graph .node--ink .node__dot{box-shadow:0 0 10px #ff914680}
-.hero__graph .node--orange .node__dot{box-shadow:0 0 0 4px #ffffff18}
-.hero__graph .node[data-pos]{right:auto; bottom:auto; transform:translate(-50%,-50%)}
-.hero__graph .node[data-pos="tl"]{left:20%; top:18.333%}
-.hero__graph .node[data-pos="tr"]{left:78.333%; top:19.167%}
-.hero__graph .node[data-pos="ml"]{left:15%; top:50%}
-.hero__graph .node[data-pos="mr"]{left:85.833%; top:56.667%}
-.hero__graph .node[data-pos="bl"]{left:30%; top:82.5%}
-.hero__graph .node[data-pos="br"]{left:70%; top:84.167%}
-.hero__graph .node-ring[data-pos="c"]{
-  left:50%; top:48.333%; width:144px; height:144px; border:1px solid #ffb083;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  background:radial-gradient(circle at 28% 18%,#fff 0%,#fff9f3 40%,#f9d7b8 100%);
-  box-shadow:inset 0 0 0 7px #fff9,0 18px 45px -24px #a6572870,0 0 0 18px #fffc,0 0 0 19px #dfb79950;
-}
-.hero__graph .node-ring b{font-size:19px; font-family:var(--mono); font-weight:500; letter-spacing:-.07em; color:#343c40}
-.hero__graph .node-ring small{font-size:10px; color:#92735d; letter-spacing:.01em}
-.hero__graph .node-ring::before,.hero__graph .node-ring::after{inset:-22px; border:1px solid #ffae74; animation:hero-ring-breathe 9s ease-in-out infinite; opacity:.2}
-.hero__graph .node-ring::after{inset:-35px; animation-delay:-4.5s; border-color:#bdcbd0}
-.hero__graph svg path{stroke:url(#home-link); stroke-width:1.3; stroke-dasharray:none; stroke-dashoffset:0; animation:none; opacity:.65}
-.hero__graph svg path.ink{stroke:#96a7ae; stroke-width:1; opacity:.25; animation:none}
-.hero__graph svg path.signal{stroke:#f59055; stroke-width:2; stroke-dasharray:3 97; opacity:.8; animation:hero-signal 14s linear infinite}
 .hero__stats{
   position:relative; width:100%; margin-top:56px; padding:0; background:#ffffff40;
   border-color:#d8d9d080; border-radius:0;
@@ -91,14 +55,8 @@
 .hero__stat .k{font-size:10px; color:#7b7c78}
 .hero-motion-paused *, .hero-motion-paused *::before, .hero-motion-paused *::after{animation-play-state:paused!important}
 @keyframes hero-arrive{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
-@keyframes hero-node-arrive{from{opacity:0; scale:.97}to{opacity:1; scale:1}}
-@keyframes hero-ring-breathe{0%,100%{transform:scale(1); opacity:.15}50%{transform:scale(1.045); opacity:.4}}
-@keyframes hero-signal{to{stroke-dashoffset:-100}}
 @media (max-width:1100px) and (min-width:981px){
   .hero h1,.page-hero h1{font-size:44px}
-  .hero__graph .node{font-size:12px; padding:12px 14px}
-  .hero__graph .node-ring[data-pos="c"]{width:116px; height:116px}
-  .hero__graph .node-ring b{font-size:16px}
 }
 @media (max-width:980px){
   html{scroll-snap-type:none}
@@ -107,8 +65,7 @@
   .hero__inner,.page-hero__inner{grid-template-columns:minmax(0,1fr); gap:40px}
   .hero__left,.page-hero__left{max-width:660px}
   .hero h1,.page-hero h1{font-size:clamp(36px,6.4vw,58px); line-height:1.2}
-  .hero__graph,.page-hero__visual{justify-self:center; margin:0 auto; max-width:540px}
-  .hero__graph .node[data-pos="bl"],.hero__graph .node[data-pos="br"]{display:flex}
+  .page-hero__visual{justify-self:center; margin:0 auto; max-width:540px}
   .hero__stats{margin-top:36px}
 }
 @media (max-width:540px){
@@ -122,18 +79,10 @@
   .hero h1 .node-word::before{width:18px; height:18px}
   .hero__cta{margin-top:24px; gap:8px}
   .hero__cta .btn{padding:0 18px; height:44px; font-size:12px}
-  .hero__graph{margin-top:10px}
-  .hero__graph .node{font-size:11px; padding:10px 12px; gap:7px; border-radius:12px}
-  .hero__graph .node-ring[data-pos="c"]{width:100px; height:100px; box-shadow:inset 0 0 0 5px #fff9,0 14px 30px -22px #a6572870,0 0 0 10px #fffc,0 0 0 11px #dfb79950}
-  .hero__graph .node-ring b{font-size:14px}
-  .hero__graph .node-ring small{font-size:8px}
-  .hero__graph .node-ring::before{inset:-14px}
-  .hero__graph .node-ring::after{inset:-22px}
   .hero__stat{padding:16px 12px}
   .hero__stat .k{font-size:9px}
 }
 @media (prefers-reduced-motion:reduce){
   .hero *,.hero *::before,.hero *::after,.page-hero *,.page-hero *::before,.page-hero *::after{animation:none!important; transition:none!important}
-  .hero__left,.page-hero__left,.hero__graph .node{opacity:1; scale:1}
-  .hero__graph svg path.signal{display:none}
+  .hero__left,.page-hero__left{opacity:1; scale:1}
 }

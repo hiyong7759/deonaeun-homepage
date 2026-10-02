@@ -1,44 +1,14 @@
 const serviceStates = {
-  si: { number:'01 / BUILD', caption:'화면, 서비스, 데이터를 하나로.', announcement:'시스템 구축: 화면, 서비스, 데이터 층을 하나로 조립합니다.', levels:[-.68,-.02,.64], offsets:[0,0,0] },
-  sm: { number:'02 / OPERATE', caption:'멈추지 않는 시스템의 흐름.', announcement:'시스템 운영: 조립된 구조를 따라 신호가 순환합니다.', levels:[-.83,0,.83], offsets:[0,0,0] },
-  a11y: { number:'03 / ACCESS', caption:'사람이 닿는 화면을 더 분명하게.', announcement:'웹접근성: 사용자가 만나는 화면과 포커스를 강조합니다.', levels:[-1.1,-.5,1.03], offsets:[-.15,-.15,.12], turns:[0,0,-.1] },
-  consulting: { number:'04 / DESIGN', caption:'구조를 펼치고, 방향을 설계하다.', announcement:'IT 컨설팅: 각 층을 분리해 구조와 연결을 살펴봅니다.', levels:[-1.17,0,1.14], offsets:[-.62,0,.62], turns:[-.07,0,.07] }
+  si: { number:'02 / BUILD', caption:'화면, 서비스, 데이터를 하나로.', announcement:'시스템 구축: 화면, 서비스, 데이터 층을 하나로 조립합니다.', levels:[-.68,-.02,.64], offsets:[0,0,0] },
+  sm: { number:'03 / OPERATE', caption:'멈추지 않는 시스템의 흐름.', announcement:'시스템 운영: 조립된 구조를 따라 신호가 순환합니다.', levels:[-.83,0,.83], offsets:[0,0,0] },
+  a11y: { number:'04 / ACCESS', caption:'사람이 닿는 화면을 더 분명하게.', announcement:'웹접근성: 사용자가 만나는 화면과 포커스를 강조합니다.', levels:[-1.1,-.5,1.03], offsets:[-.15,-.15,.12], turns:[0,0,-.1] },
+  consulting: { number:'05 / DESIGN', caption:'구조를 펼치고, 방향을 설계하다.', announcement:'IT 컨설팅: 각 층을 분리해 구조와 연결을 살펴봅니다.', levels:[-1.17,0,1.14], offsets:[-.62,0,.62], turns:[-.07,0,.07] }
 };
-
-function localMotionLoop(element, render) {
-  const media = matchMedia('(prefers-reduced-motion: reduce)');
-  let visible = true, active = false, frame = 0, last = 0, time = 0;
-  const menu = document.getElementById('navSheet');
-  const tick = now => {
-    if (!active) return;
-    const delta = last ? Math.min((now - last) / 1000, 0.05) : 0;
-    last = now; time += delta;
-    render({ time, delta, active, reduced: media.matches });
-    frame = requestAnimationFrame(tick);
-  };
-  const sync = () => {
-    active = visible && !document.hidden && !media.matches && !menu?.classList.contains('is-open');
-    cancelAnimationFrame(frame); last = 0;
-    if (active) frame = requestAnimationFrame(tick);
-    else if (visible && !document.hidden) render({ time, delta: 0, active: false, reduced: media.matches });
-  };
-  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); });
-  observer.observe(element);
-  const menuObserver = new MutationObserver(sync);
-  if (menu) menuObserver.observe(menu, { attributes: true, attributeFilter: ['class'] });
-  document.addEventListener('visibilitychange', sync); media.addEventListener('change', sync);
-  sync();
-  return {
-    get active() { return active; },
-    invalidate() { if (visible && !document.hidden) render({ time, delta: 0, active, reduced: media.matches }); },
-    destroy() { active = false; cancelAnimationFrame(frame); observer.disconnect(); menuObserver.disconnect(); document.removeEventListener('visibilitychange', sync); media.removeEventListener('change', sync); }
-  };
-}
 
 async function createSystemModel(stage, host, explorer, getSelected) {
   let renderer, loop, resizeObserver;
   try {
-    const T = await import('./assets/vendor/three.module.min.js');
+    const T = await import('../assets/vendor/three.module.min.js');
     const motion = window.DeonaeunMotion;
     const canvas=document.createElement('canvas');
     const context=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'low-power'});
@@ -226,7 +196,7 @@ async function createSystemModel(stage, host, explorer, getSelected) {
       camera.updateProjectionMatrix(); loop?.invalidate();
     }
     size();
-    loop=(motion?.loop || localMotionLoop)(stage,draw);
+    loop=motion.loop(stage,draw);
     resizeObserver=new ResizeObserver(size); resizeObserver.observe(stage);
     const move=event=>{
       if(!loop.active||event.pointerType==='touch') return;

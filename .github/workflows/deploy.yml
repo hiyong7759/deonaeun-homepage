@@ -1,0 +1,41 @@
+name: Deploy review site to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Copy static website files (no build)
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          cp *.html robots.txt sitemap.xml "$RUNNER_TEMP/site/"
+          cp -R assets css js includes "$RUNNER_TEMP/site/"
+          # Preview deployment only; company-server originals remain indexable.
+          sed -i 's/content="index, follow"/content="noindex, follow"/g' "$RUNNER_TEMP/site/"*.html
+          printf 'User-agent: *\nAllow: /\n' > "$RUNNER_TEMP/site/robots.txt"
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

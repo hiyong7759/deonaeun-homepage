@@ -1,279 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>오시는 길 · (주)더나은</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
-<link rel="stylesheet" href="styles-shared.css">
-<style>
-  /* ============ PAGE-SPECIFIC ============ */
-
-
-  /* Road geometry and marker positions are projected from real geographic data. */
-  #hero .page-hero__inner{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr); gap:40px}
-  .page-hero__visual.hero-visual--location{aspect-ratio:auto; max-width:720px}
-  .page-hero__visual .location-map{position:relative; display:block; width:100%; height:auto; overflow:visible; font-family:Pretendard,sans-serif}
-  .location-map__label{font-size:16px; font-weight:600; fill:#51655e; stroke:#f7f8f3; stroke-width:5; stroke-linejoin:round; paint-order:stroke; letter-spacing:-.4px}
-  .location-map__leader{fill:none; stroke:#8c9e95; stroke-width:1; stroke-dasharray:2 3}
-  .location-map__node{fill:#738e82; stroke:#fff; stroke-width:3}
-  .location-map__place--terminal .location-map__node{fill:#c9905c}
-  .location-map__place--terminal .location-map__label{fill:#a26d3b}
-  .location-map__road-label{font-size:12px; fill:#98a398; stroke:#fafaf6; stroke-width:3; paint-order:stroke; text-anchor:middle}
-  .location-map__number{display:none; font-family:var(--mono); font-size:17px; font-weight:600; fill:#fff}
-  .location-map__caption{display:flex; justify-content:space-between; gap:12px; padding:10px 12px 0; font-size:10px; line-height:1.5; color:#84918a}
-  .location-map__caption a{text-decoration:underline; text-underline-offset:2px}
-  .location-map__key{display:none}
-  @media (max-width:980px){
-    #hero .page-hero__inner{grid-template-columns:minmax(0,1fr)}
-  }
-  @media (max-width:540px){
-    .location-map__label,.location-map__leader,.location-map__road-label{display:none}
-    .location-map__node{r:14; stroke-width:2}
-    .location-map__number{display:block}
-    .location-map__caption{font-size:9px; padding:8px 4px 0; gap:8px}
-    .location-map__caption span{max-width:12em}
-    .location-map__key{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px 14px; list-style:none; padding:16px 4px 0; margin:0; border-top:1px solid #dfe4db; margin-top:14px}
-    .location-map__key li{display:flex; align-items:baseline; gap:7px; font-size:11px; line-height:1.5; color:#61716a; word-break:keep-all}
-    .location-map__key span{font-family:var(--mono); font-size:9px; color:#83978a; flex-shrink:0}
-  }
-
-  /* MAP SECTION */
-  .map-section{
-    padding:60px 32px 100px; background:var(--paper);
-    border-bottom:1px solid var(--gray-200);
-  }
-  .map-section__inner{width:100%; max-width:1320px; margin:0 auto}
-  .map-head{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:32px; align-items:end; margin-bottom:28px}
-  .map-head h2{font-size:clamp(32px,4.5vw,56px); font-weight:600; letter-spacing:-.03em; line-height:1.05; margin:18px 0 0}
-  .map-head h2 em{font-style:normal; color:var(--orange)}
-  .map-head p{margin:0; max-width:54ch; color:var(--gray-500); line-height:1.65}
-  .map-meta{display:grid; grid-template-columns:repeat(2,auto); gap:10px; justify-content:end}
-  .map-meta span{display:inline-flex; align-items:center; height:34px; padding:0 12px; border-radius:999px; background:#fff; border:1px solid var(--gray-200); font-family:var(--mono); font-size:11px; color:var(--gray-700); white-space:nowrap}
-
-  .map-wrap{
-    position:relative; background:#F2EEE0;
-    border-radius:24px; overflow:hidden;
-    box-shadow:0 12px 32px -8px rgba(0,0,0,.08), 0 0 0 1px var(--gray-200);
-    width:100%;
-    height:clamp(460px, 58vh, 680px);
-  }
-  .map-wrap svg{display:block; width:100%; height:100%}
-  .kakao-map{width:100%; height:100%; background:#F2EEE0}
-  .map-status{position:absolute; inset:16px auto auto 16px; z-index:3; max-width:min(420px,calc(100% - 32px)); background:rgba(255,255,255,.95); border:1px solid var(--gray-200); border-radius:12px; padding:12px 14px; box-shadow:0 8px 20px rgba(0,0,0,.1); font-size:13px; line-height:1.55; color:var(--gray-700)}
-  .map-status.is-hidden{display:none}
-  .map-status b{color:var(--ink)}
-  .map-status code{font-family:var(--mono); color:var(--orange)}
-  .map-actions{position:absolute; right:16px; bottom:16px; z-index:2; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-  .map-actions a{display:inline-flex; align-items:center; height:40px; padding:0 16px; border-radius:999px; background:rgba(255,255,255,.94); color:var(--ink); border:1px solid var(--gray-200); box-shadow:0 6px 16px rgba(0,0,0,.08); font-size:13px; font-weight:600; backdrop-filter:blur(8px)}
-  .map-actions a:hover{background:var(--orange); color:#fff; border-color:var(--orange)}
-
-  /* pin animation */
-  @keyframes pin-pulse{
-    0%, 100%{ transform:translate(-50%,-100%) scale(1); }
-    50%{ transform:translate(-50%,-100%) scale(1.08); }
-  }
-  @keyframes ring-pulse{
-    0%{ transform:translate(-50%,-50%) scale(.6); opacity:.6 }
-    100%{ transform:translate(-50%,-50%) scale(2.2); opacity:0 }
-  }
-
-  /* map controls placeholder (kakao-like) */
-  .map-controls{
-    position:absolute; top:16px; right:16px; display:flex; flex-direction:column; gap:4px;
-    background:#fff; border:1px solid var(--gray-200); border-radius:10px; overflow:hidden;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-  }
-  .map-controls button{
-    width:36px; height:36px; background:#fff; border:0; cursor:pointer;
-    font-size:18px; color:var(--gray-700); display:flex; align-items:center; justify-content:center;
-    border-bottom:1px solid var(--gray-200);
-  }
-  .map-controls button:last-child{border-bottom:0}
-  .map-controls button:hover{background:var(--paper); color:var(--orange)}
-
-  .map-credit{
-    position:absolute; bottom:10px; left:14px;
-    font-family:var(--mono); font-size:10px; color:var(--gray-500);
-    background:rgba(255,255,255,.85); padding:3px 8px; border-radius:4px;
-  }
-
-  /* INFO CARDS */
-  .info-section{padding:100px 32px; background:var(--paper-2)}
-  .info-section__inner{max-width:1320px; margin:0 auto}
-
-  .info-head{margin-bottom:48px}
-  .info-head h2{
-    font-size:clamp(36px, 5vw, 60px); font-weight:600; letter-spacing:-.03em;
-    line-height:1.05; margin:24px 0 16px; max-width:18ch; text-wrap:balance;
-  }
-  .info-head h2 em{font-style:normal; color:var(--orange)}
-  .info-head p{font-size:16px; line-height:1.65; color:var(--gray-500); max-width:50ch; margin:0}
-
-  .info-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:24px}
-
-  .info-card{
-    background:#fff; border:1px solid var(--gray-200); border-radius:18px;
-    padding:32px 28px; display:flex; flex-direction:column; gap:18px;
-    transition:all .25s; min-height:200px;
-  }
-  .info-card:hover{border-color:var(--orange); transform:translateY(-3px); box-shadow:0 12px 30px -10px rgba(0,0,0,.1)}
-  .info-card--link{cursor:pointer; text-decoration:none; color:inherit}
-
-  .info-card__icon{
-    width:48px; height:48px; border-radius:12px; background:var(--orange-soft);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .info-card__icon svg{width:24px; height:24px; stroke:var(--orange)}
-
-  .info-card__label{
-    font-family:var(--mono); font-size:11px; color:var(--gray-500);
-    letter-spacing:.06em; text-transform:uppercase;
-  }
-  .info-card__body{font-size:17px; font-weight:500; line-height:1.5; letter-spacing:-.01em; margin:0; color:var(--ink)}
-  .info-card__sub{font-family:var(--mono); font-size:13px; color:var(--gray-500); margin-top:auto; line-height:1.7}
-  .info-card__sub a{color:var(--orange)}
-  .info-card__sub a:hover{text-decoration:underline}
-
-  /* DIRECTIONS */
-  .dir-section{padding:120px 32px; background:var(--paper)}
-  .dir-section__inner{max-width:1320px; margin:0 auto}
-
-  .dir-head{text-align:center; margin-bottom:64px}
-  .dir-head h2{
-    font-size:clamp(32px, 4.5vw, 52px); font-weight:600; letter-spacing:-.03em;
-    line-height:1.05; margin:24px 0 0;
-  }
-
-  .dir-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:24px}
-
-  .dir-card{
-    background:var(--paper-2); border:1px solid var(--gray-200); border-radius:20px;
-    padding:36px 32px; transition:all .25s;
-  }
-  .dir-card:hover{border-color:var(--ink); background:#fff}
-  .dir-card__num{
-    font-family:var(--mono); font-size:11px; color:var(--orange); font-weight:600;
-    letter-spacing:.08em; margin-bottom:12px;
-  }
-  .dir-card__title{
-    display:flex; align-items:center; gap:12px;
-    font-size:20px; font-weight:600; letter-spacing:-.02em; margin:0 0 16px;
-  }
-  .dir-card__title svg{width:28px; height:28px; stroke:var(--orange); flex-shrink:0}
-  .dir-card__lines{font-family:var(--mono); font-size:13px; line-height:2; color:var(--gray-700); margin:0}
-  .dir-card__lines b{color:var(--ink); font-weight:500}
-  .dir-card__lines .punct{color:var(--gray-400)}
-
-  /* CONTACT CTA */
-  .visit-cta{
-    padding:140px 32px; background:var(--ink); color:#fff;
-    text-align:center; position:relative; overflow:hidden;
-  }
-  .visit-cta::before{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:radial-gradient(circle at 50% 50%, rgba(255,117,45,.14), transparent 50%);
-  }
-  .visit-cta__inner{max-width:780px; margin:0 auto; position:relative}
-  .visit-cta h2{
-    font-size:clamp(36px, 5vw, 64px); font-weight:600; letter-spacing:-.03em;
-    line-height:1.05; margin:24px 0 24px; text-wrap:balance;
-  }
-  .visit-cta h2 em{font-style:normal; color:var(--orange)}
-  .visit-cta p{color:#bdbdc4; max-width:46ch; margin:0 auto 36px; line-height:1.7; font-size:16px}
-  .visit-cta__btns{display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center}
-  .visit-cta .btn--ghost{color:#fff; border-color:rgba(255,255,255,.25)}
-  .visit-cta .btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.05)}
-
-  /* mobile */
-  @media (max-width:880px){
-    .info-grid, .dir-grid{grid-template-columns:1fr}
-    .map-head{grid-template-columns:1fr; gap:18px; margin-bottom:22px}
-    .map-head h2{font-size:clamp(30px,8vw,42px)}
-    .map-meta{justify-content:start; grid-template-columns:1fr}
-    .map-wrap{height:clamp(380px, 62vh, 620px)}
-  }
-</style>
-<link rel="stylesheet" href="hero-refinements.css">
-<link rel="stylesheet" href="studio-theme.css">
-<link rel="stylesheet" href="places-scene.css">
-<script src="hero-motion.js" defer></script>
-<script src="assets/vendor/gsap.min.js" defer></script>
-<script src="motion-runtime.js" defer></script>
-<script src="places-scene.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>오시는길 · 충북혁신도시 본사 | 더나은</title>
+  <meta name="description" content="충청북도 음성군 맹동면 용두3길 5, 경동스마트밸리 2층 206호. 더나은 본사 지도, 교통편과 연락처를 확인하세요.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.deonaeun.com/location.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="더나은">
+  <meta property="og:title" content="오시는길 · 충북혁신도시 본사 | 더나은">
+  <meta property="og:description" content="충청북도 음성군 맹동면 용두3길 5, 경동스마트밸리 2층 206호. 더나은 본사 지도, 교통편과 연락처를 확인하세요.">
+  <meta property="og:url" content="https://www.deonaeun.com/location.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles-shared.css">
+  <link rel="stylesheet" href="./css/location.css">
+  <link rel="stylesheet" href="./css/hero-refinements.css">
+  <link rel="stylesheet" href="./css/studio-theme.css">
+  <link rel="stylesheet" href="./css/places-scene.css">
+  <link rel="stylesheet" href="./css/accessibility.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://www.deonaeun.com/#organization", "name": "(주)더나은", "url": "https://www.deonaeun.com", "logo": "https://www.deonaeun.com/assets/logo.svg", "email": "contact@deonaeun.com", "telephone": "+82-43-750-7007", "address": {"@type": "PostalAddress", "addressCountry": "KR", "addressRegion": "충청북도", "addressLocality": "음성군", "streetAddress": "맹동면 용두3길 5, 2층 206호 (경동스마트밸리)"}}</script>
 </head>
-<body data-screen-label="Location">
+<body data-page="location" data-dark-sections="hero,contact" data-scroll-offset="60">
+<noscript>
+  <style>
+    body > :not(noscript){display:none!important}
+    body{display:flow-root;min-height:100vh;margin:0;background:#10191e;color:#f3f2ec}
+    .no-script-contact{max-width:560px;margin:12vh auto;padding:32px;font-family:system-ui,sans-serif;line-height:1.8}
+    .no-script-contact h1{display:flex;align-items:center;gap:16px;font-size:32px;color:#fff}
+    .no-script-contact h1 img{width:73px;height:auto;padding:10px;background:#f6f5f1;border-radius:10px;box-sizing:content-box}
+    .no-script-contact a{color:#ffad78;overflow-wrap:anywhere;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+    .no-script-contact a:hover{color:#ffd2b4;text-decoration-thickness:2px}
+    .no-script-contact a:focus-visible{outline:2px solid #ffad78;outline-offset:4px;border-radius:2px}
+    .no-script-contact .external-icon{display:inline-block;margin-left:4px;text-decoration:none}
+    .no-script-contact p{margin:16px 0}
+  </style>
+  <main class="no-script-contact">
+    <h1><img src="./assets/logo.svg" alt="" width="146" height="75">(주)더나은</h1>
+    <p>JavaScript를 켜면 회사 소개와 서비스 등 더 자세한 내용을 확인하실 수 있습니다.</p>
+    <p>이메일: <a href="mailto:contact@deonaeun.com" aria-label="contact@deonaeun.com으로 이메일 보내기">contact@deonaeun.com</a><br>
+    전화: <a href="tel:0437507007" aria-label="043.750.7007로 전화 걸기">043.750.7007</a></p>
+    <p>주소: <a href="https://map.kakao.com/?q=%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205" target="_blank" rel="noopener noreferrer" aria-label="더나은 회사 주소를 카카오맵에서 보기 (새 창)">충청북도 음성군 맹동면 용두3길 5, 경동스마트밸리 2층 206호<span class="external-icon" aria-hidden="true">↗</span></a></p>
+  </main>
+</noscript>
 
-<!-- ============ NAV ============ -->
-<nav class="nav" id="nav">
-  <div class="nav__inner">
-    <a class="nav__logo" href="index.html">
-      <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
-        <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-      </svg>
-      <span>deonaeun</span>
-    </a>
-    <div class="nav__links">
-      <a href="index.html">더나은</a>
-      <a href="services.html">서비스</a>
-      <a href="partners.html">파트너</a>
-      <a href="location.html" class="active">오시는길</a>
-    </div>
-    <div class="nav__cta">
-      <a class="btn btn--primary" href="mailto:contact@deonaeun.com" style="height:40px; padding:0 18px; font-size:13px">Contact →</a>
-      <button class="nav__burger" id="navBurger" aria-label="메뉴" aria-expanded="false" aria-controls="navSheet">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</nav>
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div data-include="header"><p class="include-contact"><strong>(주)더나은</strong> · <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a> · <a href="tel:0437507007">043.750.7007</a></p></div>
 
-<!-- ============ SIDE NAV ============ -->
-<aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
+  <aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
   <span class="side-nav__track"></span>
-  <button class="side-nav__dot active" data-target="hero"><span class="side-nav__label"><small>01</small>오시는길</span></button>
-  <button class="side-nav__dot" data-target="map"><span class="side-nav__label"><small>02</small>지도</span></button>
-  <button class="side-nav__dot" data-target="info"><span class="side-nav__label"><small>03</small>본사 정보</span></button>
-  <button class="side-nav__dot" data-target="directions"><span class="side-nav__label"><small>04</small>찾아오는 길</span></button>
-  <button class="side-nav__dot" data-target="contact"><span class="side-nav__label"><small>05</small>약속</span></button>
+  <button class="side-nav__dot active" data-target="hero" aria-label="오시는길" aria-current="location"><span class="side-nav__label">오시는길</span></button>
+
+<button class="side-nav__dot" data-target="map" aria-label="지도"><span class="side-nav__label">지도</span></button>
+
+<button class="side-nav__dot" data-target="info" aria-label="본사 정보"><span class="side-nav__label">본사 정보</span></button>
+
+<button class="side-nav__dot" data-target="directions" aria-label="찾아오는 길"><span class="side-nav__label">찾아오는 길</span></button>
+
+<button class="side-nav__dot" data-target="contact" aria-label="약속"><span class="side-nav__label">약속</span></button>
+
 </aside>
 
-<!-- ============ MOBILE NAV SHEET ============ -->
-<div class="nav__sheet" id="navSheet" aria-hidden="true">
-  <a href="index.html">더나은</a>
-  <a href="services.html">서비스</a>
-  <a href="partners.html">파트너</a>
-  <a href="location.html" class="active">오시는길</a>
-  <a href="mailto:contact@deonaeun.com">문의</a>
-  <div class="nav__sheet__contact">
-    // contact<br>
-    <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a><br>
-    TEL. <a href="tel:0437507007">043.750.7007</a><br>
-    <b>충북 음성 · 경동스마트밸리</b>
-  </div>
-</div>
-
-<!-- ============ PAGE HERO ============ -->
-<section class="page-hero snap" id="hero">
+  <main id="main-content"><section class="page-hero snap" id="hero">
   <div class="page-hero__inner">
     <div class="page-hero__left">
       <div class="page-hero__crumb">
-        <a href="index.html">deonaeun</a> <span>/</span> <b>location</b>
+        <a href="./">deonaeun</a> <span>/</span> <b>location</b>
       </div>
       <div class="eyebrow" style="margin-bottom:20px">// location · 오시는 길</div>
       <h1>
@@ -287,7 +85,7 @@
     </div>
 
     <div class="page-hero__visual hero-visual--location">
-      <!-- LOCATION MAP: generated by scripts/build-location-map.py from actual WGS84 geometry. -->
+            <!-- LOCATION MAP: generated by scripts/build-location-map.py from actual WGS84 geometry. -->
       <svg class="location-map" viewBox="0 0 760 710" role="img" aria-labelledby="location-map-title location-map-desc" xmlns="http://www.w3.org/2000/svg">
         <title id="location-map-title">충북혁신도시 내 더나은 본사와 공공기관 위치</title>
         <desc id="location-map-desc">북쪽이 위인 실제 도로 기반 지도. 본사, 터미널과 14개 공공기관을 건물 좌표에 표시했습니다. 안내선은 기관 이름을 연결하며 이동 경로가 아닙니다.</desc>
@@ -495,9 +293,11 @@
         <li><span>15</span>충북혁신도시 터미널</li>
       </ol>
       <!-- /LOCATION MAP -->
+
     </div>
   </div>
 </section>
+
 
 <section class="map-section snap" id="map">
   <div class="map-section__inner">
@@ -526,7 +326,7 @@
       </div>
       <p class="map-status" id="mapStatus" role="status">지도를 불러오는 중입니다.</p>
       <div class="map-actions">
-        <a href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener">카카오맵 열기 ↗</a>
+        <a href="https://map.kakao.com/?q=%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205" target="_blank" rel="noopener">카카오맵 열기 ↗</a>
         <a href="https://map.kakao.com/link/map/경동스마트밸리,36.908899373623,127.54836779397" target="_blank" rel="noopener">큰 지도 보기 ↗</a>
       </div>
     </div>
@@ -543,7 +343,7 @@
 
     <div class="info-grid">
       <!-- ADDRESS -->
-      <a class="info-card info-card--link" href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener" aria-label="카카오맵에서 주소 보기">
+      <a class="info-card info-card--link" href="https://map.kakao.com/?q=%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205" target="_blank" rel="noopener" aria-label="카카오맵에서 주소 보기">
         <div class="info-card__icon">
           <svg fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <path d="M12 21s-7-6.2-7-12a7 7 0 1 1 14 0c0 5.8-7 12-7 12z"/>
@@ -576,7 +376,7 @@
           </svg>
         </div>
         <div class="info-card__label">// email</div>
-        <p class="info-card__body">contact<wbr>@deonaeun.com</p>
+        <p class="info-card__body">contact<wbr />@deonaeun.com</p>
         <div class="info-card__sub">사업 문의 · 협력 제안<br><b style="color:var(--orange); font-weight:500">메일 보내기 ↗</b></div>
       </a>
     </div>
@@ -668,163 +468,9 @@
     </div>
   </div>
 </section>
+</main>
+  <div data-include="footer"><p class="include-contact"><strong>(주)더나은</strong> · <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a> · <a href="tel:0437507007">043.750.7007</a></p></div>
 
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div class="row">
-    <div>
-      <div class="brand">
-        <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
-          <path d="M142 71.5H3" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M142 42.5V71.5" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M117.5 42.5H142" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M90 34.5H104" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M54 57H79" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M54 34.5V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M90 35V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-        <span>deonaeun</span>
-      </div>
-      <p style="margin:0; max-width:32ch; line-height:1.6">더 나은 소프트웨어로 더 나은 세상을 만듭니다.<br>since 2018.</p>
-    </div>
-    <div>
-      <h5>사이트</h5>
-      <ul>
-        <li><a href="index.html">더나은</a></li>
-        <li><a href="services.html">서비스</a></li>
-        <li><a href="partners.html">파트너</a></li>
-        <li><a href="location.html">오시는길</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>사업영역</h5>
-      <ul>
-        <li><a href="services.html">공공 SI · 시스템 구축</a></li>
-        <li><a href="services.html">시스템 운영 (SM)</a></li>
-        <li><a href="services.html">웹접근성 인증</a></li>
-        <li><a href="services.html">IT 컨설팅</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>Contact</h5>
-      <ul>
-        <li><a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a></li>
-        <li>TEL. <a href="tel:0437507007">043.750.7007</a></li>
-        <li>FAX. 043.901.4220</li>
-        <li><a href="https://www.deonaeun.com" target="_blank" rel="noopener">www.deonaeun.com</a></li>
-        <li style="font-size:13px; line-height:1.6; padding-top:6px"><a href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener">충청북도 음성군 맹동면<br>용두 3길 5, 206호<br><span style="color:#FF752D">경동스마트밸리 ↗</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="copy">
-    <span>© 2026 <span class="nowrap-name">(주)더나은</span> · deonaeun. All rights reserved.</span>
-    <span>// crafted in 충북 음성</span>
-  </div>
-</footer>
-
-<script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8));
-
-  // mobile burger
-  const burger = document.getElementById('navBurger');
-  const sheet = document.getElementById('navSheet');
-  function setSheet(open){
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    sheet.classList.toggle('is-open', open);
-    sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
-    document.body.style.overflow = open ? 'hidden' : '';
-  }
-  burger.addEventListener('click', () => setSheet(!sheet.classList.contains('is-open')));
-  sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
-
-  // ============ SIDE NAV ============
-  const sideNav = document.getElementById('sideNav');
-  if (sideNav) {
-    const dots = sideNav.querySelectorAll('.side-nav__dot');
-    const sectionIds = ['hero','map','info','directions','contact'];
-    const darkSections = new Set(['contact']);
-    dots.forEach(d => d.addEventListener('click', () => {
-      const el = document.getElementById(d.dataset.target);
-      if (el) window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
-    }));
-    function updateActive(){
-      const probe = window.scrollY + window.innerHeight * 0.35;
-      let activeId = sectionIds[0];
-      sectionIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.offsetTop - 60 <= probe) activeId = id;
-      });
-      const idx = sectionIds.indexOf(activeId);
-      dots.forEach((d,i) => d.classList.toggle('active', i === idx));
-      sideNav.classList.toggle('is-dark', darkSections.has(activeId));
-    }
-    window.addEventListener('scroll', updateActive, { passive:true });
-    window.addEventListener('resize', updateActive);
-    updateActive();
-  }
-
-  // ============ KAKAO MAP ============
-  function initKakaoMap(){
-    const mapEl = document.getElementById('kakaoMap');
-    if (!mapEl) return;
-
-    const appKey = mapEl.dataset.appKey;
-    const lat = Number(mapEl.dataset.lat);
-    const lng = Number(mapEl.dataset.lng);
-    const title = mapEl.dataset.title || '(주)더나은 본사';
-
-    const status = document.getElementById('mapStatus');
-    const showMapError = () => {
-      status.textContent = '지도를 불러오지 못했습니다. 아래 카카오맵 버튼에서 본사 위치를 확인해 주세요.';
-      status.classList.remove('is-hidden');
-    };
-    const timeout = setTimeout(showMapError, 12000);
-    const script = document.createElement('script');
-    script.onerror = () => { clearTimeout(timeout); showMapError(); };
-    script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=' + encodeURIComponent(appKey) + '&libraries=services&autoload=false';
-    script.onload = () => {
-      if (!window.kakao || !kakao.maps) { clearTimeout(timeout); showMapError(); return; }
-      kakao.maps.load(() => {
-        const fallbackPosition = new kakao.maps.LatLng(lat, lng);
-        const map = new kakao.maps.Map(mapEl, {
-          center: fallbackPosition,
-          level: 3
-        });
-        map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-
-        function mark(position){
-          map.setCenter(position);
-          const marker = new kakao.maps.Marker({ position });
-          marker.setMap(map);
-          const info = new kakao.maps.InfoWindow({
-            content: '<div style="padding:9px 13px;font-size:13px;font-weight:700;white-space:nowrap">' + title + '<br><span style="font-weight:400;color:#666">경동스마트밸리 206호</span></div>'
-          });
-          info.open(map, marker);
-        }
-
-        mark(fallbackPosition);
-        clearTimeout(timeout);
-        status.classList.add('is-hidden');
-      });
-    };
-    document.head.appendChild(script);
-  }
-  initKakaoMap();
-
-  // reveal
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.map-section, .info-section, .dir-section, .visit-cta').forEach(el => {
-    el.classList.add('reveal'); io.observe(el);
-  });
-</script>
+  <script type="module" src="./js/bootstrap.js"></script>
 </body>
 </html>

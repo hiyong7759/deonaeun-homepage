@@ -1,6 +1,6 @@
+const { gsap } = window;
 (() => {
   'use strict';
-  const gsap = window.gsap;
   const runtime = window.DeonaeunMotion;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');

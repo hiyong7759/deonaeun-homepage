@@ -114,7 +114,7 @@ if (host && motion) {
   async function createField() {
     let renderer,geometry,material;
     try {
-      const T=await import('./assets/vendor/three.module.min.js');
+      const T=await import('../assets/vendor/three.module.min.js');
       const mount=host.querySelector('.connection-scene__render');
       renderer=new T.WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power'});
       renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));renderer.setClearColor(0x000000,0);

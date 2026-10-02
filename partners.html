@@ -1,218 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>파트너 · (주)더나은</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
-<link rel="stylesheet" href="styles-shared.css">
-<style>
-  /* ============ PAGE-SPECIFIC ============ */
-  .page-hero h1 em{color:var(--orange); font-style:normal}
-
-  /* anchor / lead section */
-  .lead-section{
-    padding:80px 32px 40px; background:var(--paper);
-    border-bottom:1px solid var(--gray-200);
-  }
-  .lead-section__inner{max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start}
-  .lead-section h2{
-    font-size:clamp(28px, 3.4vw, 40px); font-weight:600; letter-spacing:-.025em;
-    line-height:1.1; margin:16px 0 0; text-wrap:balance;
-  }
-  .lead-section p{
-    color:var(--gray-500); line-height:1.7; font-size:15px; margin:0;
-  }
-  .lead-stats{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
-    border-top:1px solid var(--gray-200); border-bottom:1px solid var(--gray-200);
-    margin-top:0;
-  }
-  .lead-stat{
-    padding:24px 24px 24px 0; border-right:1px solid var(--gray-200);
-  }
-  .lead-stat:last-child{border-right:0; padding-right:0}
-  .lead-stat .v{font-size:32px; font-weight:600; letter-spacing:-.02em}
-  .lead-stat .v small{font-size:16px; color:var(--orange); font-weight:500}
-  .lead-stat .k{font-family:var(--mono); font-size:11px; color:var(--gray-500); margin-top:4px}
-
-  /* partners grid */
-  .partners-section{
-    padding:100px 32px; background:var(--paper-2);
-  }
-  .partners-section__inner{max-width:1320px; margin:0 auto}
-  .partners-section__head{margin-bottom:64px; text-align:center}
-  .partners-section__head h2{
-    font-size:clamp(32px, 4.5vw, 56px); font-weight:600; letter-spacing:-.03em;
-    line-height:1.05; margin:24px 0 0; text-wrap:balance;
-  }
-  .partners-section__head h2 em{font-style:normal; color:var(--orange)}
-
-  .partners-grid{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
-  }
-
-  .partner-card{
-    background:#fff; border:1px solid var(--gray-200); border-radius:20px;
-    padding:32px 28px; transition:all .25s; position:relative; overflow:hidden;
-    display:flex; flex-direction:column; gap:20px; min-height:300px;
-  }
-  .partner-card:hover{
-    border-color:var(--ink); transform:translateY(-3px);
-    box-shadow:0 16px 40px -12px rgba(0,0,0,.1);
-  }
-  .partner-card::after{
-    content:""; position:absolute; top:0; right:0; width:60px; height:60px;
-    background:radial-gradient(circle at top right, rgba(255,117,45,.1), transparent 70%);
-    pointer-events:none;
-  }
-
-  .partner-card__num{
-    font-family:var(--mono); font-size:11px; color:var(--gray-400); font-weight:500;
-  }
-
-  .partner-card__logo{
-    height:104px; display:flex; align-items:center;
-    border-bottom:1px dashed var(--gray-200); padding-bottom:20px;
-  }
-  .partner-card__logo img{
-    display:block; width:auto; height:auto; max-width:100%; max-height:52px;
-    object-fit:contain; object-position:left center;
-  }
-  .partner-card__logo .partner-logo--tg{width:72px; max-height:72px}
-  .partner-card__logo .partner-logo--vitasoft{width:168px}
-
-  .partner-card__name{
-    font-size:22px; font-weight:600; letter-spacing:-.02em; margin:0; line-height:1.2;
-  }
-  .partner-card__type{
-    font-family:var(--mono); font-size:11px; color:var(--orange);
-    text-transform:uppercase; letter-spacing:.06em; margin-top:-12px;
-  }
-  .partner-card__desc{
-    color:var(--gray-500); font-size:14px; line-height:1.6; margin:0; flex:1;
-  }
-  .partner-card__since{
-    font-family:var(--mono); font-size:11px; color:var(--gray-400);
-    border-top:1px dashed var(--gray-200); padding-top:14px; margin-top:auto;
-    display:flex; justify-content:space-between;
-  }
-  .partner-card__since b{color:var(--gray-700); font-weight:500}
-
-  /* connection note (dark) */
-  .connection-note{
-    padding:100px 32px; background:var(--ink); color:#fff;
-    position:relative; overflow:hidden;
-  }
-  .connection-note::before{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:radial-gradient(circle at 50% 50%, rgba(255,117,45,.12), transparent 50%);
-  }
-  .connection-note__inner{
-    max-width:780px; margin:0 auto; text-align:center; position:relative;
-  }
-  .connection-note h2{
-    font-size:clamp(28px, 3.6vw, 44px); font-weight:600; letter-spacing:-.025em;
-    line-height:1.15; margin:24px 0; text-wrap:balance;
-  }
-  .connection-note h2 em{font-style:normal; color:var(--orange)}
-  .connection-note p{
-    color:#bdbdc4; line-height:1.7; font-size:16px; margin:0 auto 36px; max-width:50ch;
-  }
-  .connection-note__btns{display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center}
-  .connection-note .btn--ghost{color:#fff; border-color:rgba(255,255,255,.25)}
-  .connection-note .btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.05)}
-
-  /* mobile */
-  @media (max-width:980px){
-    .partners-grid{grid-template-columns:1fr 1fr}
-    .lead-section__inner{grid-template-columns:1fr; gap:32px}
-  }
-  @media (max-width:640px){
-    .partners-grid{grid-template-columns:1fr}
-    .lead-stats{grid-template-columns:1fr 1fr}
-    .lead-stat:nth-child(2n){border-right:0}
-  }
-</style>
-<link rel="stylesheet" href="hero-refinements.css">
-<link rel="stylesheet" href="studio-theme.css">
-<link rel="stylesheet" href="places-scene.css">
-<script src="hero-motion.js" defer></script>
-<script src="assets/vendor/gsap.min.js" defer></script>
-<script src="motion-runtime.js" defer></script>
-<script src="places-scene.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>파트너 · 함께하는 기관과 기업 | 더나은</title>
+  <meta name="description" content="한국고용정보원과 정보시스템 전문기업 등 더나은과 공공 정보화 사업을 함께하는 파트너를 소개합니다.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.deonaeun.com/partners.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="더나은">
+  <meta property="og:title" content="파트너 · 함께하는 기관과 기업 | 더나은">
+  <meta property="og:description" content="한국고용정보원과 정보시스템 전문기업 등 더나은과 공공 정보화 사업을 함께하는 파트너를 소개합니다.">
+  <meta property="og:url" content="https://www.deonaeun.com/partners.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles-shared.css">
+  <link rel="stylesheet" href="./css/partners.css">
+  <link rel="stylesheet" href="./css/hero-refinements.css">
+  <link rel="stylesheet" href="./css/studio-theme.css">
+  <link rel="stylesheet" href="./css/places-scene.css">
+  <link rel="stylesheet" href="./css/accessibility.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://www.deonaeun.com/#organization", "name": "(주)더나은", "url": "https://www.deonaeun.com", "logo": "https://www.deonaeun.com/assets/logo.svg", "email": "contact@deonaeun.com", "telephone": "+82-43-750-7007", "address": {"@type": "PostalAddress", "addressCountry": "KR", "addressRegion": "충청북도", "addressLocality": "음성군", "streetAddress": "맹동면 용두3길 5, 2층 206호 (경동스마트밸리)"}}</script>
 </head>
-<body data-screen-label="Partners">
+<body data-page="partners" data-dark-sections="hero,contact" data-scroll-offset="60">
+<noscript>
+  <style>
+    body > :not(noscript){display:none!important}
+    body{display:flow-root;min-height:100vh;margin:0;background:#10191e;color:#f3f2ec}
+    .no-script-contact{max-width:560px;margin:12vh auto;padding:32px;font-family:system-ui,sans-serif;line-height:1.8}
+    .no-script-contact h1{display:flex;align-items:center;gap:16px;font-size:32px;color:#fff}
+    .no-script-contact h1 img{width:73px;height:auto;padding:10px;background:#f6f5f1;border-radius:10px;box-sizing:content-box}
+    .no-script-contact a{color:#ffad78;overflow-wrap:anywhere;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+    .no-script-contact a:hover{color:#ffd2b4;text-decoration-thickness:2px}
+    .no-script-contact a:focus-visible{outline:2px solid #ffad78;outline-offset:4px;border-radius:2px}
+    .no-script-contact .external-icon{display:inline-block;margin-left:4px;text-decoration:none}
+    .no-script-contact p{margin:16px 0}
+  </style>
+  <main class="no-script-contact">
+    <h1><img src="./assets/logo.svg" alt="" width="146" height="75">(주)더나은</h1>
+    <p>JavaScript를 켜면 회사 소개와 서비스 등 더 자세한 내용을 확인하실 수 있습니다.</p>
+    <p>이메일: <a href="mailto:contact@deonaeun.com" aria-label="contact@deonaeun.com으로 이메일 보내기">contact@deonaeun.com</a><br>
+    전화: <a href="tel:0437507007" aria-label="043.750.7007로 전화 걸기">043.750.7007</a></p>
+    <p>주소: <a href="https://map.kakao.com/?q=%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205" target="_blank" rel="noopener noreferrer" aria-label="더나은 회사 주소를 카카오맵에서 보기 (새 창)">충청북도 음성군 맹동면 용두3길 5, 경동스마트밸리 2층 206호<span class="external-icon" aria-hidden="true">↗</span></a></p>
+  </main>
+</noscript>
 
-<!-- ============ NAV ============ -->
-<nav class="nav" id="nav">
-  <div class="nav__inner">
-    <a class="nav__logo" href="index.html">
-      <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
-        <path d="M142 71.5H3" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M142 42.5V71.5" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M117.5 42.5H142" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M90 34.5H104" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M54 57H79" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M54 34.5V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M90 35V57" stroke="#424242" stroke-width="6" stroke-linecap="round"/>
-        <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-      </svg>
-      <span>deonaeun</span>
-    </a>
-    <div class="nav__links">
-      <a href="index.html">더나은</a>
-      <a href="services.html">서비스</a>
-      <a href="partners.html" class="active">파트너</a>
-      <a href="location.html">오시는길</a>
-    </div>
-    <div class="nav__cta">
-      <a class="btn btn--primary" href="mailto:contact@deonaeun.com" style="height:40px; padding:0 18px; font-size:13px">Contact →</a>
-      <button class="nav__burger" id="navBurger" aria-label="메뉴" aria-expanded="false" aria-controls="navSheet">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</nav>
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div data-include="header"><p class="include-contact"><strong>(주)더나은</strong> · <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a> · <a href="tel:0437507007">043.750.7007</a></p></div>
 
-<!-- ============ SIDE NAV ============ -->
-<aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
+  <aside class="side-nav" id="sideNav" aria-label="섹션 네비게이션">
   <span class="side-nav__track"></span>
-  <button class="side-nav__dot active" data-target="hero"><span class="side-nav__label"><small>01</small>파트너</span></button>
-  <button class="side-nav__dot" data-target="lead"><span class="side-nav__label"><small>02</small>네트워크</span></button>
-  <button class="side-nav__dot" data-target="partners"><span class="side-nav__label"><small>03</small>파트너사</span></button>
-  <button class="side-nav__dot" data-target="contact"><span class="side-nav__label"><small>04</small>제휴</span></button>
+  <button class="side-nav__dot active" data-target="hero" aria-label="파트너" aria-current="location"><span class="side-nav__label">파트너</span></button>
+
+<button class="side-nav__dot" data-target="lead" aria-label="네트워크"><span class="side-nav__label">네트워크</span></button>
+
+<button class="side-nav__dot" data-target="partners" aria-label="파트너사"><span class="side-nav__label">파트너사</span></button>
+
+<button class="side-nav__dot" data-target="contact" aria-label="제휴"><span class="side-nav__label">제휴</span></button>
+
 </aside>
 
-<!-- ============ MOBILE NAV SHEET ============ -->
-<div class="nav__sheet" id="navSheet" aria-hidden="true">
-  <a href="index.html">더나은</a>
-  <a href="services.html">서비스</a>
-  <a href="partners.html" class="active">파트너</a>
-  <a href="location.html">오시는길</a>
-  <a href="mailto:contact@deonaeun.com">문의</a>
-  <div class="nav__sheet__contact">
-    // contact<br>
-    <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a><br>
-    TEL. <a href="tel:0437507007">043.750.7007</a><br>
-    <b>충북 음성 · 경동스마트밸리</b>
-  </div>
-</div>
-
-<!-- ============ HERO with abstract SVG (overlapping orbits) ============ -->
-<section class="page-hero snap" id="hero">
+  <main id="main-content"><section class="page-hero snap" id="hero">
   <div class="page-hero__inner">
     <div class="page-hero__left">
       <div class="page-hero__crumb">
-        <a href="index.html">deonaeun</a> <span>/</span> <b>partners</b>
+        <a href="./">deonaeun</a> <span>/</span> <b>partners</b>
       </div>
       <div class="eyebrow" style="margin-bottom:20px">// partners · 파트너십</div>
       <h1>
@@ -266,53 +123,60 @@
           <g class="partners-scene__logo" data-partner-art="keis">
             <rect x="86" y="85" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="86" y="82" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/keis.png" x="97" y="96" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/keis.png" x="97" y="96" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="85" y="81" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
           <g class="partners-scene__logo" data-partner-art="kaon">
             <rect x="295" y="101" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="295" y="98" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/kaon.png" x="306" y="112" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/kaon.png" x="306" y="112" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="294" y="97" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
           <g class="partners-scene__logo" data-partner-art="tg">
             <rect x="353" y="242" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="353" y="239" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/tg.png" x="396" y="250" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/tg.png" x="396" y="250" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="352" y="238" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
           <g class="partners-scene__logo" data-partner-art="sechan">
             <rect x="29" y="234" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="29" y="231" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/sechan.png" x="40" y="245" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/sechan.png" x="40" y="245" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="28" y="230" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
           <g class="partners-scene__logo" data-partner-art="vitasoft">
             <rect x="94" y="370" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="94" y="367" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/vitasoft.png" x="105" y="381" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/vitasoft.png" x="105" y="381" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="93" y="366" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
           <g class="partners-scene__logo" data-partner-art="rian">
             <rect x="302" y="373" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
             <rect class="partners-scene__plate" x="302" y="370" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
-            <image href="assets/rian.png" x="328" y="385" width="78" height="36" preserveAspectRatio="xMidYMid meet"/>
+            <image href="./assets/rian.png" x="328" y="385" width="78" height="36" preserveAspectRatio="xMidYMid meet"/>
             <rect class="partners-scene__plate-light" x="301" y="369" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
           </g>
         </svg>
         <div class="partners-scene__choices" role="group" aria-label="파트너 협력 분야">
           <button type="button" class="partners-scene__hit" data-partner="keis" data-partner-role="공공 고용서비스" aria-label="한국고용정보원 · 공공 고용서비스" style="--x:16.5385%;--y:15.7692%"><span>한국고용정보원</span></button>
-          <button type="button" class="partners-scene__hit" data-partner="kaon" data-partner-role="그룹웨어 · 협업" aria-label="가온아이 · 그룹웨어 · 협업" style="--x:56.7308%;--y:18.8462%"><span>가온아이</span></button>
-          <button type="button" class="partners-scene__hit" data-partner="tg" data-partner-role="소프트웨어 개발" aria-label="티지소프트 · 소프트웨어 개발" style="--x:67.8846%;--y:45.9615%"><span>티지소프트</span></button>
-          <button type="button" class="partners-scene__hit" data-partner="sechan" data-partner-role="IT 컨설팅" aria-label="세찬아이앤씨 · IT 컨설팅" style="--x:5.5769%;--y:44.4231%"><span>세찬아이앤씨</span></button>
-          <button type="button" class="partners-scene__hit" data-partner="vitasoft" data-partner-role="시스템 통합" aria-label="비타소프트 · 시스템 통합" style="--x:18.0769%;--y:70.5769%"><span>비타소프트</span></button>
-          <button type="button" class="partners-scene__hit" data-partner="rian" data-partner-role="전자정부" aria-label="리안커뮤니케이션즈 · 전자정부" style="--x:58.0769%;--y:71.1538%"><span>리안커뮤니케이션즈</span></button>
+
+<button type="button" class="partners-scene__hit" data-partner="kaon" data-partner-role="그룹웨어 · 협업" aria-label="가온아이 · 그룹웨어 · 협업" style="--x:56.7308%;--y:18.8462%"><span>가온아이</span></button>
+
+<button type="button" class="partners-scene__hit" data-partner="tg" data-partner-role="소프트웨어 개발" aria-label="티지소프트 · 소프트웨어 개발" style="--x:67.8846%;--y:45.9615%"><span>티지소프트</span></button>
+
+<button type="button" class="partners-scene__hit" data-partner="sechan" data-partner-role="IT 컨설팅" aria-label="세찬아이앤씨 · IT 컨설팅" style="--x:5.5769%;--y:44.4231%"><span>세찬아이앤씨</span></button>
+
+<button type="button" class="partners-scene__hit" data-partner="vitasoft" data-partner-role="시스템 통합" aria-label="비타소프트 · 시스템 통합" style="--x:18.0769%;--y:70.5769%"><span>비타소프트</span></button>
+
+<button type="button" class="partners-scene__hit" data-partner="rian" data-partner-role="전자정부" aria-label="리안커뮤니케이션즈 · 전자정부" style="--x:58.0769%;--y:71.1538%"><span>리안커뮤니케이션즈</span></button>
+
         </div>
         <span class="places-scene__sr" id="partners-scene-status" role="status" aria-live="polite"></span>
       </div>
     </div>
   </div>
 </section>
+
 
 <section class="lead-section snap" id="lead">
   <div class="lead-section__inner">
@@ -352,92 +216,62 @@
     </div>
 
     <div class="partners-grid">
+  <div class="partner-card">
+  <div class="partner-card__num">// partner_01 · 발주처</div>
+  <div class="partner-card__logo"><img class="partner-logo--keis" src="./assets/keis.png" alt="한국고용정보원 로고" width="200" height="46" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">한국고용정보원</h3>
+  <div class="partner-card__type">국가 발주기관</div>
+  <p class="partner-card__desc">대한민국 국가고용정보기관. 워크넷·고용안정정보망 등 주요 국가 고용서비스의 기획·운영을 맡고 있는 기관입니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>발주처</b></div>
+</div>
 
-      <!-- 한국고용정보원 -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_01 · 발주처</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--keis" src="assets/keis.png" alt="한국고용정보원 로고" width="200" height="46" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">한국고용정보원</h3>
-        <div class="partner-card__type">국가 발주기관</div>
-        <p class="partner-card__desc">대한민국 국가고용정보기관. 워크넷·고용안정정보망 등 주요 국가 고용서비스의 기획·운영을 맡고 있는 기관입니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>발주처</b>
-        </div>
-      </div>
+<div class="partner-card">
+  <div class="partner-card__num">// partner_02 · 솔루션</div>
+  <div class="partner-card__logo"><img class="partner-logo--kaon" src="./assets/kaon.png" alt="가온아이 로고" width="185" height="46" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">(주) 가온아이</h3>
+  <div class="partner-card__type">솔루션 파트너</div>
+  <p class="partner-card__desc">그룹웨어 &amp; 협업솔루션 No.1 전문기업. 기업의 일하는 방식을 단단하게 받치는 솔루션을 제공합니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>솔루션</b></div>
+</div>
 
-      <!-- KI 가온아이 -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_02 · 솔루션</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--kaon" src="assets/kaon.png" alt="가온아이 로고" width="185" height="46" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">(주) 가온아이</h3>
-        <div class="partner-card__type">솔루션 파트너</div>
-        <p class="partner-card__desc">그룹웨어 &amp; 협업솔루션 No.1 전문기업. 기업의 일하는 방식을 단단하게 받치는 솔루션을 제공합니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>솔루션</b>
-        </div>
-      </div>
+<div class="partner-card">
+  <div class="partner-card__num">// partner_03 · 협력사</div>
+  <div class="partner-card__logo"><img class="partner-logo--tg" src="./assets/tg.png" alt="티지소프트 로고" width="109" height="109" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">티지소프트</h3>
+  <div class="partner-card__type">개발 협력</div>
+  <p class="partner-card__desc">소프트웨어 개발·공급, 자문 및 학술 연구 용역. 기술 자문이 필요한 영역에서 함께 손을 잡습니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>협력사</b></div>
+</div>
 
-      <!-- TG (티지소프트) -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_03 · 협력사</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--tg" src="assets/tg.png" alt="티지소프트 로고" width="109" height="109" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">티지소프트</h3>
-        <div class="partner-card__type">개발 협력</div>
-        <p class="partner-card__desc">소프트웨어 개발·공급, 자문 및 학술 연구 용역. 기술 자문이 필요한 영역에서 함께 손을 잡습니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>협력사</b>
-        </div>
-      </div>
+<div class="partner-card">
+  <div class="partner-card__num">// partner_04 · 협력사</div>
+  <div class="partner-card__logo"><img class="partner-logo--sechan" src="./assets/sechan.png" alt="세찬아이앤씨 로고" width="200" height="42" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">(주) 세찬아이앤씨</h3>
+  <div class="partner-card__type">IT 컨설팅</div>
+  <p class="partner-card__desc">IT 컨설팅과 정보시스템 소프트웨어 개발. 컨설팅 단계부터 함께 들어가는 사업의 든든한 동반자입니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>협력사</b></div>
+</div>
 
-      <!-- 세찬아이앤씨 -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_04 · 협력사</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--sechan" src="assets/sechan.png" alt="세찬아이앤씨 로고" width="200" height="42" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">(주) 세찬아이앤씨</h3>
-        <div class="partner-card__type">IT 컨설팅</div>
-        <p class="partner-card__desc">IT 컨설팅과 정보시스템 소프트웨어 개발. 컨설팅 단계부터 함께 들어가는 사업의 든든한 동반자입니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>협력사</b>
-        </div>
-      </div>
+<div class="partner-card">
+  <div class="partner-card__num">// partner_05 · SI</div>
+  <div class="partner-card__logo"><img class="partner-logo--vitasoft" src="./assets/vitasoft.png" alt="비타소프트 로고" width="200" height="62" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">비타소프트</h3>
+  <div class="partner-card__type">SI · 컨설팅</div>
+  <p class="partner-card__desc">정보화 전략 컨설팅과 시스템 통합 사업. 큰 그림과 실행을 모두 챙기는 파트너입니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>협력사</b></div>
+</div>
 
-      <!-- vitasoft -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_05 · SI</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--vitasoft" src="assets/vitasoft.png" alt="비타소프트 로고" width="200" height="62" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">비타소프트</h3>
-        <div class="partner-card__type">SI · 컨설팅</div>
-        <p class="partner-card__desc">정보화 전략 컨설팅과 시스템 통합 사업. 큰 그림과 실행을 모두 챙기는 파트너입니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>협력사</b>
-        </div>
-      </div>
+<div class="partner-card">
+  <div class="partner-card__num">// partner_06 · 전자정부</div>
+  <div class="partner-card__logo"><img class="partner-logo--rian" src="./assets/rian.png" alt="리안커뮤니케이션즈 로고" width="101" height="45" loading="lazy" decoding="async"></div>
+  <h3 class="partner-card__name">(주) 리안커뮤니케이션즈</h3>
+  <div class="partner-card__type">전자정부 전문</div>
+  <p class="partner-card__desc">지능형 전자정부시스템 개발 전문회사. 행정 시스템의 다음 세대를 함께 설계합니다.</p>
+  <div class="partner-card__since"><span>// type</span><b>협력사</b></div>
+</div>
 
-      <!-- RIAN -->
-      <div class="partner-card">
-        <div class="partner-card__num">// partner_06 · 전자정부</div>
-        <div class="partner-card__logo">
-          <img class="partner-logo--rian" src="assets/rian.png" alt="리안커뮤니케이션즈 로고" width="101" height="45" loading="lazy" decoding="async">
-        </div>
-        <h3 class="partner-card__name">(주) 리안커뮤니케이션즈</h3>
-        <div class="partner-card__type">전자정부 전문</div>
-        <p class="partner-card__desc">지능형 전자정부시스템 개발 전문회사. 행정 시스템의 다음 세대를 함께 설계합니다.</p>
-        <div class="partner-card__since">
-          <span>// type</span><b>협력사</b>
-        </div>
-      </div>
+</div>
 
-    </div>
   </div>
 </section>
 
@@ -451,117 +285,13 @@
     </p>
     <div class="connection-note__btns">
       <a class="btn btn--orange" href="mailto:contact@deonaeun.com">✉ 파트너십 문의 <span class="arrow">→</span></a>
-      <a class="btn btn--ghost" href="services.html">서비스 영역 보기</a>
+      <a class="btn btn--ghost" href="./services.html">서비스 영역 보기</a>
     </div>
   </div>
 </section>
+</main>
+  <div data-include="footer"><p class="include-contact"><strong>(주)더나은</strong> · <a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a> · <a href="tel:0437507007">043.750.7007</a></p></div>
 
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div class="row">
-    <div>
-      <div class="brand">
-        <svg viewBox="0 0 146 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M142.5 15C142.5 21.6274 137.127 27 130.5 27C123.873 27 118.5 21.6274 118.5 15C118.5 8.37258 123.873 3 130.5 3C137.127 3 142.5 8.37258 142.5 15Z" stroke="#FF752D" stroke-width="6"/>
-          <path d="M142 71.5H3" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M142 42.5V71.5" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M117.5 42.5H142" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M90 34.5H104" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M54 57H79" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M41 35V56" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M54 34.5V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M90 35V57" stroke="#9C9C9F" stroke-width="6" stroke-linecap="round"/>
-          <path d="M27 34.5H41" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 56H27" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 15V55.5" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-          <path d="M3 15H105" stroke="#FF752D" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-        <span>deonaeun</span>
-      </div>
-      <p style="margin:0; max-width:32ch; line-height:1.6">더 나은 소프트웨어로 더 나은 세상을 만듭니다.<br>since 2018.</p>
-    </div>
-    <div>
-      <h5>사이트</h5>
-      <ul>
-        <li><a href="index.html">더나은</a></li>
-        <li><a href="services.html">서비스</a></li>
-        <li><a href="partners.html">파트너</a></li>
-        <li><a href="location.html">오시는길</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>사업영역</h5>
-      <ul>
-        <li><a href="services.html">공공 SI · 시스템 구축</a></li>
-        <li><a href="services.html">시스템 운영 (SM)</a></li>
-        <li><a href="services.html">웹접근성 인증</a></li>
-        <li><a href="services.html">IT 컨설팅</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>Contact</h5>
-      <ul>
-        <li><a href="mailto:contact@deonaeun.com">contact@deonaeun.com</a></li>
-        <li>TEL. <a href="tel:0437507007">043.750.7007</a></li>
-        <li>FAX. 043.901.4220</li>
-        <li><a href="https://www.deonaeun.com" target="_blank" rel="noopener">www.deonaeun.com</a></li>
-        <li style="font-size:13px; line-height:1.6; padding-top:6px"><a href="https://map.kakao.com/?q=%EC%B6%A9%EB%B6%81%20%EC%9D%8C%EC%84%B1%EA%B5%B0%20%EB%A7%B9%EB%8F%99%EB%A9%B4%20%EC%9A%A9%EB%91%903%EA%B8%B8%205%20%EA%B2%BD%EB%8F%99%EC%8A%A4%EB%A7%88%ED%8A%B8%EB%B0%B8%EB%A6%AC" target="_blank" rel="noopener">충청북도 음성군 맹동면<br>용두 3길 5, 206호<br><span style="color:#FF752D">경동스마트밸리 ↗</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="copy">
-    <span>© 2026 <span class="nowrap-name">(주)더나은</span> · deonaeun. All rights reserved.</span>
-    <span>// crafted in 충북 음성</span>
-  </div>
-</footer>
-
-<script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8));
-
-  // mobile burger
-  const burger = document.getElementById('navBurger');
-  const sheet = document.getElementById('navSheet');
-  function setSheet(open){
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    sheet.classList.toggle('is-open', open);
-    sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
-    document.body.style.overflow = open ? 'hidden' : '';
-  }
-  burger.addEventListener('click', () => setSheet(!sheet.classList.contains('is-open')));
-  sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
-
-  // ============ SIDE NAV ============
-  const sideNav = document.getElementById('sideNav');
-  if (sideNav) {
-    const dots = sideNav.querySelectorAll('.side-nav__dot');
-    const sectionIds = ['hero','lead','partners','contact'];
-    const darkSections = new Set(['contact']);
-    dots.forEach(d => d.addEventListener('click', () => {
-      const el = document.getElementById(d.dataset.target);
-      if (el) window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
-    }));
-    function updateActive(){
-      const probe = window.scrollY + window.innerHeight * 0.35;
-      let activeId = sectionIds[0];
-      sectionIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.offsetTop - 60 <= probe) activeId = id;
-      });
-      const idx = sectionIds.indexOf(activeId);
-      dots.forEach((d,i) => d.classList.toggle('active', i === idx));
-      sideNav.classList.toggle('is-dark', darkSections.has(activeId));
-    }
-    window.addEventListener('scroll', updateActive, { passive:true });
-    window.addEventListener('resize', updateActive);
-    updateActive();
-  }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.lead-section, .partners-section, .connection-note').forEach(el => {
-    el.classList.add('reveal'); io.observe(el);
-  });
-</script>
+  <script type="module" src="./js/bootstrap.js"></script>
 </body>
 </html>
