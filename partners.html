@@ -138,7 +138,12 @@
   }
 </style>
 <link rel="stylesheet" href="hero-refinements.css">
+<link rel="stylesheet" href="studio-theme.css">
+<link rel="stylesheet" href="places-scene.css">
 <script src="hero-motion.js" defer></script>
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="motion-runtime.js" defer></script>
+<script src="places-scene.js" defer></script>
 </head>
 <body data-screen-label="Partners">
 
@@ -219,76 +224,92 @@
       </p>
     </div>
 
-    <div class="page-hero__visual hero-visual--partners" aria-hidden="true">
-      <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="partner-atmosphere" cx=".45" cy=".4" r=".65">
-            <stop stop-color="#fff" stop-opacity=".75"/>
-            <stop offset="1" stop-color="#dee8e8" stop-opacity=".08"/>
-          </radialGradient>
-          <linearGradient id="partner-card" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#fff"/><stop offset="1" stop-color="#fbfcfa"/>
-          </linearGradient>
-          <linearGradient id="partner-core" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#42555f"/><stop offset="1" stop-color="#1a272d"/>
-          </linearGradient>
-          <linearGradient id="partner-link" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#9eafb6"/><stop offset=".5" stop-color="#f1b68d"/><stop offset="1" stop-color="#e7a674"/>
-          </linearGradient>
-          <filter id="partner-shadow" x="-35%" y="-45%" width="170%" height="205%">
-            <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#4b5e61" flood-opacity=".12"/>
-          </filter>
-        </defs>
-        <!-- Six real partners orbit the shared point of collaboration. -->
-        <circle cx="260" cy="260" r="210" fill="url(#partner-atmosphere)" stroke="#b5c3c7" stroke-opacity=".28"/>
-        <circle cx="260" cy="260" r="180" fill="none" stroke="#ddbc9f" stroke-opacity=".26"/>
-        <circle cx="260" cy="260" r="231" fill="none" stroke="#a6b4b8" stroke-opacity=".32" stroke-dasharray="1 12"/>
-        <g fill="none" stroke-linecap="round">
-          <circle cx="260" cy="260" r="210" stroke="#ebaa79" stroke-width="2" stroke-dasharray="70 1249" transform="rotate(-80 260 260)">
-            <animateTransform attributeName="transform" type="rotate" from="-80 260 260" to="280 260 260" dur="90s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="260" cy="260" r="180" stroke="#9aafb9" stroke-width="1.5" stroke-dasharray="34 1097" transform="rotate(110 260 260)"/>
-        </g>
-        <g fill="none" stroke="url(#partner-link)" stroke-width="1.2" opacity=".7">
-          <path d="M154 130C154 214 232 192 260 260"/>
-          <path d="M366 130C366 214 288 192 260 260"/>
-          <path d="M430 260C378 228 322 228 260 260"/>
-          <path d="M366 405C366 316 288 326 260 260"/>
-          <path d="M154 405C154 316 232 326 260 260"/>
-          <path d="M90 260C142 292 198 292 260 260"/>
-        </g>
-        <g fill="#f19b5f">
-          <circle r="2.8"><animateMotion dur="14s" repeatCount="indefinite" path="M154 130C154 214 232 192 260 260"/></circle>
-          <circle r="2.8"><animateMotion dur="14s" begin="-5s" repeatCount="indefinite" path="M430 260C378 228 322 228 260 260"/></circle>
-          <circle r="2.8"><animateMotion dur="14s" begin="-9s" repeatCount="indefinite" path="M154 405C154 316 232 326 260 260"/></circle>
-        </g>
-        <circle cx="260" cy="260" r="82" fill="#fff" fill-opacity=".52" stroke="#fff"/>
-        <circle cx="260" cy="260" r="71" fill="none" stroke="#e1b99a" stroke-opacity=".6"/>
-        <circle cx="260" cy="260" r="58" fill="url(#partner-core)" stroke="#71858f" stroke-opacity=".35" filter="url(#partner-shadow)"/>
-        <circle cx="260" cy="234" r="3" fill="#ff9b60"/>
-        <text x="260" y="261" font-family="Pretendard, Pretendard Variable, sans-serif" font-size="18" font-weight="600" fill="#fff" text-anchor="middle">더나은</text>
-        <text x="260" y="280" font-family="JetBrains Mono, monospace" font-size="8" fill="#b9c7cc" text-anchor="middle">since 2018</text>
-        <!-- Neutral plates preserve every original logo and its proportions. -->
-        <g fill="url(#partner-card)" stroke="#fff" filter="url(#partner-shadow)">
-          <rect x="88" y="95" width="132" height="70" rx="18"/>
-          <rect x="300" y="95" width="132" height="70" rx="18"/>
-          <rect x="364" y="225" width="132" height="70" rx="18"/>
-          <rect x="24" y="225" width="132" height="70" rx="18"/>
-          <rect x="88" y="370" width="132" height="70" rx="18"/>
-          <rect x="300" y="370" width="132" height="70" rx="18"/>
-        </g>
-        <image href="assets/keis.png" x="100" y="111" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-        <image href="assets/kaon.png" x="312" y="111" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-        <image href="assets/tg.png" x="408" y="238" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>
-        <image href="assets/sechan.png" x="36" y="241" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-        <image href="assets/vitasoft.png" x="100" y="386" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
-        <image href="assets/rian.png" x="327" y="387" width="78" height="36" preserveAspectRatio="xMidYMid meet"/>
-        <g fill="#f3a16c" stroke="#fff" stroke-width="3">
-          <circle cx="154" cy="165" r="4"/><circle cx="366" cy="165" r="4"/>
-          <circle cx="364" cy="260" r="4"/><circle cx="156" cy="260" r="4"/>
-          <circle cx="154" cy="370" r="4"/><circle cx="366" cy="370" r="4"/>
-        </g>
-      </svg>
+    <div class="page-hero__visual hero-visual--partners" data-scene="partners">
+      <div class="partners-scene">
+        <svg viewBox="0 0 520 520" class="partners-scene__svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="partners-aura"><stop stop-color="#ff9158" stop-opacity=".17"/><stop offset="1" stop-color="#ff9158" stop-opacity="0"/></radialGradient>
+            <linearGradient id="partners-core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#344c56"/><stop offset="1" stop-color="#111f29"/></linearGradient>
+            <linearGradient id="partners-plate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#e8efee"/></linearGradient>
+            <linearGradient id="partners-spoke" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7ca5b7" stop-opacity=".25"/><stop offset="1" stop-color="#ea9b66" stop-opacity=".8"/></linearGradient>
+            <filter id="partners-depth" x="-45%" y="-50%" width="190%" height="220%"><feDropShadow dx="0" dy="15" stdDeviation="12" flood-color="#000" flood-opacity=".4"/></filter>
+            <filter id="partners-signal-light" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="3"/></filter>
+          </defs>
+          <circle cx="270" cy="272" r="222" fill="url(#partners-aura)"/>
+          <g class="partners-scene__depth" fill="none">
+            <ellipse cx="264" cy="275" rx="222" ry="147" transform="rotate(-23 264 275)" stroke="#7895a2" stroke-opacity=".2"/>
+            <path d="M63 319 C101 444 352 482 450 302" stroke="#e8a276" stroke-opacity=".24" stroke-dasharray="3 10"/>
+            <path d="M55 199 C139 59 365 77 460 223" stroke="#749bab" stroke-opacity=".2" stroke-dasharray="1 13"/>
+          </g>
+          <g class="partners-scene__links" fill="none" stroke="url(#partners-spoke)" stroke-width="1.5">
+            <path data-partner-path="keis" d="M151 117 C159 188 213 198 260 258"/>
+            <path data-partner-path="kaon" d="M360 133 C352 201 305 214 260 258"/>
+            <path data-partner-path="tg" d="M418 274 C356 286 313 284 260 258"/>
+            <path data-partner-path="sechan" d="M94 266 C157 289 204 281 260 258"/>
+            <path data-partner-path="vitasoft" d="M159 402 C173 334 212 310 260 258"/>
+            <path data-partner-path="rian" d="M367 405 C348 339 307 311 260 258"/>
+          </g>
+          <circle class="partners-scene__wave" cx="260" cy="260" r="8" fill="none" stroke="#ffa36a" stroke-width="2" opacity="0"/>
+          <circle class="partners-scene__wave-echo" cx="260" cy="260" r="8" fill="none" stroke="#83b7c5" stroke-width="1" opacity="0"/>
+          <circle class="partners-scene__signal-glow" r="8" fill="#ffad6e" opacity="0" filter="url(#partners-signal-light)"/>
+          <circle class="partners-scene__signal" r="3.2" fill="#ffe0b9" opacity="0"/>
+          <g class="partners-scene__hub" filter="url(#partners-depth)">
+            <path d="M260 183 L326 221 V294 L260 332 L194 294 V221Z" fill="#111c23" stroke="#506571" stroke-opacity=".45"/>
+            <path d="M260 174 L326 212 V285 L260 323 L194 285 V212Z" fill="url(#partners-core)" stroke="#b0c4c8" stroke-opacity=".45"/>
+            <path d="M194 212 L260 249 L326 212 M260 249 V323" fill="none" stroke="#a8bdc4" stroke-opacity=".1"/>
+          </g>
+          <path class="partners-scene__hub-flash" d="M260 174 L326 212 V285 L260 323 L194 285 V212Z" fill="none" stroke="#ff9d62" stroke-width="2" opacity="0"/>
+          <circle cx="260" cy="219" r="3" fill="#ff975b"/>
+          <text x="260" y="251" text-anchor="middle" fill="#f8f3e8" font-family="Pretendard,sans-serif" font-size="23" font-weight="600" letter-spacing="-1">더나은</text>
+          <text x="260" y="272" text-anchor="middle" fill="#79949f" font-family="JetBrains Mono,monospace" font-size="8" letter-spacing="1">CONNECTED EXPERTISE</text>
+          <text class="partners-scene__role" x="260" y="297" text-anchor="middle" fill="#e9af84" font-family="Pretendard,sans-serif" font-size="11.5">공공 정보화 파트너십</text>
+          <g class="partners-scene__logo" data-partner-art="keis">
+            <rect x="86" y="85" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="86" y="82" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/keis.png" x="97" y="96" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="85" y="81" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+          <g class="partners-scene__logo" data-partner-art="kaon">
+            <rect x="295" y="101" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="295" y="98" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/kaon.png" x="306" y="112" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="294" y="97" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+          <g class="partners-scene__logo" data-partner-art="tg">
+            <rect x="353" y="242" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="353" y="239" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/tg.png" x="396" y="250" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="352" y="238" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+          <g class="partners-scene__logo" data-partner-art="sechan">
+            <rect x="29" y="234" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="29" y="231" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/sechan.png" x="40" y="245" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="28" y="230" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+          <g class="partners-scene__logo" data-partner-art="vitasoft">
+            <rect x="94" y="370" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="94" y="367" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/vitasoft.png" x="105" y="381" width="108" height="38" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="93" y="366" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+          <g class="partners-scene__logo" data-partner-art="rian">
+            <rect x="302" y="373" width="130" height="66" rx="16" fill="#1b3039" stroke="#4c6d78" stroke-opacity=".5" transform="translate(0 7)"/>
+            <rect class="partners-scene__plate" x="302" y="370" width="130" height="66" rx="16" fill="url(#partners-plate)" stroke="#fff" stroke-opacity=".9" filter="url(#partners-depth)"/>
+            <image href="assets/rian.png" x="328" y="385" width="78" height="36" preserveAspectRatio="xMidYMid meet"/>
+            <rect class="partners-scene__plate-light" x="301" y="369" width="132" height="68" rx="17" fill="none" stroke="#ffb67c" stroke-width="2" opacity="0"/>
+          </g>
+        </svg>
+        <div class="partners-scene__choices" role="group" aria-label="파트너 협력 분야">
+          <button type="button" class="partners-scene__hit" data-partner="keis" data-partner-role="공공 고용서비스" aria-label="한국고용정보원 · 공공 고용서비스" style="--x:16.5385%;--y:15.7692%"><span>한국고용정보원</span></button>
+          <button type="button" class="partners-scene__hit" data-partner="kaon" data-partner-role="그룹웨어 · 협업" aria-label="가온아이 · 그룹웨어 · 협업" style="--x:56.7308%;--y:18.8462%"><span>가온아이</span></button>
+          <button type="button" class="partners-scene__hit" data-partner="tg" data-partner-role="소프트웨어 개발" aria-label="티지소프트 · 소프트웨어 개발" style="--x:67.8846%;--y:45.9615%"><span>티지소프트</span></button>
+          <button type="button" class="partners-scene__hit" data-partner="sechan" data-partner-role="IT 컨설팅" aria-label="세찬아이앤씨 · IT 컨설팅" style="--x:5.5769%;--y:44.4231%"><span>세찬아이앤씨</span></button>
+          <button type="button" class="partners-scene__hit" data-partner="vitasoft" data-partner-role="시스템 통합" aria-label="비타소프트 · 시스템 통합" style="--x:18.0769%;--y:70.5769%"><span>비타소프트</span></button>
+          <button type="button" class="partners-scene__hit" data-partner="rian" data-partner-role="전자정부" aria-label="리안커뮤니케이션즈 · 전자정부" style="--x:58.0769%;--y:71.1538%"><span>리안커뮤니케이션즈</span></button>
+        </div>
+        <span class="places-scene__sr" id="partners-scene-status" role="status" aria-live="polite"></span>
+      </div>
     </div>
   </div>
 </section>

@@ -1,0 +1,54 @@
+/* The service names belong to the scene; the illustration stays in one square. */
+.service-scene{color:#f4eee3;container-type:inline-size;overflow:visible}
+.service-scene::before{display:none}
+.service-scene__halo{position:absolute;inset:17% 8% 10%;pointer-events:none;background:radial-gradient(ellipse at 50% 64%,#ff995d12,transparent 66%);border-radius:50%}
+.service-scene__canvas{position:absolute;inset:0;pointer-events:none;z-index:1}
+.service-scene__canvas canvas{display:block;width:100%;height:100%;pointer-events:none}
+.service-scene__fallback{z-index:1;pointer-events:none;opacity:1;transition:opacity .3s}
+.service-scene.is-rendered .service-scene__fallback{opacity:0;visibility:hidden}
+.service-scene__mode{position:absolute;left:50%;top:7%;transform:translateX(-50%);font:10px var(--mono);letter-spacing:.13em;color:#8ea3a8;white-space:nowrap}
+.service-scene__label{position:absolute;z-index:3;padding:10px 2px 12px;background:transparent;border:0;color:#c6d2d1;text-align:left;font-family:var(--font);cursor:pointer;transition:color .25s;min-height:56px}
+.service-scene__label::after{content:"";position:absolute;left:2px;bottom:5px;width:22px;height:1px;background:#6e888c;transform-origin:left;transition:background .25s,transform .4s,box-shadow .4s}
+.service-scene__label span{display:block;font-weight:500;font-size:clamp(16px,4cqw,23px);line-height:1.3;letter-spacing:-.025em}
+.service-scene__label small{display:block;font-size:clamp(10px,2.1cqw,12px);color:#92a4a6;line-height:1.6;margin-top:3px}
+.service-scene__label[aria-pressed="true"],.service-scene__label:hover{color:#ffaf7d}
+.service-scene__label[aria-pressed="true"]::after{background:#ff995f;transform:scaleX(1.75);box-shadow:0 0 10px #ff995f75}
+.service-scene__label:focus-visible{outline:2px solid #ffae78;outline-offset:5px;border-radius:3px}
+.service-scene__label--si{left:5%;top:15%}
+.service-scene__label--sm{right:6%;top:15%}
+.service-scene__label--a11y{left:5%;bottom:16%}
+.service-scene__label--consulting{right:4%;bottom:16%}
+.service-scene__caption{position:absolute;bottom:5%;left:0;right:0;text-align:center;font-size:12px;letter-spacing:.01em;color:#93a6aa;z-index:2;pointer-events:none}
+.scene-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.scene-fallback-layer{transform-box:fill-box;transform-origin:center;transition:transform 1s cubic-bezier(.22,.72,.18,1),opacity .7s}
+.scene-fallback-signal{opacity:0;stroke-dashoffset:0}
+.service-scene[data-service="sm"] .scene-fallback-signal{opacity:1;animation:service-signal 2.5s linear infinite}
+.service-scene[data-service="a11y"] .scene-fallback-layer--ui{transform:translate(0,-24px) scale(1.14)}
+.service-scene[data-service="a11y"] .scene-fallback-layer--data,.service-scene[data-service="a11y"] .scene-fallback-layer--api{opacity:.25;transform:translateY(20px)}
+.service-scene[data-service="consulting"] .scene-fallback-layer--data{transform:translate(-28px,23px)}
+.service-scene[data-service="consulting"] .scene-fallback-layer--ui{transform:translate(28px,-28px)}
+.service-scene[data-service="a11y"] .scene-fallback-focus{fill-opacity:1;stroke-width:4}
+.interaction-paused .scene-fallback-signal{animation-play-state:paused!important}
+@keyframes service-signal{to{stroke-dashoffset:-204}}
+/* A small real form is placed where the section illustration used to sit. */
+#a11y .cat-head{grid-template-columns:auto minmax(0,1fr) 288px;column-gap:28px}
+.a11y-mini{padding:0 17px 12px;align-self:start;border:1px solid #d3d8d2;border-radius:13px;background:#fafbf7;color:#2a3c43;box-shadow:0 13px 25px -22px #263a4666;font-family:var(--font)}
+.a11y-mini__bar{height:32px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #e1e5dd;color:#8c9c9c;font:8px var(--mono);letter-spacing:.08em}
+.a11y-mini__bar>span:first-child{font-size:7px;letter-spacing:2px;color:#c9d1ca}
+.a11y-mini h3{font-size:15px;letter-spacing:-.02em;font-weight:600;margin:17px 0 13px}
+.a11y-mini__choice{display:flex;align-items:center;gap:9px;min-height:39px;font-size:12px;cursor:pointer;border-top:1px solid #e1e5dd;border-bottom:1px solid #e1e5dd}
+.a11y-mini__choice input{width:15px;height:15px;margin:0;accent-color:#bb4e1c;cursor:pointer}
+.a11y-mini__choice:has(input:focus-visible){outline:2px solid #b74c1d;outline-offset:4px;border-radius:3px}
+.a11y-mini__choice input:focus-visible{outline:0}
+.a11y-mini__plus{margin-left:auto;color:#ad633f;font-size:17px;transition:transform .3s}
+.a11y-mini__choice:has(input:checked) .a11y-mini__plus{transform:rotate(45deg)}
+.a11y-mini__help{font-size:11px;line-height:1.7;margin:10px 0 0;color:#5c6d70}
+.a11y-mini kbd{font:10px var(--mono);border:1px solid #cbd3cc;border-bottom-width:2px;padding:1px 3px;border-radius:3px;background:#fff}
+.a11y-mini__footer{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;min-height:25px;font-size:10px;color:#738381}
+.a11y-mini__footer button{width:29px;height:29px;flex-shrink:0;border:1px solid #d5ddd6;border-radius:50%;background:transparent;color:#586e72;font-size:17px;cursor:pointer}
+.a11y-mini__footer button:hover{background:#e8eee5}
+.a11y-mini__footer button:focus-visible{outline:2px solid #b74c1d;outline-offset:3px}
+@media(max-width:1100px){#a11y .cat-head{grid-template-columns:auto minmax(0,1fr) 260px;column-gap:20px}.a11y-mini{padding-inline:13px}}
+@media(max-width:880px){#a11y .cat-head{grid-template-columns:minmax(0,1fr) 260px;gap:20px}#a11y .cat-num{grid-column:1/-1;justify-self:start}#a11y .cat-title{min-width:0}.a11y-mini{align-self:center}}
+@media(max-width:620px){#a11y .cat-head{grid-template-columns:1fr}#a11y .cat-num{grid-column:auto}.a11y-mini{width:min(100%,300px);box-sizing:border-box;justify-self:start;margin-top:3px}.service-scene__caption{font-size:10px;bottom:4%}.service-scene__mode{font-size:8px;top:5%}.service-scene__label--si,.service-scene__label--sm{top:11%}.service-scene__label--a11y,.service-scene__label--consulting{bottom:13%}}
+@media(prefers-reduced-motion:reduce){.service-scene *,.a11y-mini *{animation:none!important;transition:none!important}}

@@ -4,9 +4,11 @@
   if (!hero) return;
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const svgs = [...hero.querySelectorAll('svg')];
+  const menu = document.getElementById('navSheet');
   let visible = true;
+  let pageHidden = false;
   function syncMotion() {
-    const paused = preference.matches || document.hidden || !visible;
+    const paused = preference.matches || document.hidden || pageHidden || !visible || menu?.classList.contains('is-open');
     hero.classList.toggle('hero-motion-paused', paused);
     svgs.forEach(svg => {
       if (typeof svg.pauseAnimations !== 'function') return;
@@ -26,5 +28,8 @@
   }
   preference.addEventListener('change', syncMotion);
   document.addEventListener('visibilitychange', syncMotion);
+  window.addEventListener('pagehide', () => { pageHidden = true; syncMotion(); });
+  window.addEventListener('pageshow', () => { pageHidden = false; syncMotion(); });
+  if (menu) new MutationObserver(syncMotion).observe(menu, { attributes: true, attributeFilter: ['class'] });
   syncMotion();
 })();

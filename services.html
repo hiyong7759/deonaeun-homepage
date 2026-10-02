@@ -135,6 +135,10 @@
 </style>
 <link rel="stylesheet" href="hero-refinements.css">
 <script src="hero-motion.js" defer></script>
+<link rel="stylesheet" href="studio-theme.css">
+<link rel="stylesheet" href="services-scene.css">
+<script src="motion-runtime.js" defer></script>
+<script src="services-scene.js" type="module"></script>
 </head>
 <body data-screen-label="Services">
 
@@ -200,7 +204,7 @@
   </div>
 </div>
 
-<!-- ============ HERO with abstract SVG network ============ -->
+<!-- ============ HERO · SERVICE SYSTEM ============ -->
 <section class="page-hero snap" id="hero">
   <div class="page-hero__inner">
     <div class="page-hero__left">
@@ -217,87 +221,47 @@
       </p>
     </div>
 
-    <div class="page-hero__visual hero-visual--services" aria-hidden="true">
-      <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+    <div class="page-hero__visual hero-visual--services service-scene" id="serviceScene" data-service="si" role="group" aria-label="서비스별 시스템 모형">
+      <div class="service-scene__halo" aria-hidden="true"></div>
+      <div class="service-scene__canvas" id="serviceCanvas" aria-hidden="true"></div>
+      <svg class="service-scene__fallback" viewBox="0 0 580 580" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="service-glass" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#fff" stop-opacity=".88"/>
-            <stop offset="1" stop-color="#e9eeed" stop-opacity=".3"/>
-          </linearGradient>
-          <linearGradient id="service-card" x1="0" y1="0" x2=".8" y2="1">
-            <stop stop-color="#fff"/>
-            <stop offset="1" stop-color="#f7f8f4"/>
-          </linearGradient>
-          <linearGradient id="service-core" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#42555f"/>
-            <stop offset="1" stop-color="#1a272d"/>
-          </linearGradient>
-          <linearGradient id="service-link" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#ffb680"/>
-            <stop offset=".5" stop-color="#ff9353"/>
-            <stop offset="1" stop-color="#9aafb7"/>
-          </linearGradient>
-          <filter id="service-shadow" x="-40%" y="-50%" width="180%" height="210%">
-            <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#4b5e61" flood-opacity=".12"/>
-          </filter>
+          <linearGradient id="scene-slab" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#80999e"/><stop offset="1" stop-color="#253b44"/></linearGradient>
+          <linearGradient id="scene-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0d8"/><stop offset="1" stop-color="#b3c9c7"/></linearGradient>
+          <filter id="scene-glow"><feGaussianBlur stdDeviation="2"/></filter>
         </defs>
-        <!-- Four connected service areas, held within one continuous system. -->
-        <circle cx="260" cy="260" r="218" fill="none" stroke="#a8b9be" stroke-opacity=".18"/>
-        <g fill="url(#service-glass)" stroke-width="1">
-          <circle cx="154" cy="154" r="91" stroke="#eeb48c" stroke-opacity=".55"/>
-          <circle cx="366" cy="154" r="91" stroke="#a4bac4" stroke-opacity=".55"/>
-          <circle cx="154" cy="366" r="91" stroke="#a4bac4" stroke-opacity=".55"/>
-          <circle cx="366" cy="366" r="91" stroke="#eeb48c" stroke-opacity=".55"/>
+        <ellipse cx="290" cy="434" rx="180" ry="65" fill="#18262c" stroke="#4b6770" stroke-opacity=".4"/>
+        <g stroke="#6b8b92" stroke-opacity=".55" fill="none" stroke-dasharray="3 6"><path d="M160 295v-145M420 360V215M290 430V285"/></g>
+        <g class="scene-fallback-layer scene-fallback-layer--data">
+          <path d="m130 341 154-87 161 89v14l-156 90-159-90z" fill="#223942" stroke="#789399"/>
+          <path d="m130 341 154-87 161 89-156 90z" fill="url(#scene-slab)" stroke="#94acaf"/>
+          <g fill="#173039" stroke="#72949a"><path d="m185 333 34-20 69 39-34 20z"/><path d="m237 304 34-20 69 39-34 20z"/><path d="m289 275 34-20 69 39-34 20z"/></g>
+          <path d="m215 349 11-6m45-22 11-6m42-24 11-6" stroke="#ffad76" stroke-width="4"/>
         </g>
-        <g fill="none" stroke="url(#service-link)" stroke-width="1.3" stroke-linecap="round" opacity=".65">
-          <path d="M154 154C220 154 204 260 260 260"/>
-          <path d="M366 154C366 220 260 204 260 260"/>
-          <path d="M154 366C154 300 260 316 260 260"/>
-          <path d="M366 366C300 366 316 260 260 260"/>
-          <path d="M154 154C212 84 308 84 366 154M366 154C436 212 436 308 366 366M366 366C308 436 212 436 154 366M154 366C84 308 84 212 154 154" opacity=".25"/>
+        <g class="scene-fallback-layer scene-fallback-layer--api">
+          <path d="m130 272 154-87 161 89v14l-156 90-159-90z" fill="#2a4249" stroke="#789399"/>
+          <path d="m130 272 154-87 161 89-156 90z" fill="url(#scene-slab)" stroke="#94acaf"/>
+          <path d="m186 272 100-57 102 58-99 56z" fill="none" stroke="#ffab77" stroke-opacity=".8"/>
+          <path d="m251 269 34-20 40 22-35 21z" fill="#ff9c65" stroke="#ffe1bc"/>
+          <g fill="#bed4d0"><path d="m176 269 11-6 12 7-12 6z"/><path d="m277 209 11-6 12 7-12 6z"/><path d="m378 272 11-6 12 7-12 6z"/><path d="m279 329 11-6 12 7-12 6z"/></g>
+          <path class="scene-fallback-signal" d="m186 272 100-57 102 58-99 56z" fill="none" stroke="#ffe5c5" stroke-width="3" stroke-dasharray="10 92"/>
         </g>
-        <g fill="#f79558">
-          <circle r="3"><animateMotion dur="12s" repeatCount="indefinite" path="M154 154C220 154 204 260 260 260"/></circle>
-          <circle r="3"><animateMotion dur="12s" begin="-6s" repeatCount="indefinite" path="M366 366C300 366 316 260 260 260"/></circle>
+        <g class="scene-fallback-layer scene-fallback-layer--ui">
+          <path d="m130 203 154-87 161 89v14l-156 90-159-90z" fill="#6b898e" stroke="#bed1cf"/>
+          <path d="m130 203 154-87 161 89-156 90z" fill="url(#scene-face)" stroke="#e7eee1"/>
+          <path d="m148 203 136-77 143 80-18 10-143-79z" fill="#253b44"/>
+          <g fill="#66878b"><path d="m168 215 30-17 113 64-30 17z"/><path d="m212 190 50-28 57 32-50 29z"/><path d="m281 229 50-28 57 32-50 29z"/></g>
+          <path class="scene-fallback-focus" d="m209 190 53-31 62 35-55 32z" fill="#ffa064" fill-opacity=".75" stroke="#ffe1bf" stroke-width="2"/>
+          <path d="m235 188 20-11m51 47 20-11" stroke="#f1f0db" stroke-width="4"/>
         </g>
-        <!-- Quiet orbital accents carry movement without shifting the content. -->
-        <g fill="none" stroke-linecap="round" stroke-width="2">
-          <circle cx="154" cy="154" r="91" stroke="#f0a16a" stroke-dasharray="46 526" transform="rotate(-120 154 154)"/>
-          <circle cx="366" cy="154" r="91" stroke="#9cafb8" stroke-dasharray="32 540" transform="rotate(-40 366 154)"/>
-          <circle cx="154" cy="366" r="91" stroke="#9cafb8" stroke-dasharray="32 540" transform="rotate(110 154 366)"/>
-          <circle cx="366" cy="366" r="91" stroke="#f0a16a" stroke-dasharray="46 526" transform="rotate(40 366 366)"/>
-        </g>
-        <!-- Service labels retain their original terminology. -->
-        <g font-family="Pretendard, Pretendard Variable, sans-serif" text-anchor="middle">
-          <g filter="url(#service-shadow)">
-            <rect x="86" y="116" width="136" height="76" rx="18" fill="url(#service-card)" stroke="#fff"/>
-            <rect x="298" y="116" width="136" height="76" rx="18" fill="url(#service-card)" stroke="#fff"/>
-            <rect x="86" y="328" width="136" height="76" rx="18" fill="url(#service-card)" stroke="#fff"/>
-            <rect x="298" y="328" width="136" height="76" rx="18" fill="url(#service-card)" stroke="#fff"/>
-          </g>
-          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9e99" letter-spacing="1.5">
-            <text x="154" y="97">01</text><text x="366" y="97">02</text>
-            <text x="154" y="437">03</text><text x="366" y="437">04</text>
-          </g>
-          <g font-size="20" font-weight="600" fill="#2b3d46">
-            <text x="154" y="149">SI</text><text x="366" y="149">SM</text>
-            <text x="154" y="361">A11y</text><text x="366" y="361" font-size="17">Consulting</text>
-          </g>
-          <g font-size="13" font-weight="500" fill="#66757d">
-            <text x="154" y="173">시스템 구축</text><text x="366" y="173">시스템 운영</text>
-            <text x="154" y="385">웹접근성</text><text x="366" y="385">IT 컨설팅</text>
-          </g>
-        </g>
-        <circle cx="260" cy="260" r="76" fill="#fff" fill-opacity=".42" stroke="#fff" stroke-opacity=".8"/>
-        <circle cx="260" cy="260" r="67" fill="none" stroke="#dbb89c" stroke-opacity=".55"/>
-        <circle cx="260" cy="260" r="67" fill="none" stroke="#eea06b" stroke-width="2" stroke-linecap="round" stroke-dasharray="34 387">
-          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="60s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="260" cy="260" r="55" fill="url(#service-core)" stroke="#71858f" stroke-opacity=".35" filter="url(#service-shadow)"/>
-        <circle cx="260" cy="236" r="3" fill="#ff9b60"/>
-        <text x="260" y="260" font-family="Pretendard, Pretendard Variable, sans-serif" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">deonaeun</text>
-        <text x="260" y="278" font-family="JetBrains Mono, monospace" font-size="8" fill="#b9c7cc" text-anchor="middle">since 2018</text>
       </svg>
+      <span class="service-scene__mode" id="serviceSceneMode" aria-hidden="true">01 / BUILD</span>
+      <button class="service-scene__label service-scene__label--si" type="button" data-service-choice="si" aria-pressed="true"><span>SI</span><small>시스템 구축</small></button>
+      <button class="service-scene__label service-scene__label--sm" type="button" data-service-choice="sm" aria-pressed="false"><span>SM</span><small>시스템 운영</small></button>
+      <button class="service-scene__label service-scene__label--a11y" type="button" data-service-choice="a11y" aria-pressed="false"><span>A11y</span><small>웹접근성</small></button>
+      <button class="service-scene__label service-scene__label--consulting" type="button" data-service-choice="consulting" aria-pressed="false"><span>Consulting</span><small>IT 컨설팅</small></button>
+      <span class="service-scene__caption" id="serviceSceneCaption">화면, 서비스, 데이터를 하나로.</span>
+      <span class="scene-sr-only" id="serviceSceneStatus" role="status" aria-live="polite" aria-atomic="true">시스템 구축: 화면, 서비스, 데이터 층을 하나로 조립합니다.</span>
     </div>
   </div>
 </section>
@@ -412,11 +376,12 @@
         <h2>모두가 동등하게<br>닿을 수 있는 화면.</h2>
         <p class="desc">대국민 서비스에 필수인 웹접근성 인증. 인증 기준을 충족하도록 설계 · 구현 · 검증까지 함께합니다.</p>
       </div>
-      <div class="cat-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF752D" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="4" r="2"/>
-          <path d="M12 6v6m0 0l-4 8m4-8l4 8m-7-9h6"/>
-        </svg>
+      <div class="a11y-mini" aria-labelledby="a11yMiniTitle">
+        <div class="a11y-mini__bar"><span aria-hidden="true">● ● ●</span><span>ACCESSIBLE BY DESIGN</span></div>
+        <h3 id="a11yMiniTitle">키보드로도, 자연스럽게.</h3>
+        <label class="a11y-mini__choice"><input id="a11yMiniToggle" type="checkbox" aria-controls="a11yMiniHelp"><span>키보드 안내 펼치기</span><span class="a11y-mini__plus" aria-hidden="true">+</span></label>
+        <p class="a11y-mini__help" id="a11yMiniHelp" hidden><kbd>Tab</kbd>으로 이동하고 <kbd>Space</kbd>로 선택하세요.</p>
+        <div class="a11y-mini__footer"><span id="a11yMiniStatus" role="status" aria-live="polite">Tab으로 직접 이동해 보세요.</span><button type="button" id="a11yMiniReset" aria-label="키보드 체험 처음부터">↺</button></div>
       </div>
     </div>
 
